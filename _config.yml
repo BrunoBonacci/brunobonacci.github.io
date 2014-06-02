@@ -1,0 +1,10 @@
+name: Bits and pices
+url: http://brunobonacci.github.io
+author: Bruno Bonacci
+description: Between bits and bytes and all other pices.
+
+permalink: /:year/:month/:day/:title/
+paginate: 10
+highlighter: pygments
+
+exclude: ['README.md', 'Gemfile.lock', 'Gemfile', 'Rakefile']
