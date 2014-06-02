@@ -371,12 +371,13 @@ DUMP out;
       (c/avg :< ?age :> ?average)))
 {% endhighlight %}
 
+
 *NOTE: this is unintuive.*
 In this case we just added a field in the projection
 and nothing else and magically the aggregation is now
 over a group. Where is the `GROUP BY` equivalent clause?
-TODO: explain why/how this works.
 
+In Cascalog the `GROUP BY` is implicit ([as explained here](http://cascalog.org/articles/getting_started.html#toc_12)).
 
 Let's find the number of active users by country
 
@@ -480,8 +481,7 @@ DUMP out;
 (run<-
  (<-     [?name ?user ?age ?country ?active]
          (USERS ?name ?user ?age ?country ?active)
-         TODO: doesn't work
-         (:sort ?age)
+         (:sort ?age)  ; TODO: need global-sort
          (:reverse true)))
 {% endhighlight %}
 
