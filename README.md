@@ -1,7 +1,7 @@
-brunobonacci.github.io
+blog.brunobonacci.com
 ======================
 
 bits and pieces (blogging website)
 
-See my blog at: [brunobonacci.github.io](http://brunobonacci.github.io)
+See my blog at: [blog.brunobonacci.com](http://blog.brunobonacci.com)
 

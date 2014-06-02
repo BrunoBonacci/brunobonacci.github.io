@@ -1,7 +1,7 @@
-name: Bits and pices
-url: http://brunobonacci.github.io
+name: Bits and pieces
+url: http://blog.brunobonacci.com
 author: Bruno Bonacci
-description: Between bits and bytes and all other pices.
+description: Between bits and bytes and all other pieces.
 
 permalink: /:year/:month/:day/:title/
 paginate: 10
