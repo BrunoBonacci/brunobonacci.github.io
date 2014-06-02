@@ -730,3 +730,8 @@ DUMP out;
      (:reverse true)
      ((c/limit 3) :< ?name ?score ?age ?country :> ?name1 ?score1 ?age1 ?country1)))
 {% endhighlight %}
+
+## Conclusion
+Has we seen in the previous exaples Cascalog is very compact and intuitive. Compared to Pig and SQL is slightly more succint. However in more complex examples is were we can really appreciate its simplicity. Again, Cascalog has plenty of other features which I will try to cover in future posts. The best way to learn it is to try it, and if you find difficulties you can always post a message to the [Cascalog user group](https://groups.google.com/forum/#!forum/cascalog-user).
+
+
