@@ -20,7 +20,7 @@ In languages like Pig and Hive, in order to make complex manipulation of your da
 
 There are other reasons for which Cascalog is better than Pig, Hive et al. Just to mention few you have a very easy and high level query language which is based on logic programming and rule inference, you can and it is encouraged to write sub-queries and reuse them. Therefore you can write complex processing by composing simple sub-queries. Cascalog comes with a framework to test your queries and jobs while other tools have very little to support testing. If you have done any non-trivial job with Hadoop you know the pain of running job over and over and have to fix one error at the time. The integration of Midje (a Clojure testing tool) with Cascalog enables you to write completely in-memory tests which will behave like in the Hadoop cluster. Finally probably one of the most important feature, you have a REPL (Read, Eval, Print Loop) which enables you to explore your data in a more interactive way.
 
-Another big reason for using Cascalog is that you can reuse your query and trasnformation in both: a batch process or a real-time streaming solution. In fact Cascalog is just an higher lever abstraction on top of Cascading. Cascalog allows you to compile your query into a lower level concrete execution plan, and you could also write a custom comiler to generate an execution plan for a tool which you want to use. For example Cascalog query can be compiled to MapReduce jobs, to SQL or Apache Storm.
+Another big reason for using Cascalog is that you can reuse your query and transformation in both: a batch process or a real-time streaming solution. In fact Cascalog is just an higher lever abstraction on top of Cascading. Cascalog allows you to compile your query into a lower level concrete execution plan, and you could also write a custom compiler to generate an execution plan for a tool which you want to use. For example Cascalog query can be compiled to MapReduce jobs, to SQL or Apache Storm.
 
 In this post I won't be able to cover all those topics but I will try to give a good introduction to the basic querying capabilities. I will try to write a follow up post with more advanced use.
 
@@ -121,7 +121,7 @@ DUMP users;
 {% endhighlight %}
 
 Here Cascalog adds an implicit reduce step to remove duplicates.
-If we really whish to have the same query as SQL and Pig we should
+If we really wish to have the same query as SQL and Pig we should
 add `(:distinct false)` on our Cascalog query. 
 
 In reality the above query is split in to parts:
@@ -140,8 +140,8 @@ to put the output.
 (?- (output) query)
 {% endhighlight %}
 
-for this reason we encaplulate the execution
-into a clojure function `run<-`
+for this reason we encapsulate the execution
+into a Clojure function `run<-`
 which we'll use to run our queries.
 
 {% highlight Clojure %}
@@ -264,9 +264,9 @@ DUMP out;
 
 The optional `:<` keyword denotes
 input fields to the function
-the ouput can be then placed into field
+the output can be then placed into field
 with `:>` for example if we want to perform a simple
-tranformation on a field, such as making
+transformation on a field, such as making
 the username uppercase we can run
 
 ### SQL
@@ -376,7 +376,7 @@ DUMP out;
 {% endhighlight %}
 
 
-*NOTE: this is unintuive.*
+*NOTE: this is unintuitive.*
 In this case we just added a field in the projection
 and nothing else and magically the aggregation is now
 over a group. Where is the `GROUP BY` equivalent clause?
@@ -559,7 +559,7 @@ DUMP out;
 
 
 However in Cascalog it's very easy:
-you prject by country (which creates a group)
+you project by country (which creates a group)
 and in the group you sort by age, reverse
 and take the top 2
 
@@ -713,7 +713,7 @@ DUMP out;
 
 As we seen from the previous example is very easy to define sub query and reuse them.
 In this example I want to find the top 3 scorer per game.
-This type of queries is very common for the analycts folks (top-n by group)
+This type of queries is very common for the analytics folks (top-n by group)
 
 ### SQL
 {% highlight SQL %}
@@ -760,7 +760,7 @@ DUMP out;
 {% endhighlight %}
 
 ## Conclusion
-Has we seen in the previous exaples Cascalog is very compact and intuitive. Compared to Pig and SQL is slightly more succint. However in more complex examples is were we can really appreciate its simplicity. Again, Cascalog has plenty of other features which I will try to cover in future posts. The best way to learn it is to try it, and if you find difficulties you can always post a message to the [Cascalog user group](https://groups.google.com/forum/#!forum/cascalog-user).
+Has we seen in the previous exmaples Cascalog is very compact and intuitive. Compared to Pig and SQL is slightly more succint. However in more complex examples is were we can really appreciate its simplicity. Again, Cascalog has plenty of other features which I will try to cover in future posts. The best way to learn it is to try it, and if you find difficulties you can always post a message to the [Cascalog user group](https://groups.google.com/forum/#!forum/cascalog-user).
 
 
 ---
