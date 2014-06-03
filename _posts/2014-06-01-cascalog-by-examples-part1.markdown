@@ -20,6 +20,8 @@ In languages like Pig and Hive, in order to make complex manipulation of your da
 
 There are other reasons for which Cascalog is better than Pig, Hive et al. Just to mention few you have a very easy and high level query language which is based on logic programming and rule inference, you can and it is encouraged to write sub-queries and reuse them. Therefore you can write complex processing by composing simple sub-queries. Cascalog comes with a framework to test your queries and jobs while other tools have very little to support testing. If you have done any non-trivial job with Hadoop you know the pain of running job over and over and have to fix one error at the time. The integration of Midje (a Clojure testing tool) with Cascalog enables you to write completely in-memory tests which will behave like in the Hadoop cluster. Finally probably one of the most important feature, you have a REPL (Read, Eval, Print Loop) which enables you to explore your data in a more interactive way.
 
+Another big reason for using Cascalog is that you can reuse your query and trasnformation in both: a batch process or a real-time streaming solution. In fact Cascalog is just an higher lever abstraction on top of Cascading. Cascalog allows you to compile your query into a lower level concrete execution plan, and you could also write a custom comiler to generate an execution plan for a tool which you want to use. For example Cascalog query can be compiled to MapReduce jobs, to SQL or Apache Storm.
+
 In this post I won't be able to cover all those topics but I will try to give a good introduction to the basic querying capabilities. I will try to write a follow up post with more advanced use.
 
 # Stop talking and let me see some code...
@@ -27,7 +29,7 @@ In this post I won't be able to cover all those topics but I will try to give a 
 To start you will need to install [Leiningen](http://leiningen.org/), then you can clone the repo which contains the data used for this post and the query samples.
 
 {% highlight bash %}
-git clone TODO:
+git clone https://github.com/BrunoBonacci/cascalog-examples.git
 cd cascalog-examples
 lein repl
 nREPL server started on port 53433 on host 127.0.0.1
@@ -118,7 +120,9 @@ DUMP users;
      (USERS ?name ?user ?age ?country ?active))
 {% endhighlight %}
 
-
+Here Cascalog adds an implicit reduce step to remove duplicates.
+If we really whish to have the same query as SQL and Pig we should
+add `(:distinct false)` on our Cascalog query. 
 
 In reality the above query is split in to parts:
 one is the actual query the second part is the
@@ -477,12 +481,34 @@ DUMP out;
 
 
 ### Cascalog
+Global sorting is not very common in big data,
+most of the times you will sort by group.
+However if you have to sort the entire dataset
+you have to write a function which takes
+a query and a list of fields to sort by.
+
+In this case Cascalog it makes it more difficult that
+any other tool :-(, you have to write a custom function.
+Luckily you can write it once and reuse it many times.
+
 {% highlight Clojure %}
+(require '[cascalog.logic.vars :as v])
+(import 'cascalog.ops.IdentityBuffer)
+
+(defn global-sort [sq fields desc?]
+  (let [out-fields (get-out-fields sq)
+        new-out-fields (v/gen-nullable-vars (count out-fields))]
+    (<- new-out-fields
+        (sq :>> out-fields)
+        (:sort :<< fields)
+        (:reverse desc?)
+        ((IdentityBuffer.) :<< out-fields :>> new-out-fields))))
+
 (run<-
- (<-     [?name ?user ?age ?country ?active]
-         (USERS ?name ?user ?age ?country ?active)
-         (:sort ?age)  ; TODO: need global-sort
-         (:reverse true)))
+ (global-sort
+  (<- [?name ?user ?age ?country ?active]
+      (USERS ?name ?user ?age ?country ?active))
+  ["?age"] true))
 {% endhighlight %}
 
 ---
@@ -701,6 +727,8 @@ LEFT JOIN SCORES as s2
  GROUP BY s.game, s.user
    HAVING count(*) <=3;
 {% endhighlight %}
+**NOTE: this O(n^2) very bad!!!** 
+
 
 ### Pig
 {% highlight Ruby %}
@@ -734,4 +762,12 @@ DUMP out;
 ## Conclusion
 Has we seen in the previous exaples Cascalog is very compact and intuitive. Compared to Pig and SQL is slightly more succint. However in more complex examples is were we can really appreciate its simplicity. Again, Cascalog has plenty of other features which I will try to cover in future posts. The best way to learn it is to try it, and if you find difficulties you can always post a message to the [Cascalog user group](https://groups.google.com/forum/#!forum/cascalog-user).
 
+
+---
+
+For this article I've used:
+
+  - Cascalog 2.0 with Clojure 1.5.1
+  - Apache Pig 0.12.1
+  - MySql 5.5.37
 
