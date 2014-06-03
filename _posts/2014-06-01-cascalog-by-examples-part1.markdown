@@ -767,7 +767,7 @@ Has we seen in the previous exaples Cascalog is very compact and intuitive. Comp
 
 For this article I've used:
 
-  - Cascalog 2.0 with Clojure 1.5.1
+  - Cascalog 2.1.0 with Clojure 1.5.1
   - Apache Pig 0.12.1
   - MySql 5.5.37
 
