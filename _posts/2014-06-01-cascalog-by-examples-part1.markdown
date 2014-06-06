@@ -559,12 +559,12 @@ DUMP out;
 
 
 However in Cascalog it's very easy:
-you project by country (which creates a group)
+you make a projection by country (which creates a group)
 and in the group you sort by age, reverse
 and take the top 2
 
-### SQL
-{% highlight SQL %}
+### Cascalog
+{% highlight Clojure %}
 (run<-
  (<-    [?name1 ?user1 ?age1 ?country]
         (USERS ?name ?user ?age ?country ?active)
@@ -770,4 +770,9 @@ For this article I've used:
   - Cascalog 2.1.0 with Clojure 1.5.1
   - Apache Pig 0.12.1
   - MySql 5.5.37
+
+
+List of updates:
+
+  - 2014/06/06 Fixed mis-labelled code block (thanks Shashy)
 
