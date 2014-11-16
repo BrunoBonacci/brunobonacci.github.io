@@ -77,7 +77,7 @@ Basically the returned value from `(current-position)` which is a structured val
 
 The destructuring can be used in any of the binding forms (`let`, `loop`, `binding`, etc) as well as funcation's parameters and return values. 
 
-Now that we understand what destructuring is, we can explore in which way we can use it to simplify our code.
+Now that we understand what destructuring is, we can explore in which ways we can use it to simplify our code.
 
 
 # Destructuring of lists, vectors and sequences.
@@ -107,8 +107,8 @@ All sequential data structures in Clojure be destructured in the same way.
 
 All above s-expr print out the same result.
 
-The example that follow apply in the same way to lists, vectors and sequences.
-If you are not interested in all values you can capture only the one you are
+The example that follow applies in the same way to lists, vectors and sequences.
+If you are not interested in all values you can capture only the ones you are
 interested in and ignore the others by putting an **underscore** (`_`) as
 a placeholder for its value.
 
@@ -118,7 +118,8 @@ a placeholder for its value.
 ;;=> 3
 {% endhighlight %}
 
-If you wish capture the numbers from 4 to 9 as sequence you can do as follow.
+If you wish capture all the remaining values as a sequence, for example the numbers 
+from 4 to 9, you need to add an ampersand (`&`) and a symbol to bind to.
 
 
 {% highlight Clojure %}
@@ -144,8 +145,9 @@ No need to say, maps in Clojure are everywhere. If you pass a map as a parameter
 or you return a map out of a function and you want to extract some of the map's field, then destructuring 
 is what you are looking for.
 
-Let's go back to our current-position geohashing (first exmaple), if te function `current-position` rather than
-returning a vector of two elements returns a map, this is probably how you would write the code without destructuring.
+Let's go back to our geohashing of the current-position example (first exmaple),
+if the function `current-position` rather than returning a vector of two elements
+it returned a map, this is probably how you would write the code without destructuring.
 
 {% highlight Clojure %}
 (defn current-position []
@@ -158,8 +160,8 @@ returning a vector of two elements returns a map, this is probably how you would
 {% endhighlight %}
 
 
-Again, nothing wrong with this code, but there is a lot of boilerplate stuff. Think what would happen if you have to extract ten
-properties. For maps there are two ways of destructuring data.
+Again, nothing wrong with this code, but there is a lot of boilerplate stuff. Think what would happen if you have to extract ten properties. 
+Maps have two ways to destructure data.
 
 
 {% highlight Clojure %}
@@ -217,8 +219,8 @@ can use the `:strs` instead of `:keys`.
 {% endhighlight %}
 
 
-Another last option, not very much used is to have the keys of your map
-as Clojure symbols. In this case you should use `:syms` instead of `:keys`
+Another option, but not very much used is to have Clojure symbols as keys of your map.
+In this case you should use `:syms` instead of `:keys`
 
 {% highlight Clojure %}
 (let [{:syms [lat lng] :as coord} {'lat 51.503331, 'lng -0.119500}]
@@ -230,11 +232,12 @@ as Clojure symbols. In this case you should use `:syms` instead of `:keys`
 
 ## Destructuring maps with default values
 
-The default values in map destructuring is a very powerful feature.
-Assume that you have that take in input your db configuration.
+Map destructuring with default values is a very powerful feature.
+Assume that you have function `connect-db` which takes as input 
+a map with your db configuration.
 Typically there are a lot of parameters involved, assume that you want
 to be able to provide default for all or most of the values. One way would
-be to put the default values in a another map and merge the parameters with
+be to put the default values in a map and then merge the parameters with
 the default values. The destructuring offers an easier way to do this.
 
 {% highlight Clojure %}
@@ -326,7 +329,7 @@ function as follow:
 
 ## Destructuring maps as key-value pairs
 
-Even is maps aren't stricly speaking sequences, you can easily build a sequence out of a map. Once the sequence is build, the items are key-value pairs which can be destructured as any other sequence. This is very common when `mapping` over a map. 
+Even if maps aren't stricly speaking sequences, you can easily build a sequence out of a map. Once the sequence is built, the items are key-value pairs which can be destructured as any other vector or list. This is very common when `mapping` over a map. 
 
 {% highlight Clojure %}
 (def contact
@@ -416,7 +419,10 @@ Clojure's vectors and maps share a lot of commonalities. They are both implement
 both support the retrieval by key (or index for vectors)
 via the [`get`](https://clojuredocs.org/clojure.core/get) function.
 
-This might be useful when you have to extract only few keys in high indices.
+For this reason you can use map's destructuring methods to destructure vectors.
+This method might be useful when you have to extract only few keys in high indices.
+For example assume that you have a vector with 500 elements and you want to
+extract only the elements at index 100 and 200.
 
 {% highlight Clojure %}
 (let [{one 1 two 2} [0 1 2]]
@@ -432,7 +438,7 @@ This might be useful when you have to extract only few keys in high indices.
 ## Set's destructuring
 
 Sets are just like maps, but the key and value are set to the same value.
-This it can be useful to test whether a key is part of a set.
+This it can be useful to test whether an element is part of a set.
 
 {% highlight Clojure %}
 (let [{:strs [blue white black]} #{"blue" "white" "red" "green"}]
@@ -440,8 +446,8 @@ This it can be useful to test whether a key is part of a set.
 ;; blue white nil
 {% endhighlight %}
 
-This it can be usefull when you have a function which can optionally accepts flags
-to modify it's behaviour. For example let' consider the an hypothetical function `ls`
+Set's destructuring can be useful when you have a function which can optionally accepts flags
+to modify its behaviour. For example let's consider the an hypothetical function `ls`
 which behave like the unix command [`/bin/ls`](http://man7.org/linux/man-pages/man1/ls.1.html)
 this function takes a path and an optional set of flags.
 
@@ -459,11 +465,13 @@ and then using destructuring to capture the individual flags.
 
 # Conclusion
 
-As we seen, the destructuring is a powerful Clojure's feature. It can eliminate
+As we seen, value destructuring is a powerful Clojure's feature. It can eliminate
 loads of boilerplate and repetitions which, often, lead to bugs.
 In the writing of this post I've looked to the excellent Jay Fields' post[^3],
-some of the Clojure's documentation[^4]. Once you master the syntax, you'll see
-that the code becomes clearer and more readable.
+some of the Clojure's documentation[^4], I do suggest whoever is looking for more examples to have a look to those links. 
+At first, destructuring might seems to complicate the syntax and the readability,
+however once you master the syntax, you'll see that the code becomes clearer
+and event more readable.
 
 # Clojure destructuring cheatsheet<a name="cheatsheet">&nbsp;</a>
 {% highlight Clojure %}
