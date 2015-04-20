@@ -357,7 +357,7 @@ code block as operation.
 {% endhighlight %}
 
 In this case we use the form `~@` called [unquote-splicing](https://clojuredocs.org/clojure.core/unquote-splicing)
-in other words it expands a list into their individual elements.
+which expands a list into their individual elements.
 By changing the macro signature from `[default-value operation]` into its variadic form `[default-value & operations]`
 we give the possibility to accept a variable number of parameters (variadic functions/macros)
 which will be represented by a sequence of elements. To explode the sequence we use `~@operations`.
@@ -376,9 +376,48 @@ Let's see a bit more about `unquote-splicing`:
 
 ;; if we use the normal unquote
 ;; number will appear wrapped in a sequence
-`(max ~(range 10))    ;; wrong
+`(max ~(range 10))    ;; wrong, need (apply max ...)
 ;;=> (clojure.core/max (0 1 2 3 4 5 6 7 8 9))
 {% endhighlight %}
+
+This concludes this basic introduction to Clojure's macros.  By now you
+should have all the necessary tools to write basic macros.
+
+## Conclusion
+
+Creating Clojure macros is a powerful way to write concise and beautiful code,
+or turn your declarative code into functional code.
+There are few takeaways from this blog post:
+
+  - Despite the article is about macros, when you can write function, not macros.
+    *Macros are not composable and useable as high-order functions*, so if can
+    achieve the same result with a function, write a function instead.
+  - When writing macros use always backquote (or backtick \` character) to
+    create code templates
+  - Denote your placeholders with the tilde (`~`)
+  - If a placeholder appear more than once in your template wrap it with
+    `let` binding and create a local var instead.
+  - For every var inside the template create a generate symbol by
+    appending the hash sign (`#`) at the end of the symbol's name.
+  - Expand lists with the `unquote-splicing` (`~@`)
+  - Use `macroexpand-1` and `macroexpand` to see the generated code.
+  - Unless your macro is for internal use only, *test your macros in a
+    different namespace* to catch visibility issues.
+  - And remember *a macro is always executed a compile time not a
+    runtime*, and the output of a macro should be code.
+
+If you want to get a deeper understanding of the Clojure's macros
+check the following links:
+
+  * [Quoting without confusion](http://blog.8thlight.com/colin-jones/2012/05/22/quoting-without-confusion.html)
+  * [http://www.braveclojure.com/writing-macros/](http://www.braveclojure.com/writing-macros/)
+  * [Kyle Kingsbury's "Clojure from the ground up: macros"](https://aphyr.com/posts/305-clojure-from-the-ground-up-macros)
+  * John Aspden's introduction in three parts:
+    [part-1](http://www.learningclojure.com/2010/09/clojure-macro-tutorial-part-i-getting.html)
+    [part-2](http://www.learningclojure.com/2010/09/clojure-macro-tutorial-part-ii-compiler.html)
+    [part-3](http://www.learningclojure.com/2010/09/clojure-macro-tutorial-part-ii-syntax.html)
+
+  
 
 {% highlight clojure %}
 {% endhighlight %}
