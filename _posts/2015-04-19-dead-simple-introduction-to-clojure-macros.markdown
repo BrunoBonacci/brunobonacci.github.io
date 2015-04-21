@@ -11,6 +11,8 @@ approach used is often too complicated for someone who is new to Clojure.
 So I will try to explore the topic especially for developers who are
 new to Clojure and haven't yet grasped the macros.
 
+You can find the code of this post at: [https://github.com/BrunoBonacci/clojure-simple-macro](https://github.com/BrunoBonacci/clojure-simple-macro)
+
 # What is a macro?
 
 The simple answer is: *A macro is a piece of code that is executed at
@@ -28,7 +30,7 @@ compilation process, the source code, in is text form, is turned into a tree
 structure which describes the code in terms of its logical parts down to
 every single statement. This tree structure is then made available to
 the user (developer) who can *make some modifications* before the
-compiler turn the `AST` into compiled bytecode.
+compiler turns the `AST` into compiled bytecode.
 
 ![Abstract syntax tree](/images/20150419_Abstract_syntax_tree.jpg)
 _Image courtesy of: http://sewiki.iai.uni-bonn.de/_media/research/jtransformer/lmp.jpg_
@@ -42,7 +44,7 @@ is one of the fundamental data-structures in Clojure.  Such languages
 which use their own data-structures to represent the source code are called
 [*homoiconic*](http://en.wikipedia.org/wiki/Homoiconicity).
 
-_Tree data structure representing the s-expression for `(* 2 (+ 3 4))`_
+_Tree structure representing the s-expression for `(* 2 (+ 3 4))`_
 
 ![S-expression tree](/images/20150419_S-expression_tree.png)
 
@@ -53,16 +55,17 @@ compared to Groovy (at all), Clojure doesn't need to have a
 representation of the code for the humans and a different representation
 of the code for the compiler (machine). This apparently disadvantage
 makes macros in Clojure extremely easy to write in comparison to
-Groovy. Because are so easy to write, they can become a powerful way to
-process your source code and remove duplication, make your code more
-readable, or automatically inject additional code in your source code.
+Groovy. Because macros are so easy to write, they can become a powerful
+way to process your source code and remove duplication, make your code
+more readable, or automatically inject additional code in your source
+code.
 
 # How can I write a macro?
 
 In Clojure there are two ways to write the macros. The first one is to
 read and process the AST which is just a *list of lists*.  This is very
 much the Groovy way, with the difference that you already know how to
-manipulate a Clojure's list and you don't need a different API.  The
+manipulate a Clojure's lists and you don't need a different API.  The
 second way is very much like a
 [*templating language*](http://en.wikipedia.org/wiki/Comparison_of_web_template_engines).
 Among these template languages there some like:
@@ -189,7 +192,7 @@ apply the given template and return the code after the placeholders have
 been replaced. The difference between `macroexpand` and `macroexpand-1`
 is that the latter does only one level of expansion, which means that if
 the code, after the template has been expanded, it still contains more
-macros, those won't be expanded as well; conversely `macroexpand` will
+macros, those won't be expanded; conversely `macroexpand` will
 recursively expand all the templates until there is no more macro code
 to expand.
 
@@ -198,7 +201,7 @@ Here there are a couple of interesting things to notice.  Firstly the
 `__8493__auto__`. Another interesting thing is that the symbol
 `Exception` has been expanded to the fully qualified form (with
 namespace/package).  Using fully qualified symbols will avoid problems
-of name clashing with the users of the macro.  A common example can be
+of name clashing when the macros is used.  A common example can be
 `log/debug`.  If while you writing the macro you refer to a `log`
 namespace which contains a function named `debug`, and when the macro
 user tries to use the macro in a different namespace without having a
@@ -222,12 +225,15 @@ Let's try to see how our macro works.
 
 Now let's improve our macro and ask it to log a message to a logging system in
 case of exceptions.
-For logging we can use [timbre](https://github.com/ptaoussanis/timbre) library.
+We can use [timbre](https://github.com/ptaoussanis/timbre) logging library.
 
 So let's starting by load the namespace.
 
-
 {% highlight clojure %}
+;; add the dependency in your project.clj
+;; [com.taoensso/timbre "3.4.0"]
+;; and restart your REPL
+
 (require '[taoensso.timbre :as log])
 {% endhighlight %}
 
@@ -255,7 +261,7 @@ Let's assume this time that the default value is retrieved using the
 generated code.
 
 {% highlight clojure %}
-(macroexpand
+(macroexpand-1
  '(default-to (load-default-value) 
      (/ 1 0)))
 
@@ -326,7 +332,9 @@ only the result of the operation, in every place we needed the
 once.
 
 Last improvement we can make to this simple function is to account for a
-code block as operation.
+code block as operation. If instead of specifying only one operation
+we want to be able to specify multiple forms, we need to change the
+macro signature and accommodate the new params.  
 
 {% highlight clojure %}
 (defmacro default-to [default-value & operations]
@@ -356,11 +364,11 @@ code block as operation.
    default__6495__auto__)))
 {% endhighlight %}
 
-In this case we use the form `~@` called [unquote-splicing](https://clojuredocs.org/clojure.core/unquote-splicing)
-which expands a list into their individual elements.
 By changing the macro signature from `[default-value operation]` into its variadic form `[default-value & operations]`
 we give the possibility to accept a variable number of parameters (variadic functions/macros)
 which will be represented by a sequence of elements. To explode the sequence we use `~@operations`.
+The form `~@` called [unquote-splicing](https://clojuredocs.org/clojure.core/unquote-splicing)
+expands a list into its individual elements.
 
 Let's see a bit more about `unquote-splicing`:
 
@@ -369,15 +377,15 @@ Let's see a bit more about `unquote-splicing`:
 (range 10)
 ;;=> (0 1 2 3 4 5 6 7 8 9)
 
-;; notice here that the number are NOT wrapped
-;; into the sequence but they appear directly
-`(max ~@(range 10))
-;;=> (clojure.core/max 0 1 2 3 4 5 6 7 8 9)
-
 ;; if we use the normal unquote
 ;; number will appear wrapped in a sequence
 `(max ~(range 10))    ;; wrong, need (apply max ...)
 ;;=> (clojure.core/max (0 1 2 3 4 5 6 7 8 9))
+
+;; notice here that the number are NOT wrapped
+;; into the sequence but they appear directly
+`(max ~@(range 10))
+;;=> (clojure.core/max 0 1 2 3 4 5 6 7 8 9)
 {% endhighlight %}
 
 This concludes this basic introduction to Clojure's macros.  By now you
@@ -389,20 +397,20 @@ Creating Clojure macros is a powerful way to write concise and beautiful code,
 or turn your declarative code into functional code.
 There are few takeaways from this blog post:
 
-  - Despite the article is about macros, when you can write function, not macros.
-    *Macros are not composable and useable as high-order functions*, so if can
-    achieve the same result with a function, write a function instead.
-  - When writing macros use always backquote (or backtick \` character) to
-    create code templates
+  - When you can write function, not macros.  *Macros are not composable
+    and are not usable as high-order functions*, so if you can achieve the
+    same result with a function, write a function instead.
+  - When writing macros as templates use always backquote (or backtick
+    \` character) to create code templates
   - Denote your placeholders with the tilde (`~`)
   - If a placeholder appear more than once in your template wrap it with
     `let` binding and create a local var instead.
-  - For every var inside the template create a generate symbol by
+  - For every var inside the template create a generated symbol by
     appending the hash sign (`#`) at the end of the symbol's name.
-  - Expand lists with the `unquote-splicing` (`~@`)
+  - Expand lists with the `unquote-splicing` (`~@`) when necessary
   - Use `macroexpand-1` and `macroexpand` to see the generated code.
-  - Unless your macro is for internal use only, *test your macros in a
-    different namespace* to catch visibility issues.
+  - Unless your macro is for internal use (same namespace), *test your
+    macros in a different namespace* to catch visibility issues.
   - And remember *a macro is always executed a compile time not a
     runtime*, and the output of a macro should be code.
 
@@ -417,26 +425,8 @@ check the following links:
     [part-2](http://www.learningclojure.com/2010/09/clojure-macro-tutorial-part-ii-compiler.html)
     [part-3](http://www.learningclojure.com/2010/09/clojure-macro-tutorial-part-ii-syntax.html)
 
-  
+You can find the code of this post at: [https://github.com/BrunoBonacci/clojure-simple-macro](https://github.com/BrunoBonacci/clojure-simple-macro)
 
-{% highlight clojure %}
-{% endhighlight %}
+_Many thanks to Sathya for his feedbacks_
 
-{% highlight clojure %}
-{% endhighlight %}
-
-{% highlight clojure %}
-{% endhighlight %}
-
-{% highlight clojure %}
-{% endhighlight %}
-
-{% highlight clojure %}
-{% endhighlight %}
-
-{% highlight clojure %}
-{% endhighlight %}
-
-{% highlight clojure %}
-{% endhighlight %}
 
