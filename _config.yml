@@ -8,3 +8,5 @@ paginate: 10
 highlighter: pygments
 markdown: kramdown
 exclude: ['README.md', 'Gemfile.lock', 'Gemfile', 'Rakefile']
+
+gems: [jekyll-paginate]
