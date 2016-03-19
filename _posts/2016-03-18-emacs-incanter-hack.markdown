@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Clojure + Data + REPL + Incanter + Emacs == Happiness"
+title:  "Emacs Incanter Hack"
 date:   2016-03-18 20:00:00
 categories: Clojure, Emacs, Hacks, Data-Science, Incanter, REPL
 ---
