@@ -88,11 +88,13 @@ desktop might look just like this:
 
 The continuous swapping between windows is irritating because you lose
 the _REPL-momentum_.  One of the advantages of working with Emacs is
-that it is extensible in ways no other system IDE is. What I wanted
+that it is extensible in ways no other IDE system is. What I wanted
 was to be able to plot a Incanter chart and see the result directly in
 Emacs.
 
-The first step is to render the chart into an image and save it into a file.
+To achieve this, the first step is to render the chart into an image
+and save it into a file. Add the following lines in your
+`src/try_incanter/core.clj` and evaluate it (`C-c C-c`).
 
 {% highlight clojure %}
 (defn show [chart]
@@ -100,8 +102,9 @@ The first step is to render the chart into an image and save it into a file.
   (i/save chart "/tmp/chart.png" :width 700 :height 500))
 {% endhighlight %}
 
-Now by evaluating this line, rather than creating a new popup,
-a file will be created in your temp folder called `/tmp/chart.png`.
+If we replace the `i/view` function with our own `show` function,
+rather than creating a new popup, a file will be created in your temp
+folder called `/tmp/chart.png`.
 
 {% highlight clojure %}
 ;; before
@@ -160,8 +163,8 @@ following lines.
 Here it's where the magic happens. Evaluate this buffer with `C-c C-b`
 (or `M-x eval-buffer`) and go back to your Clojure file
 `src/try_incanter/core.clj`.  By pressing `C-c C-i` at the end of the
-following like a new buffer with the result should be visible directly
-inside your Emacs.
+following like a new buffer with the resulting image should be visible
+directly inside your Emacs.
 
 {% highlight clojure %}
 (show (p/histogram (s/sample-normal 1000)))
@@ -193,17 +196,17 @@ developing in Emacs you probably don't want to move out of Emacs but
 you are going to try to bring everything else into Emacs.
 
 My Emacs-lisp knowledge is still very poor so maybe there
-are better ways to do the same and I invite the more experienced Emacs
+are better ways to do the same thing and I invite the more experienced Emacs
 hackers to leave a comment and suggest alternative solutions.
 
 For example my first attempt was to render the plotted chart to a file
 and open the file directly in Emacs. Because I have the
-`global-auto-revert-mode` enabled, I was expecting that upon update of
-the image, the auto-revert would have kicked in and the new image
-displayed; however what actually happens is that the image disappear
+`global-auto-revert-mode` enabled, I was expecting that upon a image
+update, the auto-revert would have kicked in and the new image
+displayed; however what actually happens is that the image disappears
 and the binary content of the new image is displayed instead.
 
-Among the various weaknesses for the solution described in this post,
+Among the various weaknesses of the solution described in this post,
 one thing which I don't like is that when I press `C-c C-i` to trigger
 the evaluation, the focus moves to the image window rather than
 staying in your Clojure buffer. My understanding is that
