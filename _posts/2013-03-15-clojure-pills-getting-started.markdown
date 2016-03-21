@@ -2,7 +2,8 @@
 layout: post
 title: 'Clojure pills: Getting started'
 date:   2013-03-15 22:00:00
-categories: Clojure
+categories: [development]
+tags: [Clojure]
 ---
 
 To get started with Clojure, you need the REPL. The REPL stands for Read Evaluate Print Loop and it is a console-like application where you can enter Clojure functions/expressions and get the result directly.
@@ -13,20 +14,20 @@ The easiest way to play with Clojure REPL without commitment is to use the onlin
 
 The second possibility is to download Clojure from [clojure.org](http://clojure.org/). In this case you’ll need few more steps:
 
-{% highlight bash %}
+``` bash
 $ # donwload clojure-x.y.z.zip
 $ unzip clojure-*.zip
 $ cd clojure-*
 $ java -jar clojure-*.jar
 Clojure 1.5.1
 user=>
-{% endhighlight %}
+```
 
 When the `user=>` prompt appears you are in the REPL.
 
 However, if you are serious about learning Clojure, I’ll suggest to use [Leiningen](http://leiningen.org/). It’s a build/automation tools such as Maven for java. To install Leiningen follow those steps:
 
-{% highlight bash %}
+``` bash
 $ mkdir -p ~/bin
 $ wget "https://raw.github.com/technomancy/leiningen/stable/bin/lein" -O ~/bin/lein
 $ chmod +x ~/bin/lein
@@ -38,7 +39,7 @@ $ cd try-clojure
 
 $ # you can see the project descriptor file
 $ # and change the Clojure version to the one of your choice
-$ vi project.clj 
+$ vi project.clj
 -------------8<----------------8<----------------8<----------
 (defproject try-clojure "0.1.0-SNAPSHOT"
  :description "FIXME: write description"
@@ -53,14 +54,13 @@ $ lein repl
 ...
 user=>
 Clojure hello world!:
-{% endhighlight %}
+```
 
 In the REPL of your choice you can evaluate your first function:
 
-{% highlight Clojure %}
+``` Clojure
 user=> (println "Hello world!")
 Hello world!
 nil
 user=>
-{% endhighlight %}
-
+```

@@ -2,19 +2,20 @@
 layout: post
 title:  "Clojure Pills: The syntax"
 date:   2013-03-16 19:00:00
-categories: Clojure
+categories: [development]
+tags: [Clojure]
 ---
 
 LISP derived languages have a bad reputation for the excessive use of brackets. At first sight it’s bit hard to understand Clojure source code. If you try to google “LISP brackets” you will find a list of rants and discussions about this topic.
 
 However after few weeks your eye starts to get accustomed to the new syntax and things become incredibly clear. Clojure syntax is extremely simple compared to Java, Ruby or Groovy. Here some of its basic elements.
 
-{% highlight Clojure %}
+``` Clojure
 ; this is a comment
 
 ;; anything you put after a semicolon
 ;; till EOL is considered a comment
-{% endhighlight %}
+```
 
 In Clojure source code you will often see comments starting with one semicolon or two semicolons.
 For Clojure reader there is no difference between the two, often it’s left as a personal choice of style.
@@ -24,7 +25,7 @@ You can find a bit more info about this topic in this post: [What is the differe
 
 Additionally there are tools like [Marginalia](https://github.com/gdeer81/marginalia) that parses the source code and uses comments and others elements to produce a very nice code documentation.
 
-{% highlight Clojure %}
+``` Clojure
 ; this is a list
 '(1 2 3)
 
@@ -33,7 +34,7 @@ Additionally there are tools like [Marginalia](https://github.com/gdeer81/margin
 ;; this means
 ;; (func-to-call arg1    arg2    arg3)
 ;; (println      "hello" "world" "!!")
-{% endhighlight %}
+```
 
 The function call share the same representation of the list data structure. In fact the first element of the list is the function name and all remaining
 elements are parameters (arguments) of that function.

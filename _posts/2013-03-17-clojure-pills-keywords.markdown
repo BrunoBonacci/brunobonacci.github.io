@@ -2,7 +2,8 @@
 layout: post
 title:  "Clojure Pills: keywords"
 date:   2013-03-17 22:00:00
-categories: Clojure
+categories: [development]
+tags: [Clojure]
 ---
 
 
@@ -11,13 +12,13 @@ The closest concept to a keyword in Java is an enumeration with the difference t
 
 For example take the sizes, a Java enumeration will look like:
 
-{% highlight Java %}
+``` Java
 public enum Size { small, medium, large }
-{% endhighlight %}
+```
 
 In Clojure they will be individual keywords that optionally can be grouped in a set or vector.
 
-{% highlight Clojure %}
+``` Clojure
 :small
 :medium
 :large
@@ -27,13 +28,13 @@ In Clojure they will be individual keywords that optionally can be grouped in a 
 
 ;; as key in a map
 { :firstname "Bruno", :lastname "Bonacci" }
-{% endhighlight %}
+```
 
 The keyword (like numbers and strings), in Clojure, always evaluate to themselves. The most common use is as key in maps.
 Keywords are also functions that work with maps and sets. With maps they return the associated value in the map (if it exists), nil otherwise. In conjunction with sets they can be used to test if the keyword is present in the set.
 This method is more efficient than using a string as key because the equality comparison is more efficient in the keywords.
 
-{% highlight Clojure %}
+``` Clojure
 ;; creating a map
 (def my-map { :firstname "Bruno", :lastname "Bonacci" })
 
@@ -56,23 +57,23 @@ This method is more efficient than using a string as key because the equality co
 (:small available-sizes)
 ;= :small
 (:extra-small available-sizes)
-;= nil 
-{% endhighlight %}
+;= nil
+```
 
 In Clojure they are often used to set options in functions or as function directives such as the :else of the cond function.
 
-{% highlight Clojure %}
+``` Clojure
 (def x -5)
 (cond
    (>= x 0) "positive"
    :else    "negative )
 ;= negative
-{% endhighlight %}
+```
 
 Even if they start with a colon (:), the colon is not part of the keyword itself, but it is just for definition.
 Finally they can belong to a namespace, and to refer to the current namespace you can use a double colon (::).
 
-{% highlight Clojure %}
+``` Clojure
 :firstname
 ;= :firstname
 
@@ -89,7 +90,7 @@ Finally they can belong to a namespace, and to refer to the current namespace yo
 (identical? :user/firstname :firstname)
 ;= false
 
-;; the keyword function returns the keyword 
+;; the keyword function returns the keyword
 ;; associated to the specific string
 (keyword "firstname")
 ;= :firstname
@@ -98,7 +99,7 @@ Finally they can belong to a namespace, and to refer to the current namespace yo
 ;= false
 (identical? :user/firstname (keyword "user" "firstname"))
 ;= true
-{% endhighlight %}
+```
 
 Using the namespace can be useful to give a context to a specific keyword.
 

@@ -2,7 +2,8 @@
 layout: post
 title:  "Emacs Incanter Hack"
 date:   2016-03-18 20:00:00
-categories: Clojure, Emacs, Hacks, Data-Science, Incanter, REPL
+categories: [development, productivity]
+tags: [Clojure, Emacs, hacks, data-science, Incanter, REPL]
 ---
 
 Often while exploring a new dataset in Clojure I use the excellent
@@ -28,13 +29,13 @@ So following the
 you can create a project and fire up a REPL with Emacs with the following
 steps:
 
-{% highlight bash %}
+``` bash
 lein new try-incanter
-{% endhighlight %}
+```
 
 Then open the `try-incanter/project.clj` file and add the Incanter dependency:
 
-{% highlight clojure %}
+``` clojure
 (defproject try-incanter "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
@@ -43,13 +44,13 @@ Then open the `try-incanter/project.clj` file and add the Incanter dependency:
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [incanter "1.5.6"] ;; just added incanter dep
                  ])
-{% endhighlight %}
+```
 
 Now you are ready to start the Clojure's REPL with `C-c M-j` (or `M-x cider-jack-in`).
 
 Once the REPL is ready a buffer will popup with the following content:
 
-{% highlight clojure %}
+``` clojure
 ;; Connected to nREPL server running on port 59077 on host localhost - nrepl://localhost:59077
 ;; CIDER 0.11.0 (Bulgaria), nREPL 0.2.12
 ;; Clojure 1.7.0, Java 1.8.0_45
@@ -61,19 +62,19 @@ Once the REPL is ready a buffer will popup with the following content:
 ;;  Results: Stored in vars *1, *2, *3, an exception in *e;
 ;; ======================================================================
 user>
-{% endhighlight %}
+```
 
 At this point you are ready to hack on your data.
 For example open the file `src/try_incanter/core.clj` and require a few Incanter's namespaces and let's plot something:
 
-{% highlight clojure %}
+``` clojure
 (ns try-incanter.core
   (:require [incanter.core :as i]
             [incanter.stats :as s]
             [incanter.charts :as p]))
 
 (i/view (p/histogram (s/sample-normal 1000)))
-{% endhighlight %}
+```
 
 If you evaluate this buffer with `C-c C-k` it will create a new window
 on your desktop with a chart which looks as follow:
@@ -96,29 +97,29 @@ To achieve this, the first step is to render the chart into an image
 and save it into a file. Add the following lines in your
 `src/try_incanter/core.clj` and evaluate it (`C-c C-c`).
 
-{% highlight clojure %}
+``` clojure
 (defn show [chart]
   "Renders a chart and saves the result in a temp file"
   (i/save chart "/tmp/chart.png" :width 700 :height 500))
-{% endhighlight %}
+```
 
 If we replace the `i/view` function with our own `show` function,
 rather than creating a new popup, a file will be created in your temp
 folder called `/tmp/chart.png`.
 
-{% highlight clojure %}
+``` clojure
 ;; before
 ;; (i/view (p/histogram (s/sample-normal 1000)))
 
 ;; after: note we just replaced `view` with `show`
 (show (p/histogram (s/sample-normal 1000)))
-{% endhighlight %}
+```
 
 To be able to see image we need to hack a bit on Emacs.  Open your
 `*scratch*` buffer (or your `~/.emacs.d/init.el` file) and add the
 following lines.
 
-{% highlight elisp %}
+``` elisp
 ;;
 ;; Incanter eval and display chart
 ;;
@@ -158,7 +159,7 @@ following lines.
 
 (define-key cider-mode-map
   (kbd "C-c C-i") #'incanter-eval-and-display-chart)
-{% endhighlight %}
+```
 
 Here it's where the magic happens. Evaluate this buffer with `C-c C-b`
 (or `M-x eval-buffer`) and go back to your Clojure file
@@ -166,9 +167,9 @@ Here it's where the magic happens. Evaluate this buffer with `C-c C-b`
 following like a new buffer with the resulting image should be visible
 directly inside your Emacs.
 
-{% highlight clojure %}
+``` clojure
 (show (p/histogram (s/sample-normal 1000)))
-{% endhighlight %}
+```
 
 ![emacs incanter](/images/20160318_emacs_incanter_hack.png)
 

@@ -2,7 +2,8 @@
 layout: post
 title:  "A \"dead simple\" introduction to Clojure macros."
 date:   2015-04-19 19:49:00
-categories: Clojure, macro, development
+categories: [development]
+tags: [Clojure, macro, development]
 ---
 
 Macros are one of the topics which scares many new Clojure developers.
@@ -74,10 +75,10 @@ Among these template languages there some like:
 
 For example a Velocity template looks like:
 
-{% highlight bash %}
+``` bash
 Hello ${user_name},
-Today is the ${date} and we have ${num_users} users currently online. 
-{% endhighlight %}
+Today is the ${date} and we have ${num_users} users currently online.
+```
 
 
 Basically it is just plain text, very much like the output you want to
@@ -85,10 +86,10 @@ produce, minus a few placeholders in the places where the content must
 be generated dynamically.  Once rendered this text might just look like:
 
 
-{% highlight bash %}
+``` bash
 Hello John,
-Today is the 19th April and we have 1,653 users currently online. 
-{% endhighlight %}
+Today is the 19th April and we have 1,653 users currently online.
+```
 
 
 Like a templating engine, Clojure `syntax-quote` works pretty much the
@@ -101,31 +102,31 @@ used.  For example a division operation such `(/ a b)` might generate a
 `java.lang.ArithmeticException` when `b` is `0`.
 
 
-{% highlight clojure %}
+``` clojure
 (try
   operation
   (catch Exception x
     dafault-value))
-{% endhighlight %}
+```
 
 
 Where `operation` and `default-value` may vary from case to case.
 So if this was a Velocity template we would write the code in this way.
 
 
-{% highlight bash %}
+``` bash
 ;; example using Velocity template.
 (try
   ${operation}
   (catch Exception x
     ${dafault-value}))
-{% endhighlight %}
+```
 
 In Clojure we can write a template using the
 [syntax-quote (the \` backquote character)](http://clojure.org/reader#syntax-quote)
 form.
 
-{% highlight clojure %}
+``` clojure
 ;; if we write
 (println "hello")
 ;;> hello        [in stdout]
@@ -136,20 +137,20 @@ form.
 ;;=> (clojure.core/println "hello")
 
 ;; note the namespace is added automatically
-;; this actually produces a template 
+;; this actually produces a template
 ;; with the enclosed forms.
-{% endhighlight %}
+```
 
 So if we want to re-write our template using `syntax-quote`
 we will write as follow:
 
 
-{% highlight clojure %}
+``` clojure
 `(try
    ~operation
    (catch Exception x#
      ~dafault-value)))
-{% endhighlight %}
+```
 
 
 The *tilde* (`~`) works pretty much in the same way of `${placeholders}`
@@ -159,29 +160,29 @@ name (see [gensym](https://clojuredocs.org/clojure.core/gensym)).  Now
 we are all ready to give a name to this template and use it in our code.
 
 
-{% highlight clojure %}
+``` clojure
 (defmacro default-to [default-value operation]
   `(try
      ~operation
      (catch Exception x#
        ~default-value)))
-{% endhighlight %}
+```
 
 
 This is a fully working template, not much different from the Velocity's
 style template.  So let's see the template in its rendered form:
 
 
-{% highlight clojure %}
+``` clojure
 (macroexpand-1
  '(default-to 10 (/ 1 4)))
 
-;;=>  
+;;=>
  (try
    (/ 1 4)
    (catch java.lang.Exception x__8493__auto__
      10))
-{% endhighlight %}
+```
 
 As you can see this was the template we designed earlier. Notice that
 the placeholders have been replaced.
@@ -215,13 +216,13 @@ be a problem.
 
 Let's try to see how our macro works.
 
-{% highlight clojure %}
+``` clojure
 (default-to 10 (/ 1 4))
 ;;=> 1/4
 
 (default-to 10 (/ 1 0))   ;; Exception
 ;;=> 10
-{% endhighlight %}
+```
 
 Now let's improve our macro and ask it to log a message to a logging system in
 case of exceptions.
@@ -229,19 +230,19 @@ We can use [timbre](https://github.com/ptaoussanis/timbre) logging library.
 
 So let's starting by load the namespace.
 
-{% highlight clojure %}
+``` clojure
 ;; add the dependency in your project.clj
 ;; [com.taoensso/timbre "3.4.0"]
 ;; and restart your REPL
 
 (require '[taoensso.timbre :as log])
-{% endhighlight %}
+```
 
 
 and now let's update our little macro.
 
 
-{% highlight clojure %}
+``` clojure
 (defmacro default-to [default-value operation]
   `(try
      ~operation
@@ -249,20 +250,20 @@ and now let's update our little macro.
        (log/debug "The following error occurred:" x#
                   ", defaulting to:" ~default-value)
        ~default-value)))
-       
+
 (defn load-default-value []
   (println "loading default value from database")
   (comment loading from db)
   3)
-{% endhighlight %}
+```
 
 Let's assume this time that the default value is retrieved using the
 `load-default-value` function and use `macroexpand-1` to see the
 generated code.
 
-{% highlight clojure %}
+``` clojure
 (macroexpand-1
- '(default-to (load-default-value) 
+ '(default-to (load-default-value)
      (/ 1 0)))
 
 ;;=>
@@ -285,7 +286,7 @@ generated code.
 
 ;;=> 3
 
-{% endhighlight %}
+```
 
 Again, you can see that the `log/debug` has been expanded to the fully
 qualified name. The interesting part is that the `default-value` has
@@ -297,7 +298,7 @@ see the message: _"loading default value from database"_ appearing
 twice. Since the `(load-default-value)` produces side effect, it might
 be an undesirable behaviour. So let see how we can fix it.
 
-{% highlight clojure %}
+``` clojure
 (defmacro default-to [default-value operation]
   `(try
      ~operation
@@ -306,13 +307,13 @@ be an undesirable behaviour. So let see how we can fix it.
          (log/debug "The following error occurred:" x#
                     ", defaulting to:" default#)
          default#))))
-         
+
 
 (macroexpand-1
  '(default-to (load-default-value)
      (/ 1 0)))
 
-;;=>         
+;;=>
 (try
  (/ 1 0)
  (catch java.lang.Exception x__6188__auto__
@@ -320,7 +321,7 @@ be an undesirable behaviour. So let see how we can fix it.
    (taoensso.timbre/debug "The following error occurred:" x__6188__auto__
                           ", defaulting to:" default__6189__auto__)
    default__6189__auto__)))
-{% endhighlight %}
+```
 
 We used a `let` form to create a local var for `default-value` called
 `default#` (remember that the `#` sign a the end of the symbol generates
@@ -334,9 +335,9 @@ once.
 Last improvement we can make to this simple function is to account for a
 code block as operation. If instead of specifying only one operation
 we want to be able to specify multiple forms, we need to change the
-macro signature and accommodate the new params.  
+macro signature and accommodate the new params.
 
-{% highlight clojure %}
+``` clojure
 (defmacro default-to [default-value & operations]
   `(try
      ~@operations
@@ -362,7 +363,7 @@ macro signature and accommodate the new params.
    (taoensso.timbre/debug "The following error occurred:" x__6494__auto__
                           ", defaulting to:" default__6495__auto__)
    default__6495__auto__)))
-{% endhighlight %}
+```
 
 By changing the macro signature from `[default-value operation]` into its variadic form `[default-value & operations]`
 we give the possibility to accept a variable number of parameters (variadic functions/macros)
@@ -372,7 +373,7 @@ expands a list into its individual elements.
 
 Let's see a bit more about `unquote-splicing`:
 
-{% highlight clojure %}
+``` clojure
 ;; range return a sequence of numbers
 (range 10)
 ;;=> (0 1 2 3 4 5 6 7 8 9)
@@ -386,7 +387,7 @@ Let's see a bit more about `unquote-splicing`:
 ;; into the sequence but they appear directly
 `(max ~@(range 10))
 ;;=> (clojure.core/max 0 1 2 3 4 5 6 7 8 9)
-{% endhighlight %}
+```
 
 This concludes this basic introduction to Clojure's macros.  By now you
 should have all the necessary tools to write basic macros.
@@ -428,5 +429,3 @@ check the following links:
 You can find the code of this post at: [https://github.com/BrunoBonacci/clojure-simple-macro](https://github.com/BrunoBonacci/clojure-simple-macro)
 
 _Many thanks to Sathya for his feedbacks_
-
-
