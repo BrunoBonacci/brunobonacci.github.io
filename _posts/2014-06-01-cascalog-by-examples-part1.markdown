@@ -212,13 +212,15 @@ one is the actual query the second part is the
 command to execute it and tell Cascalog where
 to put the output.
 
-  * 1 query
+  - 1) query
+
 ``` clojure
 (<- [?name ?user ?age ?country ?active]
     (USERS ?name ?user ?age ?country ?active))
 ```
 
-  * 2 execution
+  - 2) execution
+
 ``` clojure
 (?- (output) query)
 ```

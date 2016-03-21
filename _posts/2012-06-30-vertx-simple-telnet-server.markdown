@@ -110,7 +110,7 @@ concurrent modification because by design Vert.x guarantee that this
 code will ever be executed from the same thread. The map will contain
 session information such as current working directory.
 
-``` Groovy
+``` groovy
 // this is the base directory where all user will be segregated (like: "chroot")
 BASE_DIR = new File(System.properties.baseDir ?: "/tmp").canonicalPath;
 
@@ -136,7 +136,7 @@ connections. Those handlers will take care of registering a new
 connection, handle incoming requests and handle the connection
 close. The code will look like this:
 
-``` Groovy
+``` groovy
 // general configuration
 settings = [port: 1234];
 
@@ -203,7 +203,7 @@ case the command handler try to match the request with a list of valid
 command patterns, then call the associated function and reply to the
 bus with the output of the command itself.
 
-``` Groovy
+``` groovy
 // Regular expression to verify/extract pathnames from commands
 PATH_ELEM = "[A-Za-z0-9.-]+"
 PATH = "(/?$PATH_ELEM(/$PATH_ELEM)*/?|/)"
@@ -236,7 +236,7 @@ bus.registerHandler("commands") {
 
 At this point the command implementation is very easy. The change directory "cd" command will look like this:
 
-``` Groovy
+``` groovy
 ////////////////////////////////////////////////////////////////////////// cd
 def cd(def path, String cid) {
     path = path == "" ? null : path

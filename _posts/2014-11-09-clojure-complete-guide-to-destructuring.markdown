@@ -416,7 +416,7 @@ situations, they are not very common, however it is worth to mention them.
 
 Clojure's vectors and maps share a lot of commonalities. They are both implemented via
 [Hash array mapped trie (HAMT)](http://en.wikipedia.org/wiki/Hash_array_mapped_trie)
-(you can find more about their implementation on Ref.1[^1], Ref.2[^2]),
+(you can find more about their implementation on Ref.[^1], Ref.[^2]),
 both support the retrieval by key (or index for vectors)
 via the [`get`](https://clojuredocs.org/clojure.core/get) function.
 

@@ -12,7 +12,7 @@ The closest concept to a keyword in Java is an enumeration with the difference t
 
 For example take the sizes, a Java enumeration will look like:
 
-``` Java
+``` java
 public enum Size { small, medium, large }
 ```
 
