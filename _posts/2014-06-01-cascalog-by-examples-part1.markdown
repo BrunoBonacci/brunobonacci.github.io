@@ -156,6 +156,7 @@ tuples which are: _name, user, age, country, active_ and there are 500
 users in total.
 
 The `SCORES` dataset looks like this:
+
 ``` clojure
 (take 5 (shuffle SCORES))
 ;=> (["jorden78" "Tetris" 2875]
@@ -180,14 +181,14 @@ you can change the disposition and
 the number of fields in the projection side
 
 ### SQL
-``` SQL
+``` sql
 SELECT name, user, age, country, active
   FROM USERS;
 ```
 
 
 ### Pig
-``` Ruby
+``` ruby
 users = LOAD './data/users.tsv' USING PigStorage()
         AS (name:chararray, user:chararray, age:int,
             country:chararray, active:boolean);
@@ -246,14 +247,14 @@ In this case we apply a simple filter on a field
 we want to see all active users
 
 ### SQL
-``` SQL
+``` sql
 SELECT name, user, age, country, active
   FROM USERS
  WHERE active = true;
 ```
 
 ### Pig
-``` Ruby
+``` ruby
 users = LOAD './data/users.tsv' USING PigStorage()
         AS (name:chararray, user:chararray, age:int,
             country:chararray, active:boolean);
@@ -275,7 +276,7 @@ DUMP out;
 Now we can see how easy is to add multiple filters
 
 ### SQL
-``` SQL
+``` sql
 SELECT name, user, age, country, active
   FROM USERS
  WHERE active = true
@@ -283,7 +284,7 @@ SELECT name, user, age, country, active
 ```
 
 ### Pig
-``` Ruby
+``` ruby
 users = LOAD './data/users.tsv' USING PigStorage()
         AS (name:chararray, user:chararray, age:int,
             country:chararray, active:boolean);
@@ -311,7 +312,7 @@ not a function, so is not composable as function,
 and need to be wrapped.
 
 ### SQL
-``` SQL
+``` sql
 SELECT name, user, age, country, active
   FROM USERS
  WHERE active = true
@@ -319,7 +320,7 @@ SELECT name, user, age, country, active
 ```
 
 ### Pig
-``` Ruby
+``` ruby
 users = LOAD './data/users.tsv' USING PigStorage()
         AS (name:chararray, user:chararray, age:int,
             country:chararray, active:boolean);
@@ -352,13 +353,13 @@ transformation on a field, such as making
 the username uppercase we can run
 
 ### SQL
-``` SQL
+``` sql
 SELECT name, UPPER(user), age, country, active
   FROM USERS;
 ```
 
 ### Pig
-``` Ruby
+``` ruby
 users = LOAD './data/users.tsv' USING PigStorage()
         AS (name:chararray, user:chararray, age:int,
             country:chararray, active:boolean);
@@ -400,13 +401,13 @@ to distribute your custom function in the jar for hadoop
 Some simple aggregations over the entire dataset
 
 ### SQL
-``` SQL
+``` sql
 SELECT count(*), avg(age)
   FROM USERS;
 ```
 
 ### Pig
-``` Ruby
+``` ruby
 users = LOAD './data/users.tsv' USING PigStorage()
         AS (name:chararray, user:chararray, age:int,
             country:chararray, active:boolean);
@@ -431,14 +432,14 @@ DUMP out;
 Now aggregation over a group
 
 ### SQL
-``` SQL
+``` sql
 SELECT count(*), avg(age), country
   FROM USERS
  GROUP BY country;
 ```
 
 ### Pig
-``` Ruby
+``` ruby
 users = LOAD './data/users.tsv' USING PigStorage()
         AS (name:chararray, user:chararray, age:int,
             country:chararray, active:boolean);
@@ -468,7 +469,7 @@ In Cascalog the `GROUP BY` is implicit ([as explained here](http://cascalog.org/
 Let's find the number of active users by country
 
 ### SQL
-``` SQL
+``` sql
 SELECT count(*), country
   FROM USERS
  WHERE active = true
@@ -477,7 +478,7 @@ SELECT count(*), country
 
 
 ### Pig
-``` Ruby
+``` ruby
 users = LOAD './data/users.tsv' USING PigStorage()
         AS (name:chararray, user:chararray, age:int,
             country:chararray, active:boolean);
@@ -506,7 +507,7 @@ and display only those who have 25 or more active users
 
 
 ### SQL
-``` SQL
+``` sql
 SELECT count(*) as count, country
   FROM USERS
  WHERE active = true
@@ -516,7 +517,7 @@ HAVING count >= 25;
 
 
 ### Pig
-``` Ruby
+``` ruby
 users = LOAD './data/users.tsv' USING PigStorage()
         AS (name:chararray, user:chararray, age:int,
             country:chararray, active:boolean);
@@ -545,7 +546,7 @@ DUMP out;
 to sort the result set we can use the :sort predicate
 
 ### SQL
-``` SQL
+``` sql
 SELECT name, user, age, country, active
   FROM USERS
  ORDER BY age DESC;
@@ -553,7 +554,7 @@ SELECT name, user, age, country, active
 
 
 ### Pig
-``` Ruby
+``` ruby
 users = LOAD './data/users.tsv' USING PigStorage()
         AS (name:chararray, user:chararray, age:int,
             country:chararray, active:boolean);
@@ -604,7 +605,7 @@ Frankly it's unreadable, none could easily say what this
 SQL query does.
 
 ### SQL
-``` SQL
+``` sql
     SELECT u.name, u.user, u.age, u.country
      FROM USERS as u
 LEFT JOIN USERS as u2
@@ -625,7 +626,7 @@ here you can find some alternative approaches
 The Pig version is a bit more intuitive:
 
 ### Pig
-``` Ruby
+``` ruby
 users = LOAD './data/users.tsv' USING PigStorage()
         AS (name:chararray, user:chararray, age:int,
             country:chararray, active:boolean);
@@ -665,7 +666,7 @@ If we want to display the real name of each user together
 with the game they played and their score we will need to:
 
 ### SQL
-``` SQL
+``` sql
     SELECT u.name, s.game, s.score
      FROM USERS as u, SCORES as s
     WHERE u.user = s.user;
@@ -673,7 +674,7 @@ with the game they played and their score we will need to:
 
 
 ### Pig
-``` Ruby
+``` ruby
 users = LOAD './data/users.tsv' USING PigStorage()
         AS (name:chararray, user:chararray, age:int,
             country:chararray, active:boolean);
@@ -704,7 +705,7 @@ If we want to display all user which are younger than 15
 and have more than 6000 points playing Tetris we will need to:
 
 ### SQL
-``` SQL
+``` sql
     SELECT s.score, u.name, u.age, u.country
       FROM USERS u, SCORES s
      WHERE u.user = s.user
@@ -714,7 +715,7 @@ and have more than 6000 points playing Tetris we will need to:
 ```
 
 ### Pig
-``` Ruby
+``` ruby
 users = LOAD './data/users.tsv' USING PigStorage()
         AS (name:chararray, user:chararray, age:int,
             country:chararray, active:boolean);
@@ -750,7 +751,7 @@ If we want to find the who scored the highest points
 at the Tetris game we will need to:
 
 ### SQL
-``` SQL
+``` sql
 SELECT s.score, u.name, u.age, u.country
   FROM USERS u, SCORES s
  WHERE u.user = s.user
@@ -759,7 +760,7 @@ SELECT s.score, u.name, u.age, u.country
 ```
 
 ### Pig
-``` Ruby
+``` ruby
 users = LOAD './data/users.tsv' USING PigStorage()
         AS (name:chararray, user:chararray, age:int,
             country:chararray, active:boolean);
@@ -798,7 +799,7 @@ In this example I want to find the top 3 scorer per game.
 This type of queries is very common for the analytics folks (top-n by group)
 
 ### SQL
-``` SQL
+``` sql
    SELECT s.game, s.score, u.name, u.age, u.country
      FROM SCORES as s
 LEFT JOIN SCORES as s2
@@ -813,7 +814,7 @@ LEFT JOIN SCORES as s2
 
 
 ### Pig
-``` Ruby
+``` ruby
 users = LOAD './data/users.tsv' USING PigStorage()
         AS (name:chararray, user:chararray, age:int,
             country:chararray, active:boolean);
