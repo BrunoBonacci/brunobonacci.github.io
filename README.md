@@ -5,7 +5,7 @@ bits and pieces (blogging website)
 
 See my blog at: [blog.brunobonacci.com](http://blog.brunobonacci.com)
 
-Jekyll theme based on the [Uno](https://github.com/daleanthony/Uno) theme for Ghost.
+Jekyll theme based on the [Jekyll Uno](https://github.com/joshgerdes/jekyll-uno).
 
 ## Start locally
 

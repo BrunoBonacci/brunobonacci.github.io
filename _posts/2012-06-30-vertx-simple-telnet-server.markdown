@@ -2,7 +2,7 @@
 layout: post
 title: Vert.x Goodness - Simple Telnet Server
 date:   2012-06-30 21:00:00
-categories: [develoment]
+categories: [development]
 tags: [Actor-model, concurrency, Groovy, lock-free-algorithm, Vert.x]
 ---
 
