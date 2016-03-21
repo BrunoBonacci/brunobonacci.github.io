@@ -58,7 +58,7 @@ Clojure hello world!:
 
 In the REPL of your choice you can evaluate your first function:
 
-``` Clojure
+``` clojure
 user=> (println "Hello world!")
 Hello world!
 nil

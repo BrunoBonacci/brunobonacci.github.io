@@ -8,7 +8,7 @@ tags: [Clojure]
 
 Strings and characters in Clojure they have no surprises. They map respectively to `java.lang.String` and `java.lang.Character`. Both, strings and characters they evaluate to themselves.
 
-``` Clojure
+``` clojure
 "This is a string"
 ;= "This is a string"
 
@@ -36,7 +36,7 @@ Strings and characters in Clojure they have no surprises. They map respectively 
 
 Since they map to their Java’s native type you can use all java.lang.String methods
 
-``` Clojure
+``` clojure
 (.toUpperCase "This is a string")
 ;= "THIS IS A STRING"
 
@@ -50,7 +50,7 @@ Since they map to their Java’s native type you can use all java.lang.String me
 
 There are a number of Clojure functions available to manipulate Strings:
 
-``` Clojure
+``` clojure
 ;; to create a string
 (str 123)
 ;= "123"

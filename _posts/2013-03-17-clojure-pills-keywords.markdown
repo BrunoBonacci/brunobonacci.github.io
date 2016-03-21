@@ -18,7 +18,7 @@ public enum Size { small, medium, large }
 
 In Clojure they will be individual keywords that optionally can be grouped in a set or vector.
 
-``` Clojure
+``` clojure
 :small
 :medium
 :large
@@ -34,7 +34,7 @@ The keyword (like numbers and strings), in Clojure, always evaluate to themselve
 Keywords are also functions that work with maps and sets. With maps they return the associated value in the map (if it exists), nil otherwise. In conjunction with sets they can be used to test if the keyword is present in the set.
 This method is more efficient than using a string as key because the equality comparison is more efficient in the keywords.
 
-``` Clojure
+``` clojure
 ;; creating a map
 (def my-map { :firstname "Bruno", :lastname "Bonacci" })
 
@@ -62,7 +62,7 @@ This method is more efficient than using a string as key because the equality co
 
 In Clojure they are often used to set options in functions or as function directives such as the :else of the cond function.
 
-``` Clojure
+``` clojure
 (def x -5)
 (cond
    (>= x 0) "positive"
@@ -73,7 +73,7 @@ In Clojure they are often used to set options in functions or as function direct
 Even if they start with a colon (:), the colon is not part of the keyword itself, but it is just for definition.
 Finally they can belong to a namespace, and to refer to the current namespace you can use a double colon (::).
 
-``` Clojure
+``` clojure
 :firstname
 ;= :firstname
 

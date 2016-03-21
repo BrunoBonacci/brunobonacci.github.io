@@ -9,7 +9,7 @@ tags: [Clojure]
 
 Clojure supports integers (like any other high level language) and when possible they are mapped to `java.lang.Long` objects. Numbers in Clojure are evaluated to themselves.
 
-``` Clojure
+``` clojure
 1
 ;= 1
 -350
@@ -23,7 +23,7 @@ type is a function that return the Java class of an object/value.
 
 More interestingly Clojure supports arbitrary large integers:
 
-``` Clojure
+``` clojure
 983475029384572039842462736458726354265428376576528347562834567485
 ;= 983475029384572039842462736458726354265428376576528347562834567485N
 
@@ -33,7 +33,7 @@ More interestingly Clojure supports arbitrary large integers:
 
 However, when it comes to maths, be careful about the size of your numbers or you will still run into trouble:
 
-``` Clojure
+``` clojure
 (+ 100 50 50)
 ;= 200
 
@@ -51,7 +51,7 @@ However, when it comes to maths, be careful about the size of your numbers or yo
 In other words Clojure tries to map integers to Java’s native type Long when possible with the benefit of efficient maths operations. In that case Java limits apply.
 When it is not possible to map a number into a java.lang.Long, then a BigInt is used. When found mixed types in operations like +, the largest type is used for the result. If you want to use a BigInt also for your “small” numbers then append an “N” to your integers.
 
-``` Clojure
+``` clojure
 (type 1)
 ;= java.lang.Long
 
@@ -67,14 +67,14 @@ When it is not possible to map a number into a java.lang.Long, then a BigInt is 
 
 Finally, integers can be written as decimal, hexadecimal, octal, radix-32, and binary literals. For example the number 127 can be written as follow:
 
-``` Clojure
+``` clojure
 [127 0x7F 0177 32r3V 2r01111111]
 ;= [127 127 127 127 127]
 ```
 
 The radix notation supports up to base 36 and the notation is:
 
-``` Clojure
+``` clojure
 ; {base}r{number}
 ```
 

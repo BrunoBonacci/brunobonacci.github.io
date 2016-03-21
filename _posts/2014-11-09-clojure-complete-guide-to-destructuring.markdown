@@ -27,7 +27,7 @@ position in terms of latitude and longitude coordinates in the following
 format: `[ lat lng ]`.
 
 
-``` Clojure
+``` clojure
 (defn current-position []
   [51.503331, -0.119500])
 ```
@@ -35,7 +35,7 @@ format: `[ lat lng ]`.
 Now assume we have another function which,
 accepts two parameters and returns the geohash for a specific location.
 
-``` Clojure
+``` clojure
 (defn geohash [lat lng]
    ;; this function take two separate values as params.
    ;; and it return a geohash for that position
@@ -45,7 +45,7 @@ accepts two parameters and returns the geohash for a specific location.
 Now if we wanted to get the geohash for our current position we would typically
 do as follow:
 
-``` Clojure
+``` clojure
 (let [coord (current-position)
       lat   (first coord)
       lng   (second coord)]
@@ -55,7 +55,7 @@ do as follow:
 Although this works, there is a lot of boilerplate code for just calling two functions. Destructuring allows you to separate a structured value into its costituent parts.
 For example the following code is equivalent to the previous one.
 
-``` Clojure
+``` clojure
 (let [[lat lng] (current-position)]
   (geohash lat lng))
 ```
@@ -85,7 +85,7 @@ Now that we understand what destructuring is, we can explore in which ways we ca
 
 All sequential data structures in Clojure be destructured in the same way.
 
-``` Clojure
+``` clojure
 (let [[one two three] [1 2 3]]
   (println "one:" one)
   (println "two:" two)
@@ -113,7 +113,7 @@ If you are not interested in all values you can capture only the ones you are
 interested in and ignore the others by putting an **underscore** (`_`) as
 a placeholder for its value.
 
-``` Clojure
+``` clojure
 (let [[_ _ three] (range 1 10)]
   three)
 ;;=> 3
@@ -123,7 +123,7 @@ If you wish capture all the remaining values as a sequence, for example the numb
 from 4 to 9, you need to add an ampersand (`&`) and a symbol to bind to.
 
 
-``` Clojure
+``` clojure
 (let [[_ _ three & numbers] (range 1 10)]
   numbers)
 ;;=> (4 5 6 7 8 9)
@@ -133,7 +133,7 @@ This is a good way to replace `first` and `rest` which often appear in `loop`/`r
 
 In some cases it is usefull or necessary to keep the full structured parameter as it was originally. Clojure in this case provides the clause `:as` followed by a symbol.
 
-``` Clojure
+``` clojure
 (let [[_ _ three & numbers :as all-numbers] (range 1 10)]
   all-numbers)
 ;;=> (1 2 3 4 5 6 7 8 9)
@@ -150,7 +150,7 @@ Let's go back to our geohashing of the current-position example (first exmaple),
 if the function `current-position` rather than returning a vector of two elements
 it returned a map, this is probably how you would write the code without destructuring.
 
-``` Clojure
+``` clojure
 (defn current-position []
   {:lat 51.503331, :lng -0.119500})
 
@@ -165,7 +165,7 @@ Again, nothing wrong with this code, but there is a lot of boilerplate stuff. Th
 Maps have two ways to destructure data.
 
 
-``` Clojure
+``` clojure
 (let [{lat :lat, lng :lng} (current-position)]
   (geohash lat lng))
 ```
@@ -178,7 +178,7 @@ In this case you are telling to the destructuring process to do the following th
 But again, there is a lot of repetition. This form is useful in some context which will explore later,
 however most commonly Clojure's map are destructured in the follwoing way.
 
-``` Clojure
+``` clojure
 (let [{:keys [lat lng]} (current-position)]
   (geohash lat lng))
 ```
@@ -188,7 +188,7 @@ This form of destructuring is very common as it easily allows you to select whic
 are you interested in, however both map Destructuring methods allows you to retain the
 entire map with the `:as` clause in the same way of the lists.
 
-``` Clojure
+``` clojure
 (let [{lat :lat, lng :lng :as coord} (current-position)]
   (println "calculating geohash for coordinates: " coord)
   (geohash lat lng))
@@ -202,7 +202,7 @@ entire map with the `:as` clause in the same way of the lists.
 From Clojure 1.6 you can also specify the keys as keywords and they
 can even be namespaced. The following code snippet is equivalent to the previous
 
-``` Clojure
+``` clojure
 (let [{:keys [:lat :lng] :as coord} (current-position)]
   (println "calculating geohash for coordinates: " coord)
   (geohash lat lng))
@@ -213,7 +213,7 @@ If your keys in your map are not Clojure's keywords, but strings then you
 can use the `:strs` instead of `:keys`.
 
 
-``` Clojure
+``` clojure
 (let [{:strs [lat lng] :as coord} {"lat" 51.503331, "lng" -0.119500}]
   (println "calculating geohash for coordinates: " coord)
   (geohash lat lng))
@@ -223,7 +223,7 @@ can use the `:strs` instead of `:keys`.
 Another option, but not very much used is to have Clojure symbols as keys of your map.
 In this case you should use `:syms` instead of `:keys`
 
-``` Clojure
+``` clojure
 (let [{:syms [lat lng] :as coord} {'lat 51.503331, 'lng -0.119500}]
   (println "calculating geohash for coordinates: " coord)
   (geohash lat lng))
@@ -241,7 +241,7 @@ to be able to provide default for all or most of the values. One way would
 be to put the default values in a map and then merge the parameters with
 the default values. The destructuring offers an easier way to do this.
 
-``` Clojure
+``` clojure
 (defn connect-db [{:keys [host port db-name username password]
                    :or   {host     "localhost"
                           port     12345
@@ -269,7 +269,7 @@ If in our example we want to force the user of the `connect-db` function
 to provide at least the `host` where to connect to, but everything else
 is optional we can write the function as follow:
 
-``` Clojure
+``` clojure
 (defn connect-db [host ; mandatory parameter
                   & {:keys [port db-name username password]
                      :or   {port     12345
@@ -291,7 +291,7 @@ is optional we can write the function as follow:
 Sometimes it is useful or necessary to destructure maps with a local variable name
 which name is different than the key name.
 
-``` Clojure
+``` clojure
 (def contact
   {:firstname "John"
    :lastname  "Smith"
@@ -315,7 +315,7 @@ the distance between two points in a Cartesian plane we can build a
 function as follow:
 
 
-``` Clojure
+``` clojure
 (defn distance [{x1 :x y1 :y} {x2 :x y2 :y}]
   (let [square (fn [n] (*' n n))]
     (Math/sqrt
@@ -332,7 +332,7 @@ function as follow:
 
 Even if maps aren't stricly speaking sequences, you can easily build a sequence out of a map. Once the sequence is built, the items are key-value pairs which can be destructured as any other vector or list. This is very common when `mapping` over a map.
 
-``` Clojure
+``` clojure
 (def contact
   {:firstname "John"
    :lastname  "Smith"
@@ -354,7 +354,7 @@ Even if maps aren't stricly speaking sequences, you can easily build a sequence 
 
 It also possible to do nested destructing. Here is how you can capture content from a nested vector or list.
 
-``` Clojure
+``` clojure
 ;; source: wikipedia
 (def inventor-of-the-day
   ["John" "McCarthy"
@@ -374,7 +374,7 @@ It also possible to do nested destructing. Here is how you can capture content f
 
 Destructuring nested maps seems a bit more complicated:
 
-``` Clojure
+``` clojure
 (def contact
   {:firstname "John"
    :lastname  "Smith"
@@ -425,7 +425,7 @@ This method might be useful when you have to extract only few keys in high indic
 For example assume that you have a vector with 500 elements and you want to
 extract only the elements at index 100 and 200.
 
-``` Clojure
+``` clojure
 (let [{one 1 two 2} [0 1 2]]
   (println one two))
 ;; 1 2
@@ -441,7 +441,7 @@ extract only the elements at index 100 and 200.
 Sets are just like maps, but the key and value are set to the same value.
 This it can be useful to test whether an element is part of a set.
 
-``` Clojure
+``` clojure
 (let [{:strs [blue white black]} #{"blue" "white" "red" "green"}]
   (println blue white black))
 ;; blue white nil
@@ -452,7 +452,7 @@ to modify its behaviour. For example let's consider the an hypothetical function
 which behave like the unix command [`/bin/ls`](http://man7.org/linux/man-pages/man1/ls.1.html)
 this function takes a path and an optional set of flags.
 
-``` Clojure
+``` clojure
 (defn ls [path & flags]
   (let [{:keys [all long-format human-readable sort-by-time]} (set flags)]
     ;; now you can test your flags
@@ -475,7 +475,7 @@ however once you master the syntax, you'll see that the code becomes clearer
 and event more readable.
 
 ## Clojure destructuring cheatsheet<a name="cheatsheet">&nbsp;</a>
-``` Clojure
+``` clojure
 ;; all the following destructuring forms can be used in any of the
 ;; Clojure's `let` derived bindings such as function's parameters,
 ;; `let`, `loop`, `binding`, `for`, `doseq`, etc.

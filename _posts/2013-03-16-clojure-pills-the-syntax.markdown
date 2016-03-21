@@ -10,7 +10,7 @@ LISP derived languages have a bad reputation for the excessive use of brackets. 
 
 However after few weeks your eye starts to get accustomed to the new syntax and things become incredibly clear. Clojure syntax is extremely simple compared to Java, Ruby or Groovy. Here some of its basic elements.
 
-``` Clojure
+``` clojure
 ; this is a comment
 
 ;; anything you put after a semicolon
@@ -25,7 +25,7 @@ You can find a bit more info about this topic in this post: [What is the differe
 
 Additionally there are tools like [Marginalia](https://github.com/gdeer81/marginalia) that parses the source code and uses comments and others elements to produce a very nice code documentation.
 
-``` Clojure
+``` clojure
 ; this is a list
 '(1 2 3)
 

@@ -22,7 +22,7 @@ normal operators followed by a single quote. Lets see them in action.
 
 For example:
 
-``` Clojure
+``` clojure
 ;; this is bigger than java.lang.Long can represent
 (+ 1 java.lang.Long/MAX_VALUE)
 ; ArithmeticException integer overflow  clojure.lang.Numbers.throwIntOverflow (Numbers.java:1388)
@@ -48,7 +48,7 @@ So if you expect that your operations might go beyond the Java's Long limits, us
 
 Let's calculate the factorial:
 
-``` Clojure
+``` clojure
 ;;                  v--- auto promotion
 (defn ! [x] (reduce *' (range 1 (inc x))))
 

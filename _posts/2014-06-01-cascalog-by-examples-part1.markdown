@@ -123,7 +123,7 @@ user=>
 
 Once the REPL is started you can run:
 
-``` Clojure
+``` clojure
 (use 'cascalog-examples.data)
 (use 'cascalog.api)
 (require '[cascalog.logic.ops :as c])
@@ -135,7 +135,7 @@ This will load two taps (Cascalog data sources) one called `USERS` and
 the second one called `SCORES`. At this point let's see how the sample
 data looks like:
 
-``` Clojure
+``` clojure
 (take 5 USERS)
 ;=> (["Kiayada Wyatt" "kiayada33" 33 "France" true]
 ;    ["Dominic Ochoa" "dominic43" 72 "United Kingdom" false]
@@ -156,7 +156,7 @@ tuples which are: _name, user, age, country, active_ and there are 500
 users in total.
 
 The `SCORES` dataset looks like this:
-``` Clojure
+``` clojure
 (take 5 (shuffle SCORES))
 ;=> (["jorden78" "Tetris" 2875]
 ;    ["noelle32" "Packman" 9389]
@@ -196,7 +196,7 @@ DUMP users;
 
 
 ### Cascalog
-``` Clojure
+``` clojure
 (?<- (stdout)
      [?name ?user ?age ?country ?active]
      (USERS ?name ?user ?age ?country ?active))
@@ -212,13 +212,13 @@ command to execute it and tell Cascalog where
 to put the output.
 
   * 1 query
-``` Clojure
+``` clojure
 (<- [?name ?user ?age ?country ?active]
     (USERS ?name ?user ?age ?country ?active))
 ```
 
   * 2 execution
-``` Clojure
+``` clojure
 (?- (output) query)
 ```
 
@@ -226,14 +226,14 @@ for this reason we encapsulate the execution
 into a Clojure function `run<-`
 which we'll use to run our queries.
 
-``` Clojure
+``` clojure
 (defn run<- [query]
   (?- (stdout) query))
 ```
 
 This is come comparable to the SQL statement
 
-``` Clojure
+``` clojure
 (run<-
  (<- [?name ?user ?age ?country ?active]
      (USERS ?name ?user ?age ?country ?active)))
@@ -262,7 +262,7 @@ DUMP out;
 ```
 
 ### Cascalog
-``` Clojure
+``` clojure
 (run<-
  (<-  [?name ?user ?age ?country ?active]
       (USERS ?name ?user ?age ?country ?active)
@@ -292,7 +292,7 @@ DUMP out;
 ```
 
 ### Cascalog
-``` Clojure
+``` clojure
 (run<-
  (<-
   [?name ?user ?age ?country ?active]
@@ -328,7 +328,7 @@ DUMP out;
 ```
 
 ### Cascalog
-``` Clojure
+``` clojure
 (deffilterfn active-or-senior [active age]
   (or active
       (>= age 70)))
@@ -367,7 +367,7 @@ DUMP out;
 ```
 
 ### Cascalog
-``` Clojure
+``` clojure
 (run<-
  (<-
   [?name ?user2 ?age ?country ?active]
@@ -382,7 +382,7 @@ of info into the the var so that cascalog will know how
 to distribute your custom function in the jar for hadoop
 
 ### Cascalog
-``` Clojure
+``` clojure
 (defmapfn my-upper [s]
   (clojure.string/upper-case s))
 
@@ -416,7 +416,7 @@ DUMP out;
 ```
 
 ### Cascalog
-``` Clojure
+``` clojure
 (run<-
  (<-  [?count ?average]
       (USERS ?name ?user ?age ?country ?active)
@@ -449,7 +449,7 @@ DUMP out;
 
 
 ### Cascalog
-``` Clojure
+``` clojure
 (run<-
  (<-  [?count ?average ?country]
       (USERS ?name ?user ?age ?country ?active)
@@ -489,7 +489,7 @@ DUMP out;
 
 
 ### Cascalog
-``` Clojure
+``` clojure
 (run<-
  (<-     [?count ?country]
          (USERS ?name ?user ?age ?country ?active)
@@ -529,7 +529,7 @@ DUMP out;
 
 
 ### Cascalog
-``` Clojure
+``` clojure
 (run<-
  (<-     [?count ?country]
          (USERS ?name ?user ?age ?country ?active)
@@ -573,7 +573,7 @@ In this case Cascalog it makes it more difficult that
 any other tool :-(, you have to write a custom function.
 Luckily you can write it once and reuse it many times.
 
-``` Clojure
+``` clojure
 (require '[cascalog.logic.vars :as v])
 (import 'cascalog.ops.IdentityBuffer)
 
@@ -646,7 +646,7 @@ and in the group you sort by age, reverse
 and take the top 2
 
 ### Cascalog
-``` Clojure
+``` clojure
 (run<-
  (<-    [?name1 ?user1 ?age1 ?country]
         (USERS ?name ?user ?age ?country ?active)
@@ -691,7 +691,7 @@ Cascalog will automatically infer the join key.
 
 
 ### Cascalog
-``` Clojure
+``` clojure
 (run<-
  (<-    [?name ?game ?score]
         (USERS  ?name ?user ?age ?country ?active)
@@ -734,7 +734,7 @@ and by mentioning the same field name on multiple sources
 Cascalog will automatically infer the join key.
 
 ### Cascalog
-``` Clojure
+``` clojure
 (run<-
  (<-    [?score ?name ?age ?country]
         (USERS  ?name ?user ?age ?country ?active)
@@ -775,7 +775,7 @@ DUMP out;
 ```
 
 ### Cascalog
-``` Clojure
+``` clojure
 (defn max-game-score [game]
   (<- [?mscore]
       (SCORES _ ?game ?score)
@@ -831,7 +831,7 @@ DUMP out;
 ```
 
 ### Cascalog
-``` Clojure
+``` clojure
 (run<-
  (<- [?game ?score1 ?name1 ?age1 ?country1]
      (SCORES ?user ?game ?score)

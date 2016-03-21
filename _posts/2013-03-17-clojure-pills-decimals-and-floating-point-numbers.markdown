@@ -8,7 +8,7 @@ tags: [Clojure]
 
 Similarly to my previous post about [Integer numbers]({% post_url 2013-03-16-clojure-pills-integers-number %}), Clojure has a support for floating point numbers, by default mapped as java.lang.Double and arbitrary precise decimals mapped as java.math.BigDecimal.
 
-``` Clojure
+``` clojure
 ;; floating point mapped as java.lang.Double
 1.0
 -3.5
@@ -26,7 +26,7 @@ Similarly to my previous post about [Integer numbers]({% post_url 2013-03-16-clo
 
 One difference between integers and floating point decimals in Clojure is in the way it handles basic computation. We seen in the previous post that when try to mix “small” integers and “big” integers in a calculation, Clojure always uses the largest type as return type. This seems not to be happening for the floating point and big decimals
 
-``` Clojure
+``` clojure
 (type (+ 1 1N))
 ;= clojure.lang.BigInt
 
@@ -36,7 +36,7 @@ One difference between integers and floating point decimals in Clojure is in the
 
 It is really important to keep in mind this subtle difference because you need only one Double mixed in your “precise” calculus to truncate the precision down to a java.lang.Double with potentially disastrous effects.
 
-``` Clojure
+``` clojure
 (+ 0.3M  0.3M  0.3M  0.1M )
 ;= 1.0M
 (type (+ 0.3M  0.3M  0.3M  0.1M ))
