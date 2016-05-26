@@ -39,3 +39,12 @@ learning modules and to create a community behind the project.
   * **Website**: [http://samsara-analytics.io/](http://samsara-analytics.io/)
 
 ---
+
+### Where
+
+`where` it's a small Clojure/ClojureScript library to write predicate
+functions which are easier to read and easier to compose.
+
+  * **Github**: [https://github.com/BrunoBonacci/where](https://github.com/BrunoBonacci/where)
+
+---
