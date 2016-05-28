@@ -60,3 +60,25 @@ behavior_ and causing more arm than benefit.
   * **Github**: [https://github.com/BrunoBonacci/safely](https://github.com/BrunoBonacci/safely)
 
 ---
+
+### dragonfiles
+
+`dragonfiles` it's a Clojure tools to easily process files.  Most of
+people are familiar with the Linux tool `awk`.  Although very powerful
+it lack of expressiveness.  I found myself to have hundreds of
+thousands of file to process and I was in the middle of deciding
+whether shell scripting or Hadoop based solution was going to solve
+the problem.  I wanted something easy as shell scripting, and not so
+heavy as Hadoop. So I decided to write a small tool to cover this
+middle ground where it would be too complex to develop `awk` scripts
+but not yet so big enough to move to a BigData solution.  The tool
+allow to easily define a processing function which is applied to every
+file in input at once or line-by-line.  You can harness the power of
+Clojure together with the rich Java/Clojure libraries ecosystem in a
+command line environment.
+
+_`dragonfiles` is still work-in-progress_ but already usable.
+
+  * **Github**: [https://github.com/BrunoBonacci/dragonfiles](https://github.com/BrunoBonacci/dragonfiles)
+
+---
