@@ -212,4 +212,4 @@ Happy hacking to everyone.
 
 Updates:
 
-  - _[2016-06-15] Fix emacs script to preserve cursor's position. **Thanks Yuri**._
+  - _[2016-06-15] Fix emacs script to preserve cursor's position. **Thanks Yury**._
