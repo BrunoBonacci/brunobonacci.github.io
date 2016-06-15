@@ -133,32 +133,31 @@ following lines.
   "Use `BUFFER-NAME' to display the image in `FILE-NAME'.
   Checks weather `BUFFER-NAME' already exists, and if not create
   as needed."
-  (save-excursion
-    (switch-to-buffer-other-window buffer-name)
-    (iimage-mode t)
-    (read-only-mode -1)
-    (kill-region (point-min) (point-max))
-    ;; unless we clear the cache, the same cached image will
-    ;; always get re-displayed.
-    (clear-image-cache nil)
-    (insert-image (create-image file-name))
-    (read-only-mode t)))
-
+  (switch-to-buffer-other-window buffer-name)
+  (iimage-mode t)
+  (read-only-mode -1)
+  (kill-region (point-min) (point-max))
+  ;; unless we clear the cache, the same cached image will
+  ;; always get re-displayed.
+  (clear-image-cache nil)
+  (insert-image (create-image file-name))
+  (read-only-mode t))
 
 (defun incanter-eval-and-display-chart ()
   "Evaluate the expression preceding point
    and display the chart into a popup buffer"
   (interactive)
-  (save-excursion
+  (let ((old-buf (current-buffer)))
     (condition-case nil
-        (delete-file incanter-temp-chart-file)
-      (error nil))
+                    (delete-file incanter-temp-chart-file)
+                    (error nil))
     (cider-eval-last-sexp)
     (sleep-for 0 incanter-wait-time)
-    (incanter-display-image-inline "*incanter-chart*" incanter-temp-chart-file)))
+    (incanter-display-image-inline "*incanter-chart*" incanter-temp-chart-file)
+    (switch-to-buffer-other-window old-buf)))
 
 (define-key cider-mode-map
-  (kbd "C-c C-i") #'incanter-eval-and-display-chart)
+    (kbd "C-c C-i") #'incanter-eval-and-display-chart)
 ```
 
 Here it's where the magic happens. Evaluate this buffer with `C-c C-b`
@@ -207,13 +206,10 @@ update, the auto-revert would have kicked in and the new image
 displayed; however what actually happens is that the image disappears
 and the binary content of the new image is displayed instead.
 
-Among the various weaknesses of the solution described in this post,
-one thing which I don't like is that when I press `C-c C-i` to trigger
-the evaluation, the focus moves to the image window rather than
-staying in your Clojure buffer. My understanding is that
-`save-excursion` should save your current position and restore it
-after the inner block is executed, but it looks like this isn't
-happening for some reason. So if you have a solution for this too,
-please leave a comment I will update the post accordingly.
-
 Happy hacking to everyone.
+
+---
+
+Updates:
+
+  - _[2016-06-15] Fix emacs script to preserve cursor's position. **Thanks Yuri**._
