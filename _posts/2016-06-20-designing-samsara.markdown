@@ -2,8 +2,9 @@
 layout: post
 title: Designing Samsara
 subtitle: "Overview of Samsara's Design Principles and internals."
-categories: [development, tutorial]
-tags: [Clojure, Architecture]
+date:   2016-06-20 00:00:00
+categories: [development]
+tags: [Clojure, Architecture, Samsara]
 
 author:
   name:  Bruno Bonacci
