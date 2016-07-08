@@ -493,7 +493,7 @@ and event more readable.
 ;; firstname = John, lastname = Smith, person = {:firstname "John" :lastname "Smith"}
 
 ;; maps destructuring with different local vars names
-{name :firstname family-name :lastname] :as person} {:firstname "John"  :lastname "Smith"}
+{name :firstname family-name :lastname :as person} {:firstname "John"  :lastname "Smith"}
 ;; name = John, family-name = Smith, person = {:firstname "John" :lastname "Smith"}
 
 ;; default values
