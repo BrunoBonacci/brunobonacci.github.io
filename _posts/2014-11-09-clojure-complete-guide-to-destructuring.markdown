@@ -505,8 +505,8 @@ and event more readable.
 [[x1 y1] [x2 y2] [_ _ z]]  [[2 3] [5 6] [9 8 7]]
 ;; x1 = 2, y1 = 3, x2 = 5, y2 = 6, z = 7
 
-{:keys [firstname lastname] {:keys [phone]} :contact} {:firstname "John" :lastname "Smith"
-                                                       :contact {:phone "0987654321"}}
+{:keys [firstname lastname]
+    {:keys [phone]} :contact} {:firstname "John" :lastname "Smith" :contact {:phone "0987654321"}}
 ;; firstname = John, lastname = Smith, phone = 0987654321
 ```
 
