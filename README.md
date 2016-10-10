@@ -13,6 +13,6 @@ You can start locally with
 
 ``` bash
 bundle install
-bumdle exec jekyll serve --watch
+bundle exec jekyll serve --watch
 ```
 Then you can browse [http://localhost:4000/](http://localhost:4000/).
