@@ -8,6 +8,7 @@ tags: [AWS, API-Gateway, Lambda]
 
 __Originally posted at: [https://engineering.thetrainline.com/](https://engineering.thetrainline.com/2016/10/10/microservices-with-api-gateway-aws-lambda-and-jvm-languages/)__
 
+
 At Trainline we use AWS Lambda [^1] in conjunction with API Gateway
 [^2] for some of our microservices. Different teams use different
 languages, but in the Data Engineering team we use Clojure [^3] -
@@ -433,6 +434,25 @@ some of the consequences:
     when a request is being processed. In turn, it will add more
     latency to the request processing.
 
+_(update1)_
+
+Obviously the freeze/thaw process doesn't kick-in on every request,
+this would impact the latency too much. Instead, like the following
+measurement seems to suggest, the freeze/thaw process acts on the
+request's queue length, maybe with the addition of a grace period.
+
+![api-gateway-lambda-latency](/images/aws-lambda/api-gateway-lambda-latency2.png)
+
+As the above chart shows, at lower throughput levels the latency is
+more jittery, over **20-25 req/s** it becomes more stable. This seems
+to suggest that when the request queue is empty, which it will be most
+of the time at lower throughput levels, then the container is frozen
+after the request processing is completed. Upon arrival of new
+requests the container is thawed back to its original state and the
+request is handled. At higher throughput levels the queue will be
+always containing new requests to process so that there is no need
+to freeze the container.
+
 
 Bruno Bonacci <br/>
 [@BrunoBonacci](https://twitter.com/brunobonacci) <br/>
@@ -461,3 +481,7 @@ feedback and the many corrections._
    [^15]: [https://en.wikipedia.org/wiki/Cgroups]()
    [^16]: [https://en.wikipedia.org/wiki/Linux_namespaces]()
    [^17]: [http://stackoverflow.com/questions/18582827/garbage-collector-for-young-generation]() _(Gil Tene's comment)_
+
+## Updates:
+
+   - __2017-02-04 - update1 on freeze/thaw strategy__
