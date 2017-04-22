@@ -934,7 +934,7 @@ the system to build new products or services with the same platform.
 Having a real-time analytics system as part of your services is
 invaluable. You can understand how users interact with your services
 as it is happening. You can use it for general analytics, you can use
-it as a Multi Variant Testing (MTV) system, you can use it for
+it as a Multi Variant Testing (MVT) system, you can use it for
 monitoring KPIs and in many other different way.
 
 Many BI solutions rely on batch systems which have incredibly high
