@@ -464,15 +464,111 @@ this function takes a path and an optional set of flags.
 Notice that we are creating a Clojure set out of the `flags` sequence,
 and then using destructuring to capture the individual flags.
 
+### Destructuring namespaced keys
+
+If your maps have namespaced keys then the destructuring forms have to
+be slightly changed. Given the following map:
+
+``` clojure
+;; namespaced keys
+(def contact
+  {:firstname          "John"
+   :lastname           "Smith"
+   :age                25
+   :corporate/id       "LDF123"
+   :corporate/position "CEO"})
+
+;; notice how the namespaced `:corporate/position` is extracted
+;; the symbol which is bound to the value has no namespace
+(let [{:keys [lastname corporate/position]} contact]
+  (println lastname "-" position))
+;; Smith - CEO
+
+
+;; like for normal keys, the vector of symbols can be
+;; replaced with a vector of keywords
+(let [{:keys [:lastname :corporate/position]} contact]
+  (println lastname "-" position))
+;; Smith - CEO
+
+
+;; a default value might be provided
+(let [{:keys [lastname corporate/position]
+       :or {corporate/position "Employee"}} contact]
+  (println lastname "-" position))
+;; Smith - CEO
+
+```
+
+Finally a reminder that double-colon `::` is a shortcut to represent
+current namespace.
+
+``` clojure
+
+(def contact
+  {:firstname "John"
+   :lastname  "Smith"
+   :age       25
+   ::id       "LDF123"
+   ::position "CEO"})
+
+(let [{:keys [lastname ::position]
+       :or {::position "Employee"}} contact]
+  (println lastname "-" position))
+;; Smith - CEO
+
+```
+
+Obviously, same rule applied to symbols when used as keys:
+
+``` clojure
+(def contact
+  {'firstname          "John"
+   'lastname           "Smith"
+   'age                25
+   'corporate/id       "LDF123"
+   'corporate/position "CEO"})
+
+(let [{:syms [lastname corporate/position]} contact]
+  (println lastname "-" position))
+;; Smith - CEO
+
+```
+
+We can combine the different types of destructuring to create
+powerful and declarative functions.
+
+``` clojure
+(def contact
+  {:firstname          "John"
+   :lastname           "Smith"
+   :age                25
+   :corporate/id       "LDF123"
+   :corporate/position "CEO"})
+
+
+(defn contact-line
+  ;; map destructuring
+  [{:keys [firstname lastname corporate/position] :as contact}]
+  ;; seq destructuring
+  (let [initial firstname]
+    (str "Mr " initial ". " lastname ", " position)))
+
+(contact-line contact)
+;;=> "Mr John. Smith, CEO"
+
+```
+
 ## Conclusion
 
-As we seen, value destructuring is a powerful Clojure's feature. It can eliminate
-loads of boilerplate and repetitions which, often, lead to bugs.
-In the writing of this post I've looked to the excellent Jay Fields' post[^3],
-some of the Clojure's documentation[^4], I do suggest whoever is looking for more examples to have a look to those links.
-At first, destructuring might seems to complicate the syntax and the readability,
-however once you master the syntax, you'll see that the code becomes clearer
-and event more readable.
+As we seen, value destructuring is a powerful Clojure's feature. It
+can eliminate loads of boilerplate and repetitions which, often, lead
+to bugs.  In the writing of this post I've looked to the excellent Jay
+Fields' post[^3], some of the Clojure's documentation[^4], I do
+suggest whoever is looking for more examples to have a look to those
+links.  At first, destructuring might seems to complicate the syntax
+and the readability, however once you master the syntax, you'll see
+that the code becomes clearer and event more readable.
 
 ## Clojure destructuring cheatsheet<a name="cheatsheet">&nbsp;</a>
 ``` clojure
@@ -508,6 +604,15 @@ and event more readable.
 {:keys [firstname lastname]
     {:keys [phone]} :contact} {:firstname "John" :lastname "Smith" :contact {:phone "0987654321"}}
 ;; firstname = John, lastname = Smith, phone = 0987654321
+
+;; namespaced keys in maps and sets
+{:keys [contact/firstname contact/lastname] :as person}     {:contact/firstname "John" :contact/lastname "Smith"}
+{:keys [:contact/firstname :contact/lastname] :as person}   {:contact/firstname "John" :contact/lastname "Smith"}
+{:keys [::firstname ::lastname] :as person}                 {::firstname "John"        ::lastname "Smith"}
+{:syms [contact/firstname contact/lastname] :as person}     {'contact/firstname "John"     'contact/lastname "Smith"}
+;; firstname = John, lastname = Smith, person = {:firstname "John" :lastname "Smith"}
+
+
 ```
 
 
@@ -524,3 +629,10 @@ References:
    [^2]: [https://idea.popcount.org/2012-07-25-introduction-to-hamt/](https://idea.popcount.org/2012-07-25-introduction-to-hamt/)
    [^3]: [http://blog.jayfields.com/2010/07/clojure-destructuring.html](http://blog.jayfields.com/2010/07/clojure-destructuring.html)
    [^4]: [Clojure Special Forms](http://clojure.org/special_forms#Special Forms--Binding Forms (Destructuring)-Vector binding destructuring)
+
+
+---
+
+Updates:
+
+  - 2017-05-13 - added destructuring of namespaced keys.
