@@ -623,16 +623,13 @@ For this article I've used:
 
   - Clojure 1.6.0
 
+Updates:
+
+  - 2017-05-13 - added destructuring of namespaced keys.
+
 References:
 
    [^1]: [http://hypirion.com/musings/understanding-persistent-vector-pt-1](http://hypirion.com/musings/understanding-persistent-vector-pt-1)
    [^2]: [https://idea.popcount.org/2012-07-25-introduction-to-hamt/](https://idea.popcount.org/2012-07-25-introduction-to-hamt/)
    [^3]: [http://blog.jayfields.com/2010/07/clojure-destructuring.html](http://blog.jayfields.com/2010/07/clojure-destructuring.html)
    [^4]: [Clojure Special Forms](http://clojure.org/special_forms#Special Forms--Binding Forms (Destructuring)-Vector binding destructuring)
-
-
----
-
-Updates:
-
-  - 2017-05-13 - added destructuring of namespaced keys.
