@@ -6,6 +6,8 @@ categories: [development]
 tags: [Clojure]
 ---
 
+_Last update on 2017-05-23._
+
 Destructuring is a simple, yet powerful feature of Clojure.
 There are several ways in which you can leverage destructuring
 to make your code cleaner, with less repetitions, and less bugs.
@@ -559,6 +561,39 @@ powerful and declarative functions.
 
 ```
 
+### Destructuring "gotchas".
+
+Destructuring is a powerful tool to make your code simpler,
+however there are a couple of things you should look for
+and common mistakes which pass unnoticed by the compiler.
+
+#### Typo in defaults
+
+One mistake which is very hard to track and the compiler doesn't
+give you any help with is when you put a typo in the default
+value keys (the `:or` part).
+
+Notice how `username` is defined in the `:keys` part of destructuring
+while in the default values map (`:or`) I've used `user-name`.
+The compiler won't complain, and the default value won't be bound.
+
+
+``` clojure
+(defn connect-db [host ; mandatory parameter
+                  & {:keys [port db-name username password]
+                     :or   {port     12345
+                            db-name  "my-db"
+                            user-name "db-user"
+                            password "secret"}}]
+  (println "connecting to:" host "port:" port "db-name:" db-name
+           "username:" username "password:" password))
+
+;; connecting to: server port: 12345 db-name: my-db username: nil password: secret
+;;                notice the username is `nil` ---------------^
+```
+
+
+
 ## Conclusion
 
 As we seen, value destructuring is a powerful Clojure's feature. It
@@ -621,11 +656,12 @@ that the code becomes clearer and event more readable.
 
 For this article I've used:
 
-  - Clojure 1.6.0
+  - Clojure 1.6.0, 1.7.0 and 1.8.0
 
 Updates:
 
   - 2017-05-13 - added destructuring of namespaced keys.
+  - 2017-05-23 - added common mistakes / gotchas.
 
 References:
 
