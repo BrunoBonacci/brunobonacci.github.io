@@ -592,7 +592,26 @@ The compiler won't complain, and the default value won't be bound.
 ;;                notice the username is `nil` ---------------^
 ```
 
+#### Keywords in defaults
 
+Similarly if you put keywords in the default's map values won't be
+bound and the compiler won't complain.
+
+``` clojure
+(defn connect-db [host ; mandatory parameter
+                  & {:keys [port db-name username password]
+                     :or   {:port     12345
+                            :db-name  "my-db"
+                            :username "db-user"
+                            :password "secret"}}]
+  (println "connecting to:" host "port:" port "db-name:" db-name
+           "username:" username "password:" password))
+
+(connect-db "server")
+
+;; connecting to: server port: nil db-name: nil username: nil password: nil
+;; notice all defaults are `nil`
+```
 
 ## Conclusion
 
