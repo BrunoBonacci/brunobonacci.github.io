@@ -6,7 +6,7 @@ categories: [development]
 tags: [Clojure]
 ---
 
-_Last update on 2017-05-23._
+_Last update on 2017-05-30._
 
 Destructuring is a simple, yet powerful feature of Clojure.
 There are several ways in which you can leverage destructuring
@@ -579,6 +579,7 @@ The compiler won't complain, and the default value won't be bound.
 
 
 ``` clojure
+;; BAD DEFAULTS
 (defn connect-db [host ; mandatory parameter
                   & {:keys [port db-name username password]
                      :or   {port     12345
@@ -598,6 +599,7 @@ Similarly if you put keywords in the default's map values won't be
 bound and the compiler won't complain.
 
 ``` clojure
+;; BAD DEFAULTS
 (defn connect-db [host ; mandatory parameter
                   & {:keys [port db-name username password]
                      :or   {:port     12345
@@ -612,6 +614,28 @@ bound and the compiler won't complain.
 ;; connecting to: server port: nil db-name: nil username: nil password: nil
 ;; notice all defaults are `nil`
 ```
+
+#### Defaults in a vector
+
+If by mistake you put all defaults in a vector, again, no error from
+the compiler and no value will be bound.
+
+``` clojure
+;; BAD DEFAULTS
+(defn connect-db [host ; mandatory parameter
+                  & {:keys [port db-name username password]
+                     :or   [port     12345
+                            db-name  "my-db"
+                            username "db-user"
+                            password "secret"]}]
+  (println "connecting to:" host "port:" port "db-name:" db-name
+           "username:" username "password:" password))
+
+(connect-db "server")
+;; connecting to: server port: nil db-name: nil username: nil password: nil
+;; notice all defaults are `nil`
+```
+
 
 ## Conclusion
 
