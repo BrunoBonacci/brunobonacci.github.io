@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>Emacs Incanter Hack</title>
+  <meta name="description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+  <meta name="author" content="Bruno Bonacci">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Bits and pieces">
+  <meta name="twitter:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Bits and pieces">
+  <meta property="og:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/images/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/images/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/images/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/images/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/images/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/images/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/images/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-194x194.png" sizes="194x194">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/images/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" href="/images/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://blog.brunobonacci.com//2016/03/18/emacs-incanter-hack/">
+  <link rel="alternate" type="application/rss+xml" title="Bits and pieces" href="/feed.xml">
+</head>
+
+
+  <body>
+    <span class="mobile btn-mobile-menu">
+  <i class="icon icon-list btn-mobile-menu__icon"></i>
+  <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+</span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+        <a href="/" title="link to home of Bits and pieces">
+          <img src="/images/profile.jpg" class="user-image" alt="My Profile Photo">
+          <h1 class="panel-cover__title panel-title">Bits and pieces</h1>
+        </a>
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description">Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/projects" title="link to Bits and pieces Projects" class="blog-button">Projects</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/#blog" title="link to Bits and pieces blog" class="blog-button">Blog</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/tags" title="link to Bits and pieces tags" class="blog-button">Tags</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/categories" title="link to Bits and pieces categories" class="blog-button">Categories</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+            
+              <!-- Twitter -->
+              <li class="navigation__item">
+                <a href="http://twitter.com/BrunoBonacci" title="@BrunoBonacci on Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+            
+
+            
+
+            
+              <!-- LinkedIn -->
+              <li class="navigation__item">
+                <a href="https://www.linkedin.com/in/brunobonacci" title="brunobonacci on LinkedIn" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">LinkedIn</span>
+                </a>
+              </li>
+            
+
+            
+              <!-- GitHub -->
+              <li class="navigation__item">
+                <a href="https://www.github.com/BrunoBonacci" title="BrunoBonacci on GitHub" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+            
+
+            
+
+            <!-- RSS -->
+            <li class="navigation__item">
+              <a href="/feed.xml" title="Subscribe" target="_blank">
+                <i class="icon icon-rss"></i>
+                <span class="label">RSS</span>
+              </a>
+            </li>
+
+            </ul>
+          </nav>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="18 Mar 2016" class="post-meta__date date">18 Mar 2016</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Clojure">Clojure</a> <a href="/tags/#Emacs">Emacs</a> <a href="/tags/#hacks">hacks</a> <a href="/tags/#data-science">data-science</a> <a href="/tags/#Incanter">Incanter</a> <a href="/tags/#REPL">REPL</a> </span>
+    </div>
+    <h1 class="post-title">Emacs Incanter Hack</h1>
+  </header>
+
+  <section class="post">
+    <p>Often while exploring a new dataset in Clojure I use the excellent
+<a href="http://incanter.org/">Incanter</a> library.
+Incanter is a <code class="highlighter-rouge">R</code>-like platform for statistical analysis written
+in Clojure.</p>
+
+<p>Now Clojure, on its own, is very powerful and very well suited
+to process and transform data as
+<a href="https://clojure.github.io/clojure/clojure.core-api.html">it includes a large number of data-processing functions on its core</a>.</p>
+
+<p>Incanter combines the power and flexibility of Clojure with
+<a href="http://incanter.github.io/incanter/stats-api.html">a number of ready-to-use statistical functions</a>
+and a simple way to plot charts using
+<a href="http://www.jfree.org/jfreechart/">JFreeChart</a>.
+<a href="http://blog.cognitect.com/blog/2016/1/28/state-of-clojure-2015-survey-results">Emacs + CIDER</a>
+is the primary development IDE in Clojure-land, and if you have done
+any development at all in Clojure, the idiomatic way to do it is via
+<a href="http://clojure.org/reference/repl_and_main">REPL</a> interaction.</p>
+
+<p>So following the
+<a href="https://github.com/incanter/incanter/wiki#getting-started-with-incanter">Incanter’s Getting Started guide</a>
+you can create a project and fire up a REPL with Emacs with the following
+steps:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>lein new try-incanter
+</code></pre>
+</div>
+
+<p>Then open the <code class="highlighter-rouge">try-incanter/project.clj</code> file and add the Incanter dependency:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nf">defproject</span><span class="w"> </span><span class="n">try-incanter</span><span class="w"> </span><span class="s">"0.1.0-SNAPSHOT"</span><span class="w">
+  </span><span class="no">:description</span><span class="w"> </span><span class="s">"FIXME: write description"</span><span class="w">
+  </span><span class="no">:url</span><span class="w"> </span><span class="s">"http://example.com/FIXME"</span><span class="w">
+  </span><span class="no">:license</span><span class="w"> </span><span class="p">{</span><span class="no">:name</span><span class="w"> </span><span class="s">"Eclipse Public License"</span><span class="w">
+            </span><span class="no">:url</span><span class="w"> </span><span class="s">"http://www.eclipse.org/legal/epl-v10.html"</span><span class="p">}</span><span class="w">
+  </span><span class="no">:dependencies</span><span class="w"> </span><span class="p">[[</span><span class="n">org.clojure/clojure</span><span class="w"> </span><span class="s">"1.7.0"</span><span class="p">]</span><span class="w">
+                 </span><span class="p">[</span><span class="n">incanter</span><span class="w"> </span><span class="s">"1.5.6"</span><span class="p">]</span><span class="w"> </span><span class="c1">;; just added incanter dep
+</span><span class="w">                 </span><span class="p">])</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Now you are ready to start the Clojure’s REPL with <code class="highlighter-rouge">C-c M-j</code> (or <code class="highlighter-rouge">M-x cider-jack-in</code>).</p>
+
+<p>Once the REPL is ready a buffer will popup with the following content:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; Connected to nREPL server running on port 59077 on host localhost - nrepl://localhost:59077
+;; CIDER 0.11.0 (Bulgaria), nREPL 0.2.12
+;; Clojure 1.7.0, Java 1.8.0_45
+;;     Docs: (doc function-name)
+;;           (find-doc part-of-name)
+;;   Source: (source function-name)
+;;  Javadoc: (javadoc java-object-or-class)
+;;     Exit: C-c C-q
+;;  Results: Stored in vars *1, *2, *3, an exception in *e;
+;; ======================================================================
+</span><span class="n">user&gt;</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>At this point you are ready to hack on your data.
+For example open the file <code class="highlighter-rouge">src/try_incanter/core.clj</code> and require a few Incanter’s namespaces and let’s plot something:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nf">ns</span><span class="w"> </span><span class="n">try-incanter.core</span><span class="w">
+  </span><span class="p">(</span><span class="no">:require</span><span class="w"> </span><span class="p">[</span><span class="n">incanter.core</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">i</span><span class="p">]</span><span class="w">
+            </span><span class="p">[</span><span class="n">incanter.stats</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">s</span><span class="p">]</span><span class="w">
+            </span><span class="p">[</span><span class="n">incanter.charts</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">p</span><span class="p">]))</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">i/view</span><span class="w"> </span><span class="p">(</span><span class="nf">p/histogram</span><span class="w"> </span><span class="p">(</span><span class="nf">s/sample-normal</span><span class="w"> </span><span class="mi">1000</span><span class="p">)))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>If you evaluate this buffer with <code class="highlighter-rouge">C-c C-k</code> it will create a new window
+on your desktop with a chart which looks as follow:</p>
+
+<p><img src="/images/20160318_histogram.png" alt="normal-distribution" /></p>
+
+<p>Annoyingly this popup (on a Mac) appears in the background, so you
+have to look for it and after a number of chart-plotting-steps your
+desktop might look just like this:</p>
+
+<p><img src="/images/20160318_messy_desktop.png" alt="messy desktop" /></p>
+
+<p>The continuous swapping between windows is irritating because you lose
+the <em>REPL-momentum</em>.  One of the advantages of working with Emacs is
+that it is extensible in ways no other IDE system is. What I wanted
+was to be able to plot a Incanter chart and see the result directly in
+Emacs.</p>
+
+<p>To achieve this, the first step is to render the chart into an image
+and save it into a file. Add the following lines in your
+<code class="highlighter-rouge">src/try_incanter/core.clj</code> and evaluate it (<code class="highlighter-rouge">C-c C-c</code>).</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">show</span><span class="w"> </span><span class="p">[</span><span class="n">chart</span><span class="p">]</span><span class="w">
+  </span><span class="s">"Renders a chart and saves the result in a temp file"</span><span class="w">
+  </span><span class="p">(</span><span class="nf">i/save</span><span class="w"> </span><span class="n">chart</span><span class="w"> </span><span class="s">"/tmp/chart.png"</span><span class="w"> </span><span class="no">:width</span><span class="w"> </span><span class="mi">700</span><span class="w"> </span><span class="no">:height</span><span class="w"> </span><span class="mi">500</span><span class="p">))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>If we replace the <code class="highlighter-rouge">i/view</code> function with our own <code class="highlighter-rouge">show</code> function,
+rather than creating a new popup, a file will be created in your temp
+folder called <code class="highlighter-rouge">/tmp/chart.png</code>.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; before
+;; (i/view (p/histogram (s/sample-normal 1000)))
+</span><span class="w">
+</span><span class="c1">;; after: note we just replaced `view` with `show`
+</span><span class="p">(</span><span class="nf">show</span><span class="w"> </span><span class="p">(</span><span class="nf">p/histogram</span><span class="w"> </span><span class="p">(</span><span class="nf">s/sample-normal</span><span class="w"> </span><span class="mi">1000</span><span class="p">)))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>To be able to see image we need to hack a bit on Emacs.  Open your
+<code class="highlighter-rouge">*scratch*</code> buffer (or your <code class="highlighter-rouge">~/.emacs.d/init.el</code> file) and add the
+following lines.</p>
+
+<div class="language-elisp highlighter-rouge"><pre class="highlight"><code><span class="c1">;;</span>
+<span class="c1">;; Incanter eval and display chart</span>
+<span class="c1">;;</span>
+
+<span class="p">(</span><span class="nb">require</span> <span class="ss">'cider</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">incanter-temp-chart-file</span> <span class="s">"/tmp/chart.png"</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">incanter-wait-time</span> <span class="mi">500</span><span class="p">)</span>
+
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">incanter-display-image-inline</span> <span class="p">(</span><span class="nv">buffer-name</span> <span class="nv">file-name</span><span class="p">)</span>
+  <span class="s">"Use `BUFFER-NAME' to display the image in `FILE-NAME'.
+  Checks weather `BUFFER-NAME' already exists, and if not create
+  as needed."</span>
+  <span class="p">(</span><span class="nv">switch-to-buffer-other-window</span> <span class="nv">buffer-name</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">iimage-mode</span> <span class="no">t</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">read-only-mode</span> <span class="mi">-1</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">kill-region</span> <span class="p">(</span><span class="nv">point-min</span><span class="p">)</span> <span class="p">(</span><span class="nv">point-max</span><span class="p">))</span>
+  <span class="c1">;; unless we clear the cache, the same cached image will</span>
+  <span class="c1">;; always get re-displayed.</span>
+  <span class="p">(</span><span class="nv">clear-image-cache</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">insert-image</span> <span class="p">(</span><span class="nv">create-image</span> <span class="nv">file-name</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">read-only-mode</span> <span class="no">t</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">incanter-eval-and-display-chart</span> <span class="p">()</span>
+  <span class="s">"Evaluate the expression preceding point
+   and display the chart into a popup buffer"</span>
+  <span class="p">(</span><span class="nv">interactive</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">old-buf</span> <span class="p">(</span><span class="nv">current-buffer</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">condition-case</span> <span class="no">nil</span>
+                    <span class="p">(</span><span class="nb">delete-file</span> <span class="nv">incanter-temp-chart-file</span><span class="p">)</span>
+                    <span class="p">(</span><span class="nb">error</span> <span class="no">nil</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">cider-eval-last-sexp</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">sleep-for</span> <span class="mi">0</span> <span class="nv">incanter-wait-time</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">incanter-display-image-inline</span> <span class="s">"*incanter-chart*"</span> <span class="nv">incanter-temp-chart-file</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">switch-to-buffer-other-window</span> <span class="nv">old-buf</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nv">define-key</span> <span class="nv">cider-mode-map</span>
+    <span class="p">(</span><span class="nv">kbd</span> <span class="s">"C-c C-i"</span><span class="p">)</span> <span class="nf">#'</span><span class="nv">incanter-eval-and-display-chart</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Here it’s where the magic happens. Evaluate this buffer with <code class="highlighter-rouge">C-c C-b</code>
+(or <code class="highlighter-rouge">M-x eval-buffer</code>) and go back to your Clojure file
+<code class="highlighter-rouge">src/try_incanter/core.clj</code>.  By pressing <code class="highlighter-rouge">C-c C-i</code> at the end of the
+following like a new buffer with the resulting image should be visible
+directly inside your Emacs.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nf">show</span><span class="w"> </span><span class="p">(</span><span class="nf">p/histogram</span><span class="w"> </span><span class="p">(</span><span class="nf">s/sample-normal</span><span class="w"> </span><span class="mi">1000</span><span class="p">)))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p><img src="/images/20160318_emacs_incanter_hack.png" alt="emacs incanter" /></p>
+
+<p>No more annoying windows appearing, no more switching,
+you can code and explore your dataset directly from Emacs.</p>
+
+<h2 id="conclusions">Conclusions</h2>
+
+<p>This solution isn’t certainly a “clean” solution but just a “hack” to
+make my daily working routine with Incanter running a little smoother.</p>
+
+<p>There are several other solution which I’ve also tried before hacking
+this one. I’ve used the excellent
+<a href="https://github.com/yieldbot/vizard">Yeldbot Vizard</a> plotting library
+which I particularly like for its simplicity and easy REPL
+integration, however the number of supported charts is still quite
+small and it requires to transform the dataset from the Incanter
+format to the format it expects.</p>
+
+<p>The other solution I’ve tried is the
+<a href="http://gorilla-repl.org/">Gorilla REPL</a> which is a <em>iNotebook</em>-like
+REPL for Clojure. Again pretty nice solution, but it doesn’t have the
+full power of Emacs and CIDER.  If your are predominantly
+developing in Emacs you probably don’t want to move out of Emacs but
+you are going to try to bring everything else into Emacs.</p>
+
+<p>My Emacs-lisp knowledge is still very poor so maybe there
+are better ways to do the same thing and I invite the more experienced Emacs
+hackers to leave a comment and suggest alternative solutions.</p>
+
+<p>For example my first attempt was to render the plotted chart to a file
+and open the file directly in Emacs. Because I have the
+<code class="highlighter-rouge">global-auto-revert-mode</code> enabled, I was expecting that upon a image
+update, the auto-revert would have kicked in and the new image
+displayed; however what actually happens is that the image disappears
+and the binary content of the new image is displayed instead.</p>
+
+<p>Happy hacking to everyone.</p>
+
+<hr />
+
+<p>Updates:</p>
+
+<ul>
+  <li><em>[2016-06-15] Fix emacs script to preserve cursor’s position. <strong>Thanks Yury</strong>.</em></li>
+</ul>
+
+  </section>
+  
+</article>
+
+
+
+      </div>
+
+      <footer class="footer">
+  <span class="footer__copyright">&copy; 2013-2016 Bruno Bonacci. All rights reserved.</span>
+</footer>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51571233-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+    </div>
+  </body>
+</html>

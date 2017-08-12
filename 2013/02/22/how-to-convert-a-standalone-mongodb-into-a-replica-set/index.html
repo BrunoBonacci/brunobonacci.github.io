@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>How to convert a standalone MongoDB into a replica set</title>
+  <meta name="description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+  <meta name="author" content="Bruno Bonacci">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Bits and pieces">
+  <meta name="twitter:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Bits and pieces">
+  <meta property="og:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/images/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/images/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/images/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/images/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/images/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/images/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/images/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-194x194.png" sizes="194x194">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/images/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" href="/images/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://blog.brunobonacci.com//2013/02/22/how-to-convert-a-standalone-mongodb-into-a-replica-set/">
+  <link rel="alternate" type="application/rss+xml" title="Bits and pieces" href="/feed.xml">
+</head>
+
+
+  <body>
+    <span class="mobile btn-mobile-menu">
+  <i class="icon icon-list btn-mobile-menu__icon"></i>
+  <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+</span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+        <a href="/" title="link to home of Bits and pieces">
+          <img src="/images/profile.jpg" class="user-image" alt="My Profile Photo">
+          <h1 class="panel-cover__title panel-title">Bits and pieces</h1>
+        </a>
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description">Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/projects" title="link to Bits and pieces Projects" class="blog-button">Projects</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/#blog" title="link to Bits and pieces blog" class="blog-button">Blog</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/tags" title="link to Bits and pieces tags" class="blog-button">Tags</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/categories" title="link to Bits and pieces categories" class="blog-button">Categories</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+            
+              <!-- Twitter -->
+              <li class="navigation__item">
+                <a href="http://twitter.com/BrunoBonacci" title="@BrunoBonacci on Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+            
+
+            
+
+            
+              <!-- LinkedIn -->
+              <li class="navigation__item">
+                <a href="https://www.linkedin.com/in/brunobonacci" title="brunobonacci on LinkedIn" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">LinkedIn</span>
+                </a>
+              </li>
+            
+
+            
+              <!-- GitHub -->
+              <li class="navigation__item">
+                <a href="https://www.github.com/BrunoBonacci" title="BrunoBonacci on GitHub" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+            
+
+            
+
+            <!-- RSS -->
+            <li class="navigation__item">
+              <a href="/feed.xml" title="Subscribe" target="_blank">
+                <i class="icon icon-rss"></i>
+                <span class="label">RSS</span>
+              </a>
+            </li>
+
+            </ul>
+          </nav>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="22 Feb 2013" class="post-meta__date date">22 Feb 2013</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#MongoDB">MongoDB</a> <a href="/tags/#ReplicaSet">ReplicaSet</a> </span>
+    </div>
+    <h1 class="post-title">How to convert a standalone MongoDB into a replica set</h1>
+  </header>
+
+  <section class="post">
+    <p>The default installation of MongoDB is standalone, that is fine for
+development and testing purposes. However if you find yourself in the
+position of having a production-like MongoDB in standalone set up
+(maybe for a very small app that grew up) and you want to convert this
+into a Replica Set installation to benefit from the automatic
+replication and failover, then you are stuck!!!</p>
+
+<p>There is no way as today (version 2.2.3) to migrate a standalone
+installation into a Replica Set configuration without downtime! In
+fact the procedure documented in the official MongoDB website
+(<a href="http://docs.mongodb.org/manual/tutorial/convert-standalone-to-replica-set/">here</a>)
+says that first thing you need to do is to shut down your database
+server and restart with the <code class="highlighter-rouge">--replSet</code> option.</p>
+
+<p>Frankly I don’t understand why the replica set “mode” is not the
+default. You could start with only one node in a default configuration
+and then just add nodes as you need.</p>
+
+<p>Anyway, if you have to restart the database, then let’s hope that the
+restart with a simple configuration option doesn’t take long… wrong!</p>
+
+<p>In this post there is the procedure that I crafted from my own
+experience and a good dose of google-ing. The objective is to restart
+the database server as quickly as possible so that the maintenance
+window will be of few seconds, and the applications will reconnect
+automatically to the database.</p>
+
+<p>However there are a number of “gotchas” that you need to be aware
+before you actually proceed.</p>
+
+<p>The impatient hackers can skip the whole explanation and jump to the
+procedure at the bottom of the post. However if you are interested to
+understand what is happening when you start the MongoDB in replica set
+mode for the first time just read below.</p>
+
+<h2 id="oplogsize">OplogSize</h2>
+
+<p>Once you restart your database with the
+<a href="http://docs.mongodb.org/manual/reference/configuration-options/#replSet">replSet</a>
+option your database is not usable until you perform the replica set
+initialization with <code class="highlighter-rouge">rs.initiate()</code> from the mongo console.</p>
+
+<p><code class="highlighter-rouge">rs.initiate()</code> will then create the OpLog (a capped collection) to
+store every operation that perform a change on your dataset. The size
+of the OpLog is defined by default as 5% of your free space (for a
+Linux 64-bit system). So if your development machine has 150GB of free
+space it will create 4 files of 2GB each. But if your production
+machine has 2TB of free space (very common for a mid-range dedicated
+server) you will end up over 100GB of OpLog files.</p>
+
+<p>Now <code class="highlighter-rouge">rs.initiate()</code> make sure that the right amount of space is
+provisioned before accepting requests, in this case even in a good
+machine you might have to wait quite a long time, in fact it creates a
+number of 2GB zero-filled files until it reaches the OpLog desired
+space. On a good machine it can take up to 15-20 sec per file, so if
+you have to create 50+ of them you will have to wait 15 mins or more.</p>
+
+<h2 id="how-to-estimate-your-optimal-oplogsize">How to estimate your optimal oplogSize.</h2>
+
+<p>In reality you might not need all that space, and probably you can run
+just fine with lot less Operational Log. This can be configured by the
+<a href="http://docs.mongodb.org/manual/reference/configuration-options/#oplogSize">oplogSize</a>
+configuration option as size in MB. Estimating how much space you need
+is a good mix of black magic and luck, also because once set it cannot
+be “easily” changed (see
+<a href="http://docs.mongodb.org/manual/tutorial/change-oplog-size/">here</a>). It
+requires a good knowledge of your application to forecast, but if you
+have already an application running you can take advantage of
+monitoring tools and backups. The way I measured my required capacity
+was to use the daily backups. For example if the average difference
+between two consecutive (uncompressed) daily backups is 1.5GB you can
+deduce that this is the amount of NEW data in one day. But what about
+deletes and updates? In facts deletes and updates must be accounted
+separately.</p>
+
+<p>Here is where the knowledge of the application plays its role. However
+monitoring tools such as Ganglia that keep tracks of database
+operations can come handy on evaluating the proportions between
+inserts, updates and deletes. In my application inserts are largely
+predominant as I use a event sourced architecture so I can easily say
+that 90% are inserts, 10% update and deletes. Therefore by making a
+simple proportion I get the following figure:</p>
+
+<ul>
+  <li>1.5Gb  :  90%  =  X  : 100%  –&gt;   X = 1.66GB</li>
+</ul>
+
+<p>More commonly an application that modify the state has proportions
+that looks more like 20% inserts, 70% updates and 10% deletes. After
+you figure out how much space you need for one day worth of work. Then
+you need to think what is the max time on which one of your replica
+set member can be down before re-synch. For example if you wish to
+have at least a two weeks buffer then get to:</p>
+
+<ul>
+  <li>1.66GB * 14 days  ~= 24GB</li>
+</ul>
+
+<p>Therefore you need to set <code class="highlighter-rouge">oplogSize = 24576 (24 * 1024)</code>. Upon
+<code class="highlighter-rouge">rs.initiate()</code> command, MongoDB is going to try to pre-allocate 12
+files of 2GB each zero filled called <code class="highlighter-rouge">local.0</code> to <code class="highlighter-rouge">local.11</code>. This
+time consuming operation can be prepared ahead saving lot of time
+(later we’ll see how).</p>
+
+<p>Last thing important to remember is that every node in the replica set
+that might become a primary will need this space available
+reserved. Therefore make sure that the oplogSize is available on every
+node.</p>
+
+<h2 id="authentication">Authentication</h2>
+
+<p>In order to authenticate members of a replica set, and encryption key
+must be provided. Be aware that this encryption is used only for the
+credentials transmissions but not for the data. So if your replica set
+span across unprotected network you need to set up a VPN or SSL tunnel
+solution. The encryption key must be generated prior the start up or
+the MongoDB server and distributed to all nodes.</p>
+
+<h2 id="never-have-a-replica-set-of-2-nodes---very-bad">Never have a Replica Set of 2 nodes -&gt; very bad!</h2>
+
+<p>There are a number of problems in distributed computing that simply
+cannot be solved with only two nodes. The most popular is the
+<a href="http://en.wikipedia.org/wiki/Split-brain_(computing)">split brain</a> in
+which a distributed system affected by a network partition for which
+two nodes can’t communicate between each other but both of them can
+communicate with the rest of the world.</p>
+
+<p><img src="/images/split-brain1.jpg" alt="Split Brain" /></p>
+
+<p>In this case both nodes will think that the other nodes is dead and
+decide to become the Primary. The Primary is the node that accept
+write operations such as <code class="highlighter-rouge">insert()</code>, <code class="highlighter-rouge">update()</code>, and <code class="highlighter-rouge">remove()</code>,
+Secondary nodes accepts only read.</p>
+
+<p>In MongoDB this problem is solved by the use of a voting system. If
+the Primary goes down, the remaining nodes will vote to elect a new
+Primary keeping in consideration freshness of replicated dataset and
+node priority. The primary needs to reach the <em>quorum</em> of votes
+(half + 1). If there are only two nodes the quorum is still 2 votes
+required (2 / 2 + 1 = 2). So if you have a replica set in MongoDB with
+only two nodes, one Primary and one Secondary and for any reason you
+take down any of the two members, even the secondary, the Primary will
+detect that he doesn’t have the majority any more and it will demote
+itself to a secondary. At this point you will not be able to write to
+your database at all!!!</p>
+
+<p>This is somehow unexpected by developers and might get you unprepared;
+see
+<a href="http://tebros.com/2010/11/mongodb-arbiters-with-only-two-replicas/">this blog post</a>
+for example.</p>
+
+<p>To avoid this situation have a minimum of 3 nodes or set up an Arbiter.</p>
+
+<h2 id="the-procedure">The procedure</h2>
+
+<p>At this point we can see the steps required in order to change your
+standalone MongoDB into a Replica set</p>
+
+<p><strong>NOTE:</strong> <em>those steps are for a CentOS installation, if you run on
+Debian/Ubuntu the process name, configuration files, directories, user
+and group ownership are slightly different</em>.</p>
+
+<ul>
+  <li>First edit the mongo configuration file <code class="highlighter-rouge">/etc/mongod.conf</code> and add or edit the following settings:</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="c"># this is the replica set name</span>
+<span class="c"># every node will need to have the same name</span>
+replSet <span class="o">=</span> setname
+
+<span class="c"># this is the authetication encryption key</span>
+<span class="c"># this will be required to be same on every node</span>
+keyFile <span class="o">=</span> /etc/mongodb.key
+
+<span class="c"># This is the operational log size</span>
+<span class="c"># here we assume ~24GB for example</span>
+oplogSize <span class="o">=</span> 24000
+
+<span class="c"># optionally - create a separate directory per DB</span>
+directoryperdb <span class="o">=</span> <span class="nb">true</span>
+</code></pre>
+</div>
+
+<ul>
+  <li>then create a keyFile</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="c"># generate the key and make it readable only by mongo server</span>
+sudo openssl rand -base64 753 &gt; /etc/mongodb.key
+sudo chown mongod:mongod /etc/mongodb.key
+sudo chmod 0600 /etc/mongodb.key
+</code></pre>
+</div>
+
+<ul>
+  <li>(reminder) use the same replSet for every node</li>
+  <li>(reminder) copy the key on every node</li>
+</ul>
+
+<p>now we have to generate the local.n files, for an oplogSize of 24GB we
+will create a 12 files of 2GB and we will initialise them with
+zeros. Eventually this set of files will replace (if present) the
+current local.n files that you have. However you must not overwrite
+them if the server is running, therefore we will create them with a
+slightly different name and then replace them when is time. Make sure
+that you create them in the same physical and logical device of your
+DB files to avoid a device to device copy at swap time.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="nb">cd</span> /var/lib/mongo/local
+
+<span class="c"># as root user</span>
+<span class="k">for </span>i <span class="k">in</span> <span class="o">{</span>0..11<span class="o">}</span>
+<span class="k">do
+</span><span class="nb">echo</span> <span class="s2">"Initializing new-local.</span><span class="nv">$i</span><span class="s2">"</span>
+dd <span class="k">if</span><span class="o">=</span>/dev/zero <span class="nv">of</span><span class="o">=</span>new-local.<span class="nv">$i</span> <span class="nv">bs</span><span class="o">=</span>2146435072 <span class="nv">count</span><span class="o">=</span>1
+chown mongod:mongod new-local.<span class="nv">$i</span>
+chmod 0600 new-local.<span class="nv">$i</span>
+<span class="k">done</span>
+</code></pre>
+</div>
+
+<ul>
+  <li>at this point we can restart the mongodb server and swap the files</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="c"># stopping the server</span>
+sudo /etc/init.d/mongod stop
+
+<span class="c"># now replace local.n files</span>
+<span class="nb">cd</span> /var/lib/mongo/local
+sudo rm -fr local.<span class="k">*</span>
+sudo rename <span class="s1">'s/new-local/local/g'</span> new-local.<span class="k">*</span>
+
+<span class="c"># restarting the server</span>
+sudo /etc/init.d/mongod start
+</code></pre>
+</div>
+
+<ul>
+  <li>
+    <p>when the startup process is completed and the mongodb logs show the following message:</p>
+
+    <p>[rsStart] replSet info you may need to run replSetInitiate – rs.initiate() in the shell – if that is not already done</p>
+  </li>
+</ul>
+
+<p>then you can issue the initiate command with:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>mongo admin --port 27017 -u admin_user -p admin_pass --eval <span class="s1">'rs.initiate()'</span>
+</code></pre>
+</div>
+
+<p>The <code class="highlighter-rouge">rs.initiate()</code> command should last few seconds and your database
+will be back and available.  Now your MongoDB is a fully functioning
+Primary instance of a replica set. At this point you can add new nodes
+with <code class="highlighter-rouge">rs.add( "host:port" )</code> and if you are planning to put only two
+nodes remember that you HAVE TO set up an Arbiter.</p>
+
+<hr />
+
+<p>Sources:</p>
+
+<ul>
+  <li><a href="http://docs.mongodb.org/manual/tutorial/convert-standalone-to-replica-set/">http://docs.mongodb.org/manual/tutorial/convert-standalone-to-replica-set/</a></li>
+  <li><a href="http://docs.mongodb.org/manual/tutorial/change-oplog-size/">http://docs.mongodb.org/manual/tutorial/change-oplog-size/</a></li>
+  <li><a href="http://docs.mongodb.org/manual/tutorial/deploy-replica-set/">http://docs.mongodb.org/manual/tutorial/deploy-replica-set/</a></li>
+  <li><a href="http://tebros.com/2010/11/mongodb-arbiters-with-only-two-replicas/">http://tebros.com/2010/11/mongodb-arbiters-with-only-two-replicas/</a></li>
+  <li><a href="https://groups.google.com/forum/?fromgroups=#!topic/mongodb-user/Ix3BqdG-ogs">https://groups.google.com/forum/?fromgroups=#!topic/mongodb-user/Ix3BqdG-ogs</a></li>
+  <li><a href="http://engineering.foursquare.com/2011/05/24/fun-with-mongodb-replica-sets/">http://engineering.foursquare.com/2011/05/24/fun-with-mongodb-replica-sets/</a></li>
+  <li><a href="http://blog.serverdensity.com/notes-from-a-production-mongodb-deployment/">http://blog.serverdensity.com/notes-from-a-production-mongodb-deployment/</a></li>
+</ul>
+
+  </section>
+  
+</article>
+
+
+
+      </div>
+
+      <footer class="footer">
+  <span class="footer__copyright">&copy; 2013-2016 Bruno Bonacci. All rights reserved.</span>
+</footer>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51571233-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+    </div>
+  </body>
+</html>

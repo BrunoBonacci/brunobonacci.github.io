@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>The complete guide to Clojure destructuring.</title>
+  <meta name="description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+  <meta name="author" content="Bruno Bonacci">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Bits and pieces">
+  <meta name="twitter:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Bits and pieces">
+  <meta property="og:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/images/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/images/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/images/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/images/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/images/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/images/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/images/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-194x194.png" sizes="194x194">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/images/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" href="/images/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://blog.brunobonacci.com//2014/11/16/clojure-complete-guide-to-destructuring/">
+  <link rel="alternate" type="application/rss+xml" title="Bits and pieces" href="/feed.xml">
+</head>
+
+
+  <body>
+    <span class="mobile btn-mobile-menu">
+  <i class="icon icon-list btn-mobile-menu__icon"></i>
+  <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+</span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+        <a href="/" title="link to home of Bits and pieces">
+          <img src="/images/profile.jpg" class="user-image" alt="My Profile Photo">
+          <h1 class="panel-cover__title panel-title">Bits and pieces</h1>
+        </a>
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description">Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/projects" title="link to Bits and pieces Projects" class="blog-button">Projects</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/#blog" title="link to Bits and pieces blog" class="blog-button">Blog</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/tags" title="link to Bits and pieces tags" class="blog-button">Tags</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/categories" title="link to Bits and pieces categories" class="blog-button">Categories</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+            
+              <!-- Twitter -->
+              <li class="navigation__item">
+                <a href="http://twitter.com/BrunoBonacci" title="@BrunoBonacci on Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+            
+
+            
+
+            
+              <!-- LinkedIn -->
+              <li class="navigation__item">
+                <a href="https://www.linkedin.com/in/brunobonacci" title="brunobonacci on LinkedIn" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">LinkedIn</span>
+                </a>
+              </li>
+            
+
+            
+              <!-- GitHub -->
+              <li class="navigation__item">
+                <a href="https://www.github.com/BrunoBonacci" title="BrunoBonacci on GitHub" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+            
+
+            
+
+            <!-- RSS -->
+            <li class="navigation__item">
+              <a href="/feed.xml" title="Subscribe" target="_blank">
+                <i class="icon icon-rss"></i>
+                <span class="label">RSS</span>
+              </a>
+            </li>
+
+            </ul>
+          </nav>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="16 Nov 2014" class="post-meta__date date">16 Nov 2014</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Clojure">Clojure</a> </span>
+    </div>
+    <h1 class="post-title">The complete guide to Clojure destructuring.</h1>
+  </header>
+
+  <section class="post">
+    <p><em>Last update on 2017-05-30.</em></p>
+
+<p>Destructuring is a simple, yet powerful feature of Clojure.
+There are several ways in which you can leverage destructuring
+to make your code cleaner, with less repetitions, and less bugs.</p>
+
+<p>In this post I want to try to cover all possible ways you can
+destructure Clojure’s data structures. If I missed
+anything please, drop me a message and I will include your feedback.</p>
+
+<h2 id="tldr-destructuring-cheatsheet">TL;DR Destructuring cheatsheet</h2>
+<p>Jump at the bottom of the page if you just want to see a <a href="#cheatsheet">destructuring cheatsheet</a>.</p>
+
+<h2 id="what-destructuring-is">What destructuring is?</h2>
+
+<p>The simplest form of destructuring is the positional mapping of values
+from a vector or a list.</p>
+
+<p>Let’s assume that we have a function which somehow returns the current
+position in terms of latitude and longitude coordinates in the following
+format: <code class="highlighter-rouge">[ lat lng ]</code>.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">current-position</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="p">[</span><span class="mf">51.503331</span><span class="n">,</span><span class="w"> </span><span class="mf">-0.119500</span><span class="p">])</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Now assume we have another function which,
+accepts two parameters and returns the geohash for a specific location.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">geohash</span><span class="w"> </span><span class="p">[</span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">]</span><span class="w">
+   </span><span class="c1">;; this function take two separate values as params.
+</span><span class="w">   </span><span class="c1">;; and it return a geohash for that position
+</span><span class="p">)</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Now if we wanted to get the geohash for our current position we would typically
+do as follow:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">coord</span><span class="w"> </span><span class="p">(</span><span class="nf">current-position</span><span class="p">)</span><span class="w">
+      </span><span class="n">lat</span><span class="w">   </span><span class="p">(</span><span class="nb">first</span><span class="w"> </span><span class="n">coord</span><span class="p">)</span><span class="w">
+      </span><span class="n">lng</span><span class="w">   </span><span class="p">(</span><span class="nb">second</span><span class="w"> </span><span class="n">coord</span><span class="p">)]</span><span class="w">
+  </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Although this works, there is a lot of boilerplate code for just calling two functions. Destructuring allows you to separate a structured value into its costituent parts.
+For example the following code is equivalent to the previous one.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[[</span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nf">current-position</span><span class="p">)]</span><span class="w">
+  </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Basically the returned value from <code class="highlighter-rouge">(current-position)</code> which is a structured value (vector), is getting <strong>de-structured</strong> into the mapping vector <code class="highlighter-rouge">[lat lng]</code> where the first value is assigned to the first element in the vector, the second to the second, and so on.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="o">[</span>lat lng] <span class="o">(</span>current-position<span class="o">)</span>
+    |             |
+    V             V
+<span class="o">[</span>lat lng] <span class="o">[</span>51.503331, -0.119500]
+
+
+<span class="o">[</span>51.503331, -0.119500]
+     |          |
+     V          V
+   <span class="o">[</span>lat        lng]
+
+</code></pre>
+</div>
+
+<p>The destructuring can be used in any of the binding forms (<code class="highlighter-rouge">let</code>, <code class="highlighter-rouge">loop</code>, <code class="highlighter-rouge">binding</code>, etc) as well as funcation’s parameters and return values.</p>
+
+<p>Now that we understand what destructuring is, we can explore in which ways we can use it to simplify our code.</p>
+
+<h2 id="destructuring-of-lists-vectors-and-sequences">Destructuring of lists, vectors and sequences.</h2>
+
+<p>All sequential data structures in Clojure be destructured in the same way.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[[</span><span class="n">one</span><span class="w"> </span><span class="n">two</span><span class="w"> </span><span class="n">three</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">]]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"one:"</span><span class="w"> </span><span class="n">one</span><span class="p">)</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"two:"</span><span class="w"> </span><span class="n">two</span><span class="p">)</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"three:"</span><span class="w"> </span><span class="n">three</span><span class="p">))</span><span class="w">
+
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[[</span><span class="n">one</span><span class="w"> </span><span class="n">two</span><span class="w"> </span><span class="n">three</span><span class="p">]</span><span class="w"> </span><span class="o">'</span><span class="p">(</span><span class="nf">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">)]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"one:"</span><span class="w"> </span><span class="n">one</span><span class="p">)</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"two:"</span><span class="w"> </span><span class="n">two</span><span class="p">)</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"three:"</span><span class="w"> </span><span class="n">three</span><span class="p">))</span><span class="w">
+
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[[</span><span class="n">one</span><span class="w"> </span><span class="n">two</span><span class="w"> </span><span class="n">three</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb">range</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">4</span><span class="p">)]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"one:"</span><span class="w"> </span><span class="n">one</span><span class="p">)</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"two:"</span><span class="w"> </span><span class="n">two</span><span class="p">)</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"three:"</span><span class="w"> </span><span class="n">three</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; one: 1
+;; two: 2
+;; three: 3
+</span></code></pre>
+</div>
+
+<p>All above s-expr print out the same result.</p>
+
+<p>The example that follow applies in the same way to lists, vectors and sequences.
+If you are not interested in all values you can capture only the ones you are
+interested in and ignore the others by putting an <strong>underscore</strong> (<code class="highlighter-rouge">_</code>) as
+a placeholder for its value.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[[</span><span class="n">_</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="n">three</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb">range</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">10</span><span class="p">)]</span><span class="w">
+  </span><span class="n">three</span><span class="p">)</span><span class="w">
+</span><span class="c1">;;=&gt; 3
+</span></code></pre>
+</div>
+
+<p>If you wish capture all the remaining values as a sequence, for example the numbers
+from 4 to 9, you need to add an ampersand (<code class="highlighter-rouge">&amp;</code>) and a symbol to bind to.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[[</span><span class="n">_</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="n">three</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">numbers</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb">range</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">10</span><span class="p">)]</span><span class="w">
+  </span><span class="n">numbers</span><span class="p">)</span><span class="w">
+</span><span class="c1">;;=&gt; (4 5 6 7 8 9)
+</span></code></pre>
+</div>
+
+<p>This is a good way to replace <code class="highlighter-rouge">first</code> and <code class="highlighter-rouge">rest</code> which often appear in <code class="highlighter-rouge">loop</code>/<code class="highlighter-rouge">recur</code> construct.</p>
+
+<p>In some cases it is usefull or necessary to keep the full structured parameter as it was originally. Clojure in this case provides the clause <code class="highlighter-rouge">:as</code> followed by a symbol.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[[</span><span class="n">_</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="n">three</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">numbers</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">all-numbers</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb">range</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">10</span><span class="p">)]</span><span class="w">
+  </span><span class="n">all-numbers</span><span class="p">)</span><span class="w">
+</span><span class="c1">;;=&gt; (1 2 3 4 5 6 7 8 9)
+</span></code></pre>
+</div>
+
+<h2 id="maps-destructuring">Maps destructuring.</h2>
+
+<p>No need to say, maps in Clojure are everywhere. If you pass a map as a parameter to a function,
+or you return a map out of a function and you want to extract some of the map’s field, then destructuring
+is what you are looking for.</p>
+
+<p>Let’s go back to our geohashing of the current-position example (first exmaple),
+if the function <code class="highlighter-rouge">current-position</code> rather than returning a vector of two elements
+it returned a map, this is probably how you would write the code without destructuring.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">current-position</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="p">{</span><span class="no">:lat</span><span class="w"> </span><span class="mf">51.503331</span><span class="n">,</span><span class="w"> </span><span class="no">:lng</span><span class="w"> </span><span class="mf">-0.119500</span><span class="p">})</span><span class="w">
+
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">coord</span><span class="w"> </span><span class="p">(</span><span class="nf">current-position</span><span class="p">)</span><span class="w">
+      </span><span class="n">lat</span><span class="w">   </span><span class="p">(</span><span class="no">:lat</span><span class="w"> </span><span class="n">coord</span><span class="p">)</span><span class="w">
+      </span><span class="n">lng</span><span class="w">   </span><span class="p">(</span><span class="no">:lng</span><span class="w"> </span><span class="n">coord</span><span class="p">)]</span><span class="w">
+  </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Again, nothing wrong with this code, but there is a lot of boilerplate stuff. Think what would happen if you have to extract ten properties.
+Maps have two ways to destructure data.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="n">lat</span><span class="w"> </span><span class="no">:lat,</span><span class="w"> </span><span class="n">lng</span><span class="w"> </span><span class="no">:lng</span><span class="p">}</span><span class="w"> </span><span class="p">(</span><span class="nf">current-position</span><span class="p">)]</span><span class="w">
+  </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>In this case you are telling to the destructuring process to do the following things:</p>
+
+<ul>
+  <li><em>Of the returned map, put the content of the key <code class="highlighter-rouge">:lat</code> into a local var called <code class="highlighter-rouge">lat</code></em></li>
+  <li><em>Of the returned map, put the content of the key <code class="highlighter-rouge">:lng</code> into a local var called <code class="highlighter-rouge">lng</code></em></li>
+</ul>
+
+<p>But again, there is a lot of repetition. This form is useful in some context which will explore later,
+however most commonly Clojure’s map are destructured in the follwoing way.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">]}</span><span class="w"> </span><span class="p">(</span><span class="nf">current-position</span><span class="p">)]</span><span class="w">
+  </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>This form of destructuring is very common as it easily allows you to select which keys
+are you interested in, however both map Destructuring methods allows you to retain the
+entire map with the <code class="highlighter-rouge">:as</code> clause in the same way of the lists.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="n">lat</span><span class="w"> </span><span class="no">:lat,</span><span class="w"> </span><span class="n">lng</span><span class="w"> </span><span class="no">:lng</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">coord</span><span class="p">}</span><span class="w"> </span><span class="p">(</span><span class="nf">current-position</span><span class="p">)]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"calculating geohash for coordinates: "</span><span class="w"> </span><span class="n">coord</span><span class="p">)</span><span class="w">
+  </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
+
+
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">]</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">coord</span><span class="p">}</span><span class="w"> </span><span class="p">(</span><span class="nf">current-position</span><span class="p">)]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"calculating geohash for coordinates: "</span><span class="w"> </span><span class="n">coord</span><span class="p">)</span><span class="w">
+  </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>From Clojure 1.6 you can also specify the keys as keywords and they
+can even be namespaced. The following code snippet is equivalent to the previous</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="no">:lat</span><span class="w"> </span><span class="no">:lng</span><span class="p">]</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">coord</span><span class="p">}</span><span class="w"> </span><span class="p">(</span><span class="nf">current-position</span><span class="p">)]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"calculating geohash for coordinates: "</span><span class="w"> </span><span class="n">coord</span><span class="p">)</span><span class="w">
+  </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>If your keys in your map are not Clojure’s keywords, but strings then you
+can use the <code class="highlighter-rouge">:strs</code> instead of <code class="highlighter-rouge">:keys</code>.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:strs</span><span class="w"> </span><span class="p">[</span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">]</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">coord</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="s">"lat"</span><span class="w"> </span><span class="mf">51.503331</span><span class="n">,</span><span class="w"> </span><span class="s">"lng"</span><span class="w"> </span><span class="mf">-0.119500</span><span class="p">}]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"calculating geohash for coordinates: "</span><span class="w"> </span><span class="n">coord</span><span class="p">)</span><span class="w">
+  </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Another option, but not very much used is to have Clojure symbols as keys of your map.
+In this case you should use <code class="highlighter-rouge">:syms</code> instead of <code class="highlighter-rouge">:keys</code></p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:syms</span><span class="w"> </span><span class="p">[</span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">]</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">coord</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="ss">'lat</span><span class="w"> </span><span class="mf">51.503331</span><span class="n">,</span><span class="w"> </span><span class="ss">'lng</span><span class="w"> </span><span class="mf">-0.119500</span><span class="p">}]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"calculating geohash for coordinates: "</span><span class="w"> </span><span class="n">coord</span><span class="p">)</span><span class="w">
+  </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
+</span></code></pre>
+</div>
+
+<h2 id="destructuring-maps-with-default-values">Destructuring maps with default values</h2>
+
+<p>Map destructuring with default values is a very powerful feature.
+Assume that you have function <code class="highlighter-rouge">connect-db</code> which takes as input
+a map with your db configuration.
+Typically there are a lot of parameters involved, assume that you want
+to be able to provide default for all or most of the values. One way would
+be to put the default values in a map and then merge the parameters with
+the default values. The destructuring offers an easier way to do this.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">connect-db</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">host</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="n">db-name</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="n">password</span><span class="p">]</span><span class="w">
+                   </span><span class="no">:or</span><span class="w">   </span><span class="p">{</span><span class="n">host</span><span class="w">     </span><span class="s">"localhost"</span><span class="w">
+                          </span><span class="n">port</span><span class="w">     </span><span class="mi">12345</span><span class="w">
+                          </span><span class="n">db-name</span><span class="w">  </span><span class="s">"my-db"</span><span class="w">
+                          </span><span class="n">username</span><span class="w"> </span><span class="s">"db-user"</span><span class="w">
+                          </span><span class="n">password</span><span class="w"> </span><span class="s">"secret"</span><span class="p">}</span><span class="w">
+                   </span><span class="no">:as</span><span class="w"> </span><span class="n">cfg</span><span class="p">}]</span><span class="w">
+   </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"connecting to:"</span><span class="w"> </span><span class="n">host</span><span class="w"> </span><span class="s">"port:"</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="s">"db-name:"</span><span class="w"> </span><span class="n">db-name</span><span class="w">
+            </span><span class="s">"username:"</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="s">"password:"</span><span class="w"> </span><span class="n">password</span><span class="p">))</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">connect-db</span><span class="w"> </span><span class="p">{</span><span class="no">:host</span><span class="w"> </span><span class="s">"server"</span><span class="p">})</span><span class="w">
+</span><span class="c1">;; connecting to: server port: 12345 db-name: my-db username: db-user password: secret
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">connect-db</span><span class="w"> </span><span class="p">{</span><span class="no">:host</span><span class="w"> </span><span class="s">"server"</span><span class="w"> </span><span class="no">:username</span><span class="w"> </span><span class="s">"user2"</span><span class="w"> </span><span class="no">:password</span><span class="w"> </span><span class="s">"Passowrd1"</span><span class="p">})</span><span class="w">
+</span><span class="c1">;; connecting to: server port: 12345 db-name: my-db username: user2 password: Passowrd1
+</span></code></pre>
+</div>
+
+<p>Notice how the default values are injected in the destructured vars only for the keys
+which are not provided.</p>
+
+<p>Lastly, you can combine the map destructuring with default values with variadic
+parameters to have functions with default parameters.</p>
+
+<p>If in our example we want to force the user of the <code class="highlighter-rouge">connect-db</code> function
+to provide at least the <code class="highlighter-rouge">host</code> where to connect to, but everything else
+is optional we can write the function as follow:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">connect-db</span><span class="w"> </span><span class="p">[</span><span class="n">host</span><span class="w"> </span><span class="c1">; mandatory parameter
+</span><span class="w">                  </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">port</span><span class="w"> </span><span class="n">db-name</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="n">password</span><span class="p">]</span><span class="w">
+                     </span><span class="no">:or</span><span class="w">   </span><span class="p">{</span><span class="n">port</span><span class="w">     </span><span class="mi">12345</span><span class="w">
+                            </span><span class="n">db-name</span><span class="w">  </span><span class="s">"my-db"</span><span class="w">
+                            </span><span class="n">username</span><span class="w"> </span><span class="s">"db-user"</span><span class="w">
+                            </span><span class="n">password</span><span class="w"> </span><span class="s">"secret"</span><span class="p">}}]</span><span class="w">
+   </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"connecting to:"</span><span class="w"> </span><span class="n">host</span><span class="w"> </span><span class="s">"port:"</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="s">"db-name:"</span><span class="w"> </span><span class="n">db-name</span><span class="w">
+            </span><span class="s">"username:"</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="s">"password:"</span><span class="w"> </span><span class="n">password</span><span class="p">))</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">connect-db</span><span class="w"> </span><span class="s">"server"</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; connecting to: server port: 12345 db-name: my-db username: db-user password: secret
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">connect-db</span><span class="w"> </span><span class="s">"server"</span><span class="w"> </span><span class="no">:username</span><span class="w"> </span><span class="s">"user2"</span><span class="w"> </span><span class="no">:password</span><span class="w"> </span><span class="s">"Passowrd1"</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; connecting to: server port: 12345 db-name: my-db username: user2 password: Passowrd1
+</span></code></pre>
+</div>
+
+<h2 id="maps-destructuring-with-custom-key-names">Maps destructuring with custom key names</h2>
+
+<p>Sometimes it is useful or necessary to destructure maps with a local variable name
+which name is different than the key name.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">contact</span><span class="w">
+  </span><span class="p">{</span><span class="no">:firstname</span><span class="w"> </span><span class="s">"John"</span><span class="w">
+   </span><span class="no">:lastname</span><span class="w">  </span><span class="s">"Smith"</span><span class="w">
+   </span><span class="no">:age</span><span class="w">       </span><span class="mi">25</span><span class="w">
+   </span><span class="no">:phone</span><span class="w">     </span><span class="s">"+44.123.456.789"</span><span class="w">
+   </span><span class="no">:emails</span><span class="w">    </span><span class="s">"jsmith@company.com"</span><span class="p">})</span><span class="w">
+
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="n">firstname</span><span class="w"> </span><span class="no">:firstname</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="no">:age</span><span class="p">}</span><span class="w"> </span><span class="n">contact</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">str</span><span class="w"> </span><span class="s">"Hi, I'm "</span><span class="w"> </span><span class="n">firstname</span><span class="w"> </span><span class="s">" and I'm "</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="s">" years old."</span><span class="p">))</span><span class="w">
+</span><span class="c1">;;=&gt; "Hi, I'm John and I'm 25 years old."
+</span><span class="w">
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="nb">name</span><span class="w"> </span><span class="no">:firstname</span><span class="w"> </span><span class="n">years-old</span><span class="w"> </span><span class="no">:age</span><span class="p">}</span><span class="w"> </span><span class="n">contact</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">str</span><span class="w"> </span><span class="s">"Hi, I'm "</span><span class="w"> </span><span class="nb">name</span><span class="w"> </span><span class="s">" and I'm "</span><span class="w"> </span><span class="n">years-old</span><span class="w"> </span><span class="s">" years old."</span><span class="p">))</span><span class="w">
+</span><span class="c1">;;=&gt; "Hi, I'm John and I'm 25 years old."
+</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>As shown in this second example you can define local var with a name
+that is different than the key. For example if we have to calculate
+the distance between two points in a Cartesian plane we can build a
+function as follow:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">distance</span><span class="w"> </span><span class="p">[{</span><span class="n">x1</span><span class="w"> </span><span class="no">:x</span><span class="w"> </span><span class="n">y1</span><span class="w"> </span><span class="no">:y</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="n">x2</span><span class="w"> </span><span class="no">:x</span><span class="w"> </span><span class="n">y2</span><span class="w"> </span><span class="no">:y</span><span class="p">}]</span><span class="w">
+  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">square</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="o">'</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">n</span><span class="p">))]</span><span class="w">
+    </span><span class="p">(</span><span class="nf">Math/sqrt</span><span class="w">
+     </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nf">square</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">x1</span><span class="w"> </span><span class="n">x2</span><span class="p">))</span><span class="w">
+        </span><span class="p">(</span><span class="nf">square</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">y1</span><span class="w"> </span><span class="n">y2</span><span class="p">))))))</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">distance</span><span class="w"> </span><span class="p">{</span><span class="no">:x</span><span class="w"> </span><span class="mi">3</span><span class="n">,</span><span class="w"> </span><span class="no">:y</span><span class="w"> </span><span class="mi">2</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="no">:x</span><span class="w"> </span><span class="mi">9</span><span class="n">,</span><span class="w"> </span><span class="no">:y</span><span class="w"> </span><span class="mi">7</span><span class="p">})</span><span class="w">
+</span><span class="c1">;;=&gt; 7.810249675906654
+</span></code></pre>
+</div>
+
+<h2 id="destructuring-maps-as-key-value-pairs">Destructuring maps as key-value pairs</h2>
+
+<p>Even if maps aren’t stricly speaking sequences, you can easily build a sequence out of a map. Once the sequence is built, the items are key-value pairs which can be destructured as any other vector or list. This is very common when <code class="highlighter-rouge">mapping</code> over a map.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">contact</span><span class="w">
+  </span><span class="p">{</span><span class="no">:firstname</span><span class="w"> </span><span class="s">"John"</span><span class="w">
+   </span><span class="no">:lastname</span><span class="w">  </span><span class="s">"Smith"</span><span class="w">
+   </span><span class="no">:age</span><span class="w">       </span><span class="mi">25</span><span class="w">
+   </span><span class="no">:phone</span><span class="w">     </span><span class="s">"+44.123.456.789"</span><span class="w">
+   </span><span class="no">:emails</span><span class="w">    </span><span class="s">"jsmith@company.com"</span><span class="p">})</span><span class="w">
+
+</span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[[</span><span class="n">k</span><span class="w"> </span><span class="n">v</span><span class="p">]]</span><span class="w"> </span><span class="p">(</span><span class="nb">str</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="s">" -&gt; "</span><span class="w"> </span><span class="n">v</span><span class="p">))</span><span class="w"> </span><span class="n">contact</span><span class="p">)</span><span class="w">
+</span><span class="c1">;;(":age -&gt; 25"
+;; ":lastname -&gt; Smith"
+;; ":phone -&gt; +44.123.456.789"
+;; ":firstname -&gt; John"
+;; ":emails -&gt; jsmith@company.com")
+</span></code></pre>
+</div>
+
+<h2 id="nested-destructuring">Nested destructuring</h2>
+
+<p>It also possible to do nested destructing. Here is how you can capture content from a nested vector or list.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; source: wikipedia
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">inventor-of-the-day</span><span class="w">
+  </span><span class="p">[</span><span class="s">"John"</span><span class="w"> </span><span class="s">"McCarthy"</span><span class="w">
+   </span><span class="s">"1927-09-04"</span><span class="w">
+   </span><span class="s">"LISP"</span><span class="w">
+   </span><span class="p">[</span><span class="s">"Turing Award (1971)"</span><span class="w">
+    </span><span class="s">"Computer Pioneer Award (1985)"</span><span class="w">
+    </span><span class="s">"Kyoto Prize (1988)"</span><span class="w">
+    </span><span class="s">"National Medal of Science (1990)"</span><span class="w">
+    </span><span class="s">"Benjamin Franklin Medal (2003)"</span><span class="p">]])</span><span class="w">
+
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[[</span><span class="n">firstname</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="p">[</span><span class="n">first-award</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">other-awards</span><span class="p">]]</span><span class="w"> </span><span class="n">inventor-of-the-day</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">str</span><span class="w"> </span><span class="n">firstname</span><span class="w"> </span><span class="s">", "</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="s">"'s first notable award was: "</span><span class="w"> </span><span class="n">first-award</span><span class="p">))</span><span class="w">
+</span><span class="c1">;;=&gt; "John, McCarthy's first notable award was: Turing Award (1971)"
+</span></code></pre>
+</div>
+
+<p>Destructuring nested maps seems a bit more complicated:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">contact</span><span class="w">
+  </span><span class="p">{</span><span class="no">:firstname</span><span class="w"> </span><span class="s">"John"</span><span class="w">
+   </span><span class="no">:lastname</span><span class="w">  </span><span class="s">"Smith"</span><span class="w">
+   </span><span class="no">:age</span><span class="w">       </span><span class="mi">25</span><span class="w">
+   </span><span class="no">:contacts</span><span class="w"> </span><span class="p">{</span><span class="no">:phone</span><span class="w"> </span><span class="s">"+44.123.456.789"</span><span class="w">
+             </span><span class="no">:emails</span><span class="w"> </span><span class="p">{</span><span class="no">:work</span><span class="w"> </span><span class="s">"jsmith@company.com"</span><span class="w">
+                      </span><span class="no">:personal</span><span class="w"> </span><span class="s">"jsmith@some-email.com"</span><span class="p">}}})</span><span class="w">
+
+</span><span class="c1">;; Just the top level
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="n">lastname</span><span class="w"> </span><span class="no">:lastname</span><span class="p">}</span><span class="w"> </span><span class="n">contact</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="p">))</span><span class="w">
+</span><span class="c1">;; Smith
+</span><span class="w">
+</span><span class="c1">;; One nested level
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="n">lastname</span><span class="w"> </span><span class="no">:lastname</span><span class="w">
+       </span><span class="p">{</span><span class="n">phone</span><span class="w"> </span><span class="no">:phone</span><span class="p">}</span><span class="w"> </span><span class="no">:contacts</span><span class="p">}</span><span class="w"> </span><span class="n">contact</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="n">phone</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; Smith +44.123.456.789
+</span><span class="w">
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">firstname</span><span class="w"> </span><span class="n">lastname</span><span class="p">]</span><span class="w">
+       </span><span class="p">{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">phone</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="no">:contacts</span><span class="p">}</span><span class="w"> </span><span class="n">contact</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">firstname</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="n">phone</span><span class="w"> </span><span class="p">))</span><span class="w">
+</span><span class="c1">;; John Smith +44.123.456.789
+</span><span class="w">
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">firstname</span><span class="w"> </span><span class="n">lastname</span><span class="p">]</span><span class="w">
+       </span><span class="p">{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">phone</span><span class="p">]</span><span class="w">
+        </span><span class="p">{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">work</span><span class="w"> </span><span class="n">personal</span><span class="p">]}</span><span class="w"> </span><span class="no">:emails</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="no">:contacts</span><span class="p">}</span><span class="w"> </span><span class="n">contact</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">firstname</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="n">phone</span><span class="w"> </span><span class="n">work</span><span class="w"> </span><span class="n">personal</span><span class="p">))</span><span class="w">
+</span><span class="c1">;;John Smith +44.123.456.789 jsmith@company.com jsmith@some-email.com
+</span></code></pre>
+</div>
+
+<h2 id="less-common-destructuring-forms">Less common destructuring forms</h2>
+
+<p>There are some other forms of destructuring which can be used in particular
+situations, they are not very common, however it is worth to mention them.</p>
+
+<h3 id="destructuring-vectors-by-keys">Destructuring vectors by keys</h3>
+
+<p>Clojure’s vectors and maps share a lot of commonalities. They are both implemented via
+<a href="http://en.wikipedia.org/wiki/Hash_array_mapped_trie">Hash array mapped trie (HAMT)</a>
+(you can find more about their implementation on Ref.<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>, Ref.<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup>),
+both support the retrieval by key (or index for vectors)
+via the <a href="https://clojuredocs.org/clojure.core/get"><code class="highlighter-rouge">get</code></a> function.</p>
+
+<p>For this reason you can use map’s destructuring methods to destructure vectors.
+This method might be useful when you have to extract only few keys in high indices.
+For example assume that you have a vector with 500 elements and you want to
+extract only the elements at index 100 and 200.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="n">one</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">two</span><span class="w"> </span><span class="mi">2</span><span class="p">}</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">]]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">two</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; 1 2
+</span><span class="w">
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="n">v1</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="n">v2</span><span class="w"> </span><span class="mi">200</span><span class="p">}</span><span class="w"> </span><span class="p">(</span><span class="nb">apply</span><span class="w"> </span><span class="nb">vector</span><span class="w"> </span><span class="p">(</span><span class="nb">range</span><span class="w"> </span><span class="mi">500</span><span class="p">))]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="n">v2</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; 100 500
+</span></code></pre>
+</div>
+
+<h3 id="sets-destructuring">Set’s destructuring</h3>
+
+<p>Sets are just like maps, but the key and value are set to the same value.
+This it can be useful to test whether an element is part of a set.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:strs</span><span class="w"> </span><span class="p">[</span><span class="n">blue</span><span class="w"> </span><span class="n">white</span><span class="w"> </span><span class="n">black</span><span class="p">]}</span><span class="w"> </span><span class="o">#</span><span class="p">{</span><span class="s">"blue"</span><span class="w"> </span><span class="s">"white"</span><span class="w"> </span><span class="s">"red"</span><span class="w"> </span><span class="s">"green"</span><span class="p">}]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">blue</span><span class="w"> </span><span class="n">white</span><span class="w"> </span><span class="n">black</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; blue white nil
+</span></code></pre>
+</div>
+
+<p>Set’s destructuring can be useful when you have a function which can optionally accepts flags
+to modify its behaviour. For example let’s consider the an hypothetical function <code class="highlighter-rouge">ls</code>
+which behave like the unix command <a href="http://man7.org/linux/man-pages/man1/ls.1.html"><code class="highlighter-rouge">/bin/ls</code></a>
+this function takes a path and an optional set of flags.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">ls</span><span class="w"> </span><span class="p">[</span><span class="nb">path</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">flags</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">all</span><span class="w"> </span><span class="n">long-format</span><span class="w"> </span><span class="n">human-readable</span><span class="w"> </span><span class="n">sort-by-time</span><span class="p">]}</span><span class="w"> </span><span class="p">(</span><span class="nb">set</span><span class="w"> </span><span class="n">flags</span><span class="p">)]</span><span class="w">
+    </span><span class="c1">;; now you can test your flags
+</span><span class="w">    </span><span class="p">(</span><span class="nb">when</span><span class="w"> </span><span class="n">long-format</span><span class="w"> </span><span class="p">(</span><span class="nb">comment</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="n">someting</span><span class="p">))</span><span class="w">
+    </span><span class="c1">;; ....
+</span><span class="w">    </span><span class="p">))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Notice that we are creating a Clojure set out of the <code class="highlighter-rouge">flags</code> sequence,
+and then using destructuring to capture the individual flags.</p>
+
+<h3 id="destructuring-namespaced-keys">Destructuring namespaced keys</h3>
+
+<p>If your maps have namespaced keys then the destructuring forms have to
+be slightly changed. Given the following map:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; namespaced keys
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">contact</span><span class="w">
+  </span><span class="p">{</span><span class="no">:firstname</span><span class="w">          </span><span class="s">"John"</span><span class="w">
+   </span><span class="no">:lastname</span><span class="w">           </span><span class="s">"Smith"</span><span class="w">
+   </span><span class="no">:age</span><span class="w">                </span><span class="mi">25</span><span class="w">
+   </span><span class="no">:corporate/id</span><span class="w">       </span><span class="s">"LDF123"</span><span class="w">
+   </span><span class="no">:corporate/position</span><span class="w"> </span><span class="s">"CEO"</span><span class="p">})</span><span class="w">
+
+</span><span class="c1">;; notice how the namespaced `:corporate/position` is extracted
+;; the symbol which is bound to the value has no namespace
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">lastname</span><span class="w"> </span><span class="n">corporate/position</span><span class="p">]}</span><span class="w"> </span><span class="n">contact</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="s">"-"</span><span class="w"> </span><span class="n">position</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; Smith - CEO
+</span><span class="w">
+
+</span><span class="c1">;; like for normal keys, the vector of symbols can be
+;; replaced with a vector of keywords
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="no">:lastname</span><span class="w"> </span><span class="no">:corporate/position</span><span class="p">]}</span><span class="w"> </span><span class="n">contact</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="s">"-"</span><span class="w"> </span><span class="n">position</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; Smith - CEO
+</span><span class="w">
+
+</span><span class="c1">;; a default value might be provided
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">lastname</span><span class="w"> </span><span class="n">corporate/position</span><span class="p">]</span><span class="w">
+       </span><span class="no">:or</span><span class="w"> </span><span class="p">{</span><span class="n">corporate/position</span><span class="w"> </span><span class="s">"Employee"</span><span class="p">}}</span><span class="w"> </span><span class="n">contact</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="s">"-"</span><span class="w"> </span><span class="n">position</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; Smith - CEO
+</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Finally a reminder that double-colon <code class="highlighter-rouge">::</code> is a shortcut to represent
+current namespace.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="w">
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">contact</span><span class="w">
+  </span><span class="p">{</span><span class="no">:firstname</span><span class="w"> </span><span class="s">"John"</span><span class="w">
+   </span><span class="no">:lastname</span><span class="w">  </span><span class="s">"Smith"</span><span class="w">
+   </span><span class="no">:age</span><span class="w">       </span><span class="mi">25</span><span class="w">
+   </span><span class="no">::id</span><span class="w">       </span><span class="s">"LDF123"</span><span class="w">
+   </span><span class="no">::position</span><span class="w"> </span><span class="s">"CEO"</span><span class="p">})</span><span class="w">
+
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">lastname</span><span class="w"> </span><span class="no">::position</span><span class="p">]</span><span class="w">
+       </span><span class="no">:or</span><span class="w"> </span><span class="p">{</span><span class="no">::position</span><span class="w"> </span><span class="s">"Employee"</span><span class="p">}}</span><span class="w"> </span><span class="n">contact</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="s">"-"</span><span class="w"> </span><span class="n">position</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; Smith - CEO
+</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Obviously, same rule applied to symbols when used as keys:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">contact</span><span class="w">
+  </span><span class="p">{</span><span class="ss">'firstname</span><span class="w">          </span><span class="s">"John"</span><span class="w">
+   </span><span class="ss">'lastname</span><span class="w">           </span><span class="s">"Smith"</span><span class="w">
+   </span><span class="ss">'age</span><span class="w">                </span><span class="mi">25</span><span class="w">
+   </span><span class="ss">'corporate/id</span><span class="w">       </span><span class="s">"LDF123"</span><span class="w">
+   </span><span class="ss">'corporate/position</span><span class="w"> </span><span class="s">"CEO"</span><span class="p">})</span><span class="w">
+
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:syms</span><span class="w"> </span><span class="p">[</span><span class="n">lastname</span><span class="w"> </span><span class="n">corporate/position</span><span class="p">]}</span><span class="w"> </span><span class="n">contact</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="s">"-"</span><span class="w"> </span><span class="n">position</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; Smith - CEO
+</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>We can combine the different types of destructuring to create
+powerful and declarative functions.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">contact</span><span class="w">
+  </span><span class="p">{</span><span class="no">:firstname</span><span class="w">          </span><span class="s">"John"</span><span class="w">
+   </span><span class="no">:lastname</span><span class="w">           </span><span class="s">"Smith"</span><span class="w">
+   </span><span class="no">:age</span><span class="w">                </span><span class="mi">25</span><span class="w">
+   </span><span class="no">:corporate/id</span><span class="w">       </span><span class="s">"LDF123"</span><span class="w">
+   </span><span class="no">:corporate/position</span><span class="w"> </span><span class="s">"CEO"</span><span class="p">})</span><span class="w">
+
+
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">contact-line</span><span class="w">
+  </span><span class="c1">;; map destructuring
+</span><span class="w">  </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">firstname</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="n">corporate/position</span><span class="p">]</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">contact</span><span class="p">}]</span><span class="w">
+  </span><span class="c1">;; seq destructuring
+</span><span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">initial</span><span class="w"> </span><span class="n">firstname</span><span class="p">]</span><span class="w">
+    </span><span class="p">(</span><span class="nb">str</span><span class="w"> </span><span class="s">"Mr "</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="s">". "</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="s">", "</span><span class="w"> </span><span class="n">position</span><span class="p">)))</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">contact-line</span><span class="w"> </span><span class="n">contact</span><span class="p">)</span><span class="w">
+</span><span class="c1">;;=&gt; "Mr John. Smith, CEO"
+</span><span class="w">
+</span></code></pre>
+</div>
+
+<h3 id="destructuring-gotchas">Destructuring “gotchas”.</h3>
+
+<p>Destructuring is a powerful tool to make your code simpler,
+however there are a couple of things you should look for
+and common mistakes which pass unnoticed by the compiler.</p>
+
+<h4 id="typo-in-defaults">Typo in defaults</h4>
+
+<p>One mistake which is very hard to track and the compiler doesn’t
+give you any help with is when you put a typo in the default
+value keys (the <code class="highlighter-rouge">:or</code> part).</p>
+
+<p>Notice how <code class="highlighter-rouge">username</code> is defined in the <code class="highlighter-rouge">:keys</code> part of destructuring
+while in the default values map (<code class="highlighter-rouge">:or</code>) I’ve used <code class="highlighter-rouge">user-name</code>.
+The compiler won’t complain, and the default value won’t be bound.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; BAD DEFAULTS
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">connect-db</span><span class="w"> </span><span class="p">[</span><span class="n">host</span><span class="w"> </span><span class="c1">; mandatory parameter
+</span><span class="w">                  </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">port</span><span class="w"> </span><span class="n">db-name</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="n">password</span><span class="p">]</span><span class="w">
+                     </span><span class="no">:or</span><span class="w">   </span><span class="p">{</span><span class="n">port</span><span class="w">     </span><span class="mi">12345</span><span class="w">
+                            </span><span class="n">db-name</span><span class="w">  </span><span class="s">"my-db"</span><span class="w">
+                            </span><span class="n">user-name</span><span class="w"> </span><span class="s">"db-user"</span><span class="w">
+                            </span><span class="n">password</span><span class="w"> </span><span class="s">"secret"</span><span class="p">}}]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"connecting to:"</span><span class="w"> </span><span class="n">host</span><span class="w"> </span><span class="s">"port:"</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="s">"db-name:"</span><span class="w"> </span><span class="n">db-name</span><span class="w">
+           </span><span class="s">"username:"</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="s">"password:"</span><span class="w"> </span><span class="n">password</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; connecting to: server port: 12345 db-name: my-db username: nil password: secret
+;;                notice the username is `nil` ---------------^
+</span></code></pre>
+</div>
+
+<h4 id="keywords-in-defaults">Keywords in defaults</h4>
+
+<p>Similarly if you put keywords in the default’s map values won’t be
+bound and the compiler won’t complain.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; BAD DEFAULTS
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">connect-db</span><span class="w"> </span><span class="p">[</span><span class="n">host</span><span class="w"> </span><span class="c1">; mandatory parameter
+</span><span class="w">                  </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">port</span><span class="w"> </span><span class="n">db-name</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="n">password</span><span class="p">]</span><span class="w">
+                     </span><span class="no">:or</span><span class="w">   </span><span class="p">{</span><span class="no">:port</span><span class="w">     </span><span class="mi">12345</span><span class="w">
+                            </span><span class="no">:db-name</span><span class="w">  </span><span class="s">"my-db"</span><span class="w">
+                            </span><span class="no">:username</span><span class="w"> </span><span class="s">"db-user"</span><span class="w">
+                            </span><span class="no">:password</span><span class="w"> </span><span class="s">"secret"</span><span class="p">}}]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"connecting to:"</span><span class="w"> </span><span class="n">host</span><span class="w"> </span><span class="s">"port:"</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="s">"db-name:"</span><span class="w"> </span><span class="n">db-name</span><span class="w">
+           </span><span class="s">"username:"</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="s">"password:"</span><span class="w"> </span><span class="n">password</span><span class="p">))</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">connect-db</span><span class="w"> </span><span class="s">"server"</span><span class="p">)</span><span class="w">
+
+</span><span class="c1">;; connecting to: server port: nil db-name: nil username: nil password: nil
+;; notice all defaults are `nil`
+</span></code></pre>
+</div>
+
+<h4 id="defaults-in-a-vector">Defaults in a vector</h4>
+
+<p>If by mistake you put all defaults in a vector, again, no error from
+the compiler and no value will be bound.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; BAD DEFAULTS
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">connect-db</span><span class="w"> </span><span class="p">[</span><span class="n">host</span><span class="w"> </span><span class="c1">; mandatory parameter
+</span><span class="w">                  </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">port</span><span class="w"> </span><span class="n">db-name</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="n">password</span><span class="p">]</span><span class="w">
+                     </span><span class="no">:or</span><span class="w">   </span><span class="p">[</span><span class="n">port</span><span class="w">     </span><span class="mi">12345</span><span class="w">
+                            </span><span class="n">db-name</span><span class="w">  </span><span class="s">"my-db"</span><span class="w">
+                            </span><span class="n">username</span><span class="w"> </span><span class="s">"db-user"</span><span class="w">
+                            </span><span class="n">password</span><span class="w"> </span><span class="s">"secret"</span><span class="p">]}]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"connecting to:"</span><span class="w"> </span><span class="n">host</span><span class="w"> </span><span class="s">"port:"</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="s">"db-name:"</span><span class="w"> </span><span class="n">db-name</span><span class="w">
+           </span><span class="s">"username:"</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="s">"password:"</span><span class="w"> </span><span class="n">password</span><span class="p">))</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">connect-db</span><span class="w"> </span><span class="s">"server"</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; connecting to: server port: nil db-name: nil username: nil password: nil
+;; notice all defaults are `nil`
+</span></code></pre>
+</div>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>As we seen, value destructuring is a powerful Clojure’s feature. It
+can eliminate loads of boilerplate and repetitions which, often, lead
+to bugs.  In the writing of this post I’ve looked to the excellent Jay
+Fields’ post<sup id="fnref:3"><a href="#fn:3" class="footnote">3</a></sup>, some of the Clojure’s documentation<sup id="fnref:4"><a href="#fn:4" class="footnote">4</a></sup>, I do
+suggest whoever is looking for more examples to have a look to those
+links.  At first, destructuring might seems to complicate the syntax
+and the readability, however once you master the syntax, you’ll see
+that the code becomes clearer and event more readable.</p>
+
+<h2 id="clojure-destructuring-cheatsheet">Clojure destructuring cheatsheet<a name="cheatsheet"> </a></h2>
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; all the following destructuring forms can be used in any of the
+;; Clojure's `let` derived bindings such as function's parameters,
+;; `let`, `loop`, `binding`, `for`, `doseq`, etc.
+</span><span class="w">
+</span><span class="c1">;; list, vectors and sequences
+</span><span class="p">[</span><span class="n">zero</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="n">three</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">four-and-more</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">numbers</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb">range</span><span class="p">)</span><span class="w">
+</span><span class="c1">;; zero = 0, three = 3, four-and-more = (4 5 6 7 ...),
+;; numbers = (0 1 2 3 4 5 6 7 ...)
+</span><span class="w">
+</span><span class="c1">;; maps and sets
+</span><span class="p">{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">firstname</span><span class="w"> </span><span class="n">lastname</span><span class="p">]</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">person</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="no">:firstname</span><span class="w"> </span><span class="s">"John"</span><span class="w">  </span><span class="no">:lastname</span><span class="w"> </span><span class="s">"Smith"</span><span class="p">}</span><span class="w">
+</span><span class="p">{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="no">:firstname</span><span class="w"> </span><span class="no">:lastname</span><span class="p">]</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">person</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="no">:firstname</span><span class="w"> </span><span class="s">"John"</span><span class="w">  </span><span class="no">:lastname</span><span class="w"> </span><span class="s">"Smith"</span><span class="p">}</span><span class="w">
+</span><span class="p">{</span><span class="no">:strs</span><span class="w"> </span><span class="p">[</span><span class="n">firstname</span><span class="w"> </span><span class="n">lastname</span><span class="p">]</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">person</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="s">"firstname"</span><span class="w"> </span><span class="s">"John"</span><span class="w"> </span><span class="s">"lastname"</span><span class="w"> </span><span class="s">"Smith"</span><span class="p">}</span><span class="w">
+</span><span class="p">{</span><span class="no">:syms</span><span class="w"> </span><span class="p">[</span><span class="n">firstname</span><span class="w"> </span><span class="n">lastname</span><span class="p">]</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">person</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="ss">'firstname</span><span class="w"> </span><span class="s">"John"</span><span class="w">  </span><span class="ss">'lastname</span><span class="w"> </span><span class="s">"Smith"</span><span class="p">}</span><span class="w">
+</span><span class="c1">;; firstname = John, lastname = Smith, person = {:firstname "John" :lastname "Smith"}
+</span><span class="w">
+</span><span class="c1">;; maps destructuring with different local vars names
+</span><span class="p">{</span><span class="nb">name</span><span class="w"> </span><span class="no">:firstname</span><span class="w"> </span><span class="n">family-name</span><span class="w"> </span><span class="no">:lastname</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">person</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="no">:firstname</span><span class="w"> </span><span class="s">"John"</span><span class="w">  </span><span class="no">:lastname</span><span class="w"> </span><span class="s">"Smith"</span><span class="p">}</span><span class="w">
+</span><span class="c1">;; name = John, family-name = Smith, person = {:firstname "John" :lastname "Smith"}
+</span><span class="w">
+</span><span class="c1">;; default values
+</span><span class="p">{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">firstname</span><span class="w"> </span><span class="n">lastname</span><span class="p">]</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">person</span><span class="w">
+ </span><span class="no">:or</span><span class="w"> </span><span class="p">{</span><span class="n">firstname</span><span class="w"> </span><span class="s">"Jane"</span><span class="w">  </span><span class="no">:lastname</span><span class="w"> </span><span class="s">"Bloggs"</span><span class="p">}}</span><span class="w"> </span><span class="p">{</span><span class="no">:firstname</span><span class="w"> </span><span class="s">"John"</span><span class="p">}</span><span class="w">
+</span><span class="c1">;; firstname = John, lastname = Bloggs, person = {:firstname "John"}
+</span><span class="w">
+</span><span class="c1">;; nested destructuring
+</span><span class="p">[[</span><span class="n">x1</span><span class="w"> </span><span class="n">y1</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="n">x2</span><span class="w"> </span><span class="n">y2</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="n">_</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="n">z</span><span class="p">]]</span><span class="w">  </span><span class="p">[[</span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="mi">5</span><span class="w"> </span><span class="mi">6</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="mi">9</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="mi">7</span><span class="p">]]</span><span class="w">
+</span><span class="c1">;; x1 = 2, y1 = 3, x2 = 5, y2 = 6, z = 7
+</span><span class="w">
+</span><span class="p">{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">firstname</span><span class="w"> </span><span class="n">lastname</span><span class="p">]</span><span class="w">
+    </span><span class="p">{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">phone</span><span class="p">]}</span><span class="w"> </span><span class="no">:contact</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="no">:firstname</span><span class="w"> </span><span class="s">"John"</span><span class="w"> </span><span class="no">:lastname</span><span class="w"> </span><span class="s">"Smith"</span><span class="w"> </span><span class="no">:contact</span><span class="w"> </span><span class="p">{</span><span class="no">:phone</span><span class="w"> </span><span class="s">"0987654321"</span><span class="p">}}</span><span class="w">
+</span><span class="c1">;; firstname = John, lastname = Smith, phone = 0987654321
+</span><span class="w">
+</span><span class="c1">;; namespaced keys in maps and sets
+</span><span class="p">{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">contact/firstname</span><span class="w"> </span><span class="n">contact/lastname</span><span class="p">]</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">person</span><span class="p">}</span><span class="w">     </span><span class="p">{</span><span class="no">:contact/firstname</span><span class="w"> </span><span class="s">"John"</span><span class="w"> </span><span class="no">:contact/lastname</span><span class="w"> </span><span class="s">"Smith"</span><span class="p">}</span><span class="w">
+</span><span class="p">{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="no">:contact/firstname</span><span class="w"> </span><span class="no">:contact/lastname</span><span class="p">]</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">person</span><span class="p">}</span><span class="w">   </span><span class="p">{</span><span class="no">:contact/firstname</span><span class="w"> </span><span class="s">"John"</span><span class="w"> </span><span class="no">:contact/lastname</span><span class="w"> </span><span class="s">"Smith"</span><span class="p">}</span><span class="w">
+</span><span class="p">{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="no">::firstname</span><span class="w"> </span><span class="no">::lastname</span><span class="p">]</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">person</span><span class="p">}</span><span class="w">                 </span><span class="p">{</span><span class="no">::firstname</span><span class="w"> </span><span class="s">"John"</span><span class="w">        </span><span class="no">::lastname</span><span class="w"> </span><span class="s">"Smith"</span><span class="p">}</span><span class="w">
+</span><span class="p">{</span><span class="no">:syms</span><span class="w"> </span><span class="p">[</span><span class="n">contact/firstname</span><span class="w"> </span><span class="n">contact/lastname</span><span class="p">]</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">person</span><span class="p">}</span><span class="w">     </span><span class="p">{</span><span class="ss">'contact/firstname</span><span class="w"> </span><span class="s">"John"</span><span class="w">     </span><span class="ss">'contact/lastname</span><span class="w"> </span><span class="s">"Smith"</span><span class="p">}</span><span class="w">
+</span><span class="c1">;; firstname = John, lastname = Smith, person = {:firstname "John" :lastname "Smith"}
+</span><span class="w">
+
+</span></code></pre>
+</div>
+
+<hr />
+
+<p>For this article I’ve used:</p>
+
+<ul>
+  <li>Clojure 1.6.0, 1.7.0 and 1.8.0</li>
+</ul>
+
+<p>Updates:</p>
+
+<ul>
+  <li>2017-05-13 - added destructuring of namespaced keys.</li>
+  <li>2017-05-23 - added common mistakes / gotchas.</li>
+</ul>
+
+<p>References:</p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p><a href="http://hypirion.com/musings/understanding-persistent-vector-pt-1">http://hypirion.com/musings/understanding-persistent-vector-pt-1</a>&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:2">
+      <p><a href="https://idea.popcount.org/2012-07-25-introduction-to-hamt/">https://idea.popcount.org/2012-07-25-introduction-to-hamt/</a>&nbsp;<a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:3">
+      <p><a href="http://blog.jayfields.com/2010/07/clojure-destructuring.html">http://blog.jayfields.com/2010/07/clojure-destructuring.html</a>&nbsp;<a href="#fnref:3" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:4">
+      <p><a href="http://clojure.org/special_forms#Special Forms--Binding Forms (Destructuring)-Vector binding destructuring">Clojure Special Forms</a>&nbsp;<a href="#fnref:4" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+  </section>
+  
+</article>
+
+
+
+      </div>
+
+      <footer class="footer">
+  <span class="footer__copyright">&copy; 2013-2016 Bruno Bonacci. All rights reserved.</span>
+</footer>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51571233-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+    </div>
+  </body>
+</html>

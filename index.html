@@ -1,24 +1,429 @@
----
-layout: default
----
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-<div class="main-post-list">
+  <title>Bits and pieces</title>
+  <meta name="description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+  <meta name="author" content="Bruno Bonacci">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Bits and pieces">
+  <meta name="twitter:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Bits and pieces">
+  <meta property="og:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/images/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/images/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/images/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/images/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/images/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/images/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/images/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-194x194.png" sizes="194x194">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/images/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" href="/images/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://blog.brunobonacci.com//">
+  <link rel="alternate" type="application/rss+xml" title="Bits and pieces" href="/feed.xml">
+</head>
+
+
+  <body>
+    <span class="mobile btn-mobile-menu">
+  <i class="icon icon-list btn-mobile-menu__icon"></i>
+  <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+</span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+        <a href="/" title="link to home of Bits and pieces">
+          <img src="/images/profile.jpg" class="user-image" alt="My Profile Photo">
+          <h1 class="panel-cover__title panel-title">Bits and pieces</h1>
+        </a>
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description">Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/projects" title="link to Bits and pieces Projects" class="blog-button">Projects</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/#blog" title="link to Bits and pieces blog" class="blog-button">Blog</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/tags" title="link to Bits and pieces tags" class="blog-button">Tags</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/categories" title="link to Bits and pieces categories" class="blog-button">Categories</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+            
+              <!-- Twitter -->
+              <li class="navigation__item">
+                <a href="http://twitter.com/BrunoBonacci" title="@BrunoBonacci on Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+            
+
+            
+
+            
+              <!-- LinkedIn -->
+              <li class="navigation__item">
+                <a href="https://www.linkedin.com/in/brunobonacci" title="brunobonacci on LinkedIn" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">LinkedIn</span>
+                </a>
+              </li>
+            
+
+            
+              <!-- GitHub -->
+              <li class="navigation__item">
+                <a href="https://www.github.com/BrunoBonacci" title="BrunoBonacci on GitHub" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+            
+
+            
+
+            <!-- RSS -->
+            <li class="navigation__item">
+              <a href="/feed.xml" title="Subscribe" target="_blank">
+                <i class="icon icon-rss"></i>
+                <span class="label">RSS</span>
+              </a>
+            </li>
+
+            </ul>
+          </nav>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <div class="main-post-list">
 
   <ol class="post-list">
-    {% for post in paginator.posts %}
+    
       <li>
-        <h2 class="post-list__post-title post-title"><a href="{{ site.baseurl }}{{ post.url | remove_first: '/' }}" title="{{ post.title }}">{{ post.title }}</a></h2>
-        <p class="excerpt">{{ post.excerpt | remove: '<p>' | remove: '</p>' }}&hellip;</p>
-        <div class="post-list__meta"><time datetime="{{ post.date | date: "%-d %b %Y" }}" class="post-list__meta--date date">{{ post.date | date: "%-d %b %Y" }}</time> &#8226; <span class="post-meta__tags">on {% for tag in post.tags %}<a href="{{ site.baseurl }}tags/#{{ tag }}">{{ tag }}</a> {% endfor %}</span></div>
+        <h2 class="post-list__post-title post-title"><a href="/2017/08/10/lumo-vs-planck-vs-clojure-vs-pixie/" title="lumo vs planck vs clojure vs pixie.">lumo vs planck vs clojure vs pixie.</a></h2>
+        <p class="excerpt">I was looking to use Clojure for scripting. A few years ago there was
+not much options. Recently the scenario changed rapidly. The options
+currently available are:
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="10 Aug 2017" class="post-list__meta--date date">10 Aug 2017</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Clojure">Clojure</a> </span></div>
         <hr class="post-list__divider">
       </li>
-    {% endfor %}
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2016/10/10/aws-api-gateway-and-lambda-with-jvm/" title="Microservices with API Gateway, AWS Lambda and JVM languages">Microservices with API Gateway, AWS Lambda and JVM languages</a></h2>
+        <p class="excerpt"><strong>Originally posted at: <a href="https://engineering.thetrainline.com/2016/10/10/microservices-with-api-gateway-aws-lambda-and-jvm-languages/">https://engineering.thetrainline.com/</a></strong>
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="10 Oct 2016" class="post-list__meta--date date">10 Oct 2016</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#AWS">AWS</a> <a href="/tags/#API-Gateway">API-Gateway</a> <a href="/tags/#Lambda">Lambda</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2016/06/20/designing-samsara/" title="Designing Samsara">Designing Samsara</a></h2>
+        <p class="excerpt">In this post I describe the ideas behind
+<a href="http://samsara-analytics.io/">Samsara</a> a real-time analytics
+system. It as a walk through its design principles, and the decision
+behind the architecture.
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="20 Jun 2016" class="post-list__meta--date date">20 Jun 2016</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Clojure">Clojure</a> <a href="/tags/#Architecture">Architecture</a> <a href="/tags/#Samsara">Samsara</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2016/05/11/clojure-basics/" title="Learn Clojure - Clojure Basics">Learn Clojure - Clojure Basics</a></h2>
+        <p class="excerpt">I will try to introduce concepts gradually
+without assuming prior knowledge of Clojure (or
+any other LISP dialect).  However I will assume
+that you are already an experienced developer
+in any other popular language such as Java,
+C/C++, Python or Javascript.  General
+programming concepts such as functions,
+parameters, recursion, objects and common
+data-structures such as: linked lists, maps (or
+dictionaries), vectors and sets will be assumed
+to be already known.
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="11 May 2016" class="post-list__meta--date date">11 May 2016</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Clojure">Clojure</a> <a href="/tags/#REPL">REPL</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2016/03/18/emacs-incanter-hack/" title="Emacs Incanter Hack">Emacs Incanter Hack</a></h2>
+        <p class="excerpt">Often while exploring a new dataset in Clojure I use the excellent
+<a href="http://incanter.org/">Incanter</a> library.
+Incanter is a <code class="highlighter-rouge">R</code>-like platform for statistical analysis written
+in Clojure.
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="18 Mar 2016" class="post-list__meta--date date">18 Mar 2016</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Clojure">Clojure</a> <a href="/tags/#Emacs">Emacs</a> <a href="/tags/#hacks">hacks</a> <a href="/tags/#data-science">data-science</a> <a href="/tags/#Incanter">Incanter</a> <a href="/tags/#REPL">REPL</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2015/04/19/dead-simple-introduction-to-clojure-macros/" title="A "dead simple" introduction to Clojure macros.">A "dead simple" introduction to Clojure macros.</a></h2>
+        <p class="excerpt">Macros are one of the topics which scares many new Clojure developers.
+Although I’ve seen many tutorials about the topic, I think that the
+approach used is often too complicated for someone who is new to Clojure.
+So I will try to explore the topic especially for developers who are
+new to Clojure and haven’t yet grasped the macros.
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="19 Apr 2015" class="post-list__meta--date date">19 Apr 2015</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Clojure">Clojure</a> <a href="/tags/#macro">macro</a> <a href="/tags/#development">development</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2014/11/16/clojure-complete-guide-to-destructuring/" title="The complete guide to Clojure destructuring.">The complete guide to Clojure destructuring.</a></h2>
+        <p class="excerpt"><em>Last update on 2017-05-30.</em>
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="16 Nov 2014" class="post-list__meta--date date">16 Nov 2014</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Clojure">Clojure</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2014/06/01/cascalog-by-examples-part1/" title="Cascalog by examples (part 1)">Cascalog by examples (part 1)</a></h2>
+        <p class="excerpt">In the past 2-3 years I’ve been using a number of different
+technologies on top of Hadoop for querying and processing BigData.
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="1 Jun 2014" class="post-list__meta--date date">1 Jun 2014</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Cascalog">Cascalog</a> <a href="/tags/#Clojure">Clojure</a> <a href="/tags/#BigData">BigData</a> <a href="/tags/#Pig">Pig</a> <a href="/tags/#Hive">Hive</a> <a href="/tags/#Hadoop">Hadoop</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2013/06/21/how-to-calculate-the-reminder-with-bitwise-operations/" title="How to calculate the reminder with bitwise operations">How to calculate the reminder with bitwise operations</a></h2>
+        <p class="excerpt">In High Performance Computing everything counts. Martin Thompson
+(former LMAX CTO) warns us in his excellent
+<a href="http://yow.eventer.com/yow-2012-1012/lock-free-algorithms-for-ultimate-performance-by-martin-thompson-1250">talks</a>
+and <a href="http://mechanical-sympathy.blogspot.co.uk/">blog</a> about the cost
+of the division operation in the modern CPUs.
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="21 Jun 2013" class="post-list__meta--date date">21 Jun 2013</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Java">Java</a> <a href="/tags/#High Performance Computing">High Performance Computing</a> <a href="/tags/#HPC">HPC</a> <a href="/tags/#performance">performance</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2013/06/21/clojure-pills-arithmetics-and-type-autopromotion/" title="Clojure Pills: Arithmetics and type autopromotion">Clojure Pills: Arithmetics and type autopromotion</a></h2>
+        <p class="excerpt">In a previous post about <a href="/2013/03/16/clojure-pills-integers-number/">Integer numbers</a> we have seen that Clojure
+for efficiency reasons tries to map the numbers to their Java basic
+types and that with the literals modifiers “N” for integers and “M”
+for decimals you can use BigIntegers and BigDecimals in place of the
+Long and Double.
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="21 Jun 2013" class="post-list__meta--date date">21 Jun 2013</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Clojure">Clojure</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2013/03/23/clojure-pills-strings-and-characters/" title="Clojure Pills: Strings and Characters">Clojure Pills: Strings and Characters</a></h2>
+        <p class="excerpt">Strings and characters in Clojure they have no surprises. They map respectively to <code class="highlighter-rouge">java.lang.String</code> and <code class="highlighter-rouge">java.lang.Character</code>. Both, strings and characters they evaluate to themselves.
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="23 Mar 2013" class="post-list__meta--date date">23 Mar 2013</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Clojure">Clojure</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2013/03/17/clojure-pills-keywords/" title="Clojure Pills: keywords">Clojure Pills: keywords</a></h2>
+        <p class="excerpt">The keywords concept is unknown to most of the programming languages.
+The closest concept to a keyword in Java is an enumeration with the difference that enumerated values are in Java grouped in a surrounding type.
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="17 Mar 2013" class="post-list__meta--date date">17 Mar 2013</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Clojure">Clojure</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2013/03/17/clojure-pills-rational-numbers/" title="Clojure Pills: rational numbers">Clojure Pills: rational numbers</a></h2>
+        <p class="excerpt">A rather unique and interesting feature of Clojure (and Lisp derived languages) is the first class support for rational numbers.
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="17 Mar 2013" class="post-list__meta--date date">17 Mar 2013</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Clojure">Clojure</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2013/03/17/clojure-pills-decimals-and-floating-point-numbers/" title="Clojure Pills: Decimals and floating point numbers">Clojure Pills: Decimals and floating point numbers</a></h2>
+        <p class="excerpt">Similarly to my previous post about <a href="/2013/03/16/clojure-pills-integers-number/">Integer numbers</a>, Clojure has a support for floating point numbers, by default mapped as java.lang.Double and arbitrary precise decimals mapped as java.math.BigDecimal.
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="17 Mar 2013" class="post-list__meta--date date">17 Mar 2013</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Clojure">Clojure</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2013/03/16/clojure-pills-integers-number/" title="Clojure Pills: Integers number">Clojure Pills: Integers number</a></h2>
+        <p class="excerpt">Clojure supports integers (like any other high level language) and when possible they are mapped to <code class="highlighter-rouge">java.lang.Long</code> objects. Numbers in Clojure are evaluated to themselves.
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="16 Mar 2013" class="post-list__meta--date date">16 Mar 2013</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Clojure">Clojure</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2013/03/16/clojure-pills-the-syntax/" title="Clojure Pills: The syntax">Clojure Pills: The syntax</a></h2>
+        <p class="excerpt">LISP derived languages have a bad reputation for the excessive use of brackets. At first sight it’s bit hard to understand Clojure source code. If you try to google “LISP brackets” you will find a list of rants and discussions about this topic.
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="16 Mar 2013" class="post-list__meta--date date">16 Mar 2013</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Clojure">Clojure</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2013/03/15/clojure-pills-getting-started/" title="Clojure pills: Getting started">Clojure pills: Getting started</a></h2>
+        <p class="excerpt">To get started with Clojure, you need the REPL. The REPL stands for Read Evaluate Print Loop and it is a console-like application where you can enter Clojure functions/expressions and get the result directly.
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="15 Mar 2013" class="post-list__meta--date date">15 Mar 2013</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Clojure">Clojure</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2013/03/15/clojure-pills-the-journey-begins/" title="Clojure pills: The journey begins">Clojure pills: The journey begins</a></h2>
+        <p class="excerpt">Few months back, after reading an inspiring post about Lisp and the agility of developing new ideas, I decided to start my journey and learn Clojure.
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="15 Mar 2013" class="post-list__meta--date date">15 Mar 2013</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Clojure">Clojure</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2013/02/22/how-to-convert-a-standalone-mongodb-into-a-replica-set/" title="How to convert a standalone MongoDB into a replica set">How to convert a standalone MongoDB into a replica set</a></h2>
+        <p class="excerpt">The default installation of MongoDB is standalone, that is fine for
+development and testing purposes. However if you find yourself in the
+position of having a production-like MongoDB in standalone set up
+(maybe for a very small app that grew up) and you want to convert this
+into a Replica Set installation to benefit from the automatic
+replication and failover, then you are stuck!!!
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="22 Feb 2013" class="post-list__meta--date date">22 Feb 2013</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#MongoDB">MongoDB</a> <a href="/tags/#ReplicaSet">ReplicaSet</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2012/06/30/vertx-simple-telnet-server/" title="Vert.x Goodness - Simple Telnet Server">Vert.x Goodness - Simple Telnet Server</a></h2>
+        <p class="excerpt">One of the coding test that I often assign to developers when I do
+interview is to implement a simple Telnet server in Java. Not a
+full-fledged Telnet server compliant to the
+<a href="http://tools.ietf.org/html/rfc854">RFC-854</a>, but just a non-secure,
+small brother with just few commands implemented.
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="30 Jun 2012" class="post-list__meta--date date">30 Jun 2012</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Actor-model">Actor-model</a> <a href="/tags/#concurrency">concurrency</a> <a href="/tags/#Groovy">Groovy</a> <a href="/tags/#lock-free-algorithm">lock-free-algorithm</a> <a href="/tags/#Vert.x">Vert.x</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="/2012/03/24/yet-another-post-about-ops-devops-noops/" title="Yet, another post about Ops, DevOps, NoOps!">Yet, another post about Ops, DevOps, NoOps!</a></h2>
+        <p class="excerpt">In the past few days I’ve seen strong exchange of opinions about the
+different Ops flavours. In particular Adrian
+(<a href="https://twitter.com/adrianco">@adrianco</a>) from Netflix, in a series
+of twitter posts, defined as “NoOps” a certain number of practices
+adopted by Netflix development teams to push in production changes by
+themselves without depending on Ops teams. The twitter posts, and most
+probably, the presence of the “No” prefix, have been largely
+mis-interpreted by Ops communities. Adrian with
+<a href="http://perfcap.blogspot.co.uk/2012/03/ops-devops-and-noops-at-netflix.html">this post</a>,
+tried to clarify what the term NoOps means in NetFlix.
+
+&hellip;</p>
+        <div class="post-list__meta"><time datetime="24 Mar 2012" class="post-list__meta--date date">24 Mar 2012</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#methodologies">methodologies</a> <a href="/tags/#devops">devops</a> </span></div>
+        <hr class="post-list__divider">
+      </li>
+    
   </ol>
 
   <hr class="post-list__divider ">
 
-  {% if paginator.previous_page or paginator.next_page %}
-      {% include pagination.html %}
-  {% endif %}
+  
 
 </div>
+      </div>
+
+      <footer class="footer">
+  <span class="footer__copyright">&copy; 2013-2016 Bruno Bonacci. All rights reserved.</span>
+</footer>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51571233-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+    </div>
+  </body>
+</html>

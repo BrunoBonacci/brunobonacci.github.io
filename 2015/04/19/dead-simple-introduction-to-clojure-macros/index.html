@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>A "dead simple" introduction to Clojure macros.</title>
+  <meta name="description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+  <meta name="author" content="Bruno Bonacci">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Bits and pieces">
+  <meta name="twitter:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Bits and pieces">
+  <meta property="og:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/images/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/images/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/images/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/images/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/images/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/images/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/images/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-194x194.png" sizes="194x194">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/images/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" href="/images/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://blog.brunobonacci.com//2015/04/19/dead-simple-introduction-to-clojure-macros/">
+  <link rel="alternate" type="application/rss+xml" title="Bits and pieces" href="/feed.xml">
+</head>
+
+
+  <body>
+    <span class="mobile btn-mobile-menu">
+  <i class="icon icon-list btn-mobile-menu__icon"></i>
+  <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+</span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+        <a href="/" title="link to home of Bits and pieces">
+          <img src="/images/profile.jpg" class="user-image" alt="My Profile Photo">
+          <h1 class="panel-cover__title panel-title">Bits and pieces</h1>
+        </a>
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description">Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/projects" title="link to Bits and pieces Projects" class="blog-button">Projects</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/#blog" title="link to Bits and pieces blog" class="blog-button">Blog</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/tags" title="link to Bits and pieces tags" class="blog-button">Tags</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/categories" title="link to Bits and pieces categories" class="blog-button">Categories</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+            
+              <!-- Twitter -->
+              <li class="navigation__item">
+                <a href="http://twitter.com/BrunoBonacci" title="@BrunoBonacci on Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+            
+
+            
+
+            
+              <!-- LinkedIn -->
+              <li class="navigation__item">
+                <a href="https://www.linkedin.com/in/brunobonacci" title="brunobonacci on LinkedIn" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">LinkedIn</span>
+                </a>
+              </li>
+            
+
+            
+              <!-- GitHub -->
+              <li class="navigation__item">
+                <a href="https://www.github.com/BrunoBonacci" title="BrunoBonacci on GitHub" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+            
+
+            
+
+            <!-- RSS -->
+            <li class="navigation__item">
+              <a href="/feed.xml" title="Subscribe" target="_blank">
+                <i class="icon icon-rss"></i>
+                <span class="label">RSS</span>
+              </a>
+            </li>
+
+            </ul>
+          </nav>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="19 Apr 2015" class="post-meta__date date">19 Apr 2015</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Clojure">Clojure</a> <a href="/tags/#macro">macro</a> <a href="/tags/#development">development</a> </span>
+    </div>
+    <h1 class="post-title">A "dead simple" introduction to Clojure macros.</h1>
+  </header>
+
+  <section class="post">
+    <p>Macros are one of the topics which scares many new Clojure developers.
+Although I’ve seen many tutorials about the topic, I think that the
+approach used is often too complicated for someone who is new to Clojure.
+So I will try to explore the topic especially for developers who are
+new to Clojure and haven’t yet grasped the macros.</p>
+
+<p>You can find the code of this post at: <a href="https://github.com/BrunoBonacci/clojure-simple-macro">https://github.com/BrunoBonacci/clojure-simple-macro</a></p>
+
+<h1 id="what-is-a-macro">What is a macro?</h1>
+
+<p>The simple answer is: <em>A macro is a piece of code that is executed at
+compile-time (rather than runtime) and it produces code which in turn is
+compiled.</em></p>
+
+<p>How this is possible? Many other languages have some sort of “macros”,
+such as C/C++, Groovy and many others. However there is a fundamental
+difference.  Languages such C and C++ have
+<a href="http://en.wikipedia.org/wiki/Macro_%28computer_science%29"><em>“Text substitution macros”</em></a>
+while languages such as Groovy have
+<a href="http://glaforge.appspot.com/article/groovy-ast-transformations-tutorials">Abstract Syntax Tree (AST)</a>
+transformations. In other words, in one of the early phases of the
+compilation process, the source code, in is text form, is turned into a tree
+structure which describes the code in terms of its logical parts down to
+every single statement. This tree structure is then made available to
+the user (developer) who can <em>make some modifications</em> before the
+compiler turns the <code class="highlighter-rouge">AST</code> into compiled bytecode.</p>
+
+<p><img src="/images/20150419_Abstract_syntax_tree.jpg" alt="Abstract syntax tree" />
+<em>Image courtesy of: http://sewiki.iai.uni-bonn.de/_media/research/jtransformer/lmp.jpg</em></p>
+
+<p>LISP languages (such as Clojure) don’t need to transform the text
+representation into an Abstract Syntax Tree because the text itself is
+in AST form already.  Clojure source files are written in terms of
+<a href="http://en.wikipedia.org/wiki/S-expression">S-expressions</a> (or <code class="highlighter-rouge">sexpr</code>)
+which are nothing else than <em>lists of lists</em> (= trees).  Now the <em>list</em>
+is one of the fundamental data-structures in Clojure.  Such languages
+which use their own data-structures to represent the source code are called
+<a href="http://en.wikipedia.org/wiki/Homoiconicity"><em>homoiconic</em></a>.</p>
+
+<p><em>Tree structure representing the s-expression for <code class="highlighter-rouge">(* 2 (+ 3 4))</code></em></p>
+
+<p><img src="/images/20150419_S-expression_tree.png" alt="S-expression tree" /></p>
+
+<p>The reason why LISP languages have this <em>funny looking syntax</em> is due to
+the fact that the code is written directly in their AST form. So
+compared to Groovy (at all), Clojure doesn’t need to have a
+representation of the code for the humans and a different representation
+of the code for the compiler (machine). This apparently disadvantage
+makes macros in Clojure extremely easy to write in comparison to
+Groovy. Because macros are so easy to write, they can become a powerful
+way to process your source code and remove duplication, make your code
+more readable, or automatically inject additional code in your source
+code.</p>
+
+<h1 id="how-can-i-write-a-macro">How can I write a macro?</h1>
+
+<p>In Clojure there are two ways to write the macros. The first one is to
+read and process the AST which is just a <em>list of lists</em>.  This is very
+much the Groovy way, with the difference that you already know how to
+manipulate a Clojure’s lists and you don’t need a different API.  The
+second way is very much like a
+<a href="http://en.wikipedia.org/wiki/Comparison_of_web_template_engines"><em>templating language</em></a>.
+Among these template languages there some like:
+<a href="http://en.wikipedia.org/wiki/Apache_Velocity">Velocity</a> or
+<a href="http://mustache.github.io/">Mustache</a> which are very popular.</p>
+
+<p>For example a Velocity template looks like:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>Hello <span class="k">${</span><span class="nv">user_name</span><span class="k">}</span>,
+Today is the <span class="k">${</span><span class="nv">date</span><span class="k">}</span> and we have <span class="k">${</span><span class="nv">num_users</span><span class="k">}</span> users currently online.
+</code></pre>
+</div>
+
+<p>Basically it is just plain text, very much like the output you want to
+produce, minus a few placeholders in the places where the content must
+be generated dynamically.  Once rendered this text might just look like:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>Hello John,
+Today is the 19th April and we have 1,653 users currently online.
+</code></pre>
+</div>
+
+<p>Like a templating engine, Clojure <code class="highlighter-rouge">syntax-quote</code> works pretty much the
+same way.  <em>You start by writing the target code in the way you want to
+see it</em> and then put the placeholders.</p>
+
+<p>For example let’s write a macro which wraps a code execution with a
+<code class="highlighter-rouge">try</code>/<code class="highlighter-rouge">catch</code>, and in case of a exception is raised, a default value is
+used.  For example a division operation such <code class="highlighter-rouge">(/ a b)</code> might generate a
+<code class="highlighter-rouge">java.lang.ArithmeticException</code> when <code class="highlighter-rouge">b</code> is <code class="highlighter-rouge">0</code>.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nf">try</span><span class="w">
+  </span><span class="n">operation</span><span class="w">
+  </span><span class="p">(</span><span class="nf">catch</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="n">x</span><span class="w">
+    </span><span class="n">dafault-value</span><span class="p">))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Where <code class="highlighter-rouge">operation</code> and <code class="highlighter-rouge">default-value</code> may vary from case to case.
+So if this was a Velocity template we would write the code in this way.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>;; example using Velocity template.
+<span class="o">(</span>try
+  <span class="k">${</span><span class="nv">operation</span><span class="k">}</span>
+  <span class="o">(</span>catch Exception x
+    <span class="k">${</span><span class="nv">dafault</span><span class="p">-value</span><span class="k">}</span><span class="o">))</span>
+</code></pre>
+</div>
+
+<p>In Clojure we can write a template using the
+<a href="http://clojure.org/reader#syntax-quote">syntax-quote (the ` backquote character)</a>
+form.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; if we write
+</span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"hello"</span><span class="p">)</span><span class="w">
+</span><span class="c1">;;&gt; hello        [in stdout]
+</span><span class="w">
+</span><span class="c1">;; it is executed and produces the output "hello"
+;; however if we write:
+</span><span class="o">`</span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"hello"</span><span class="p">))</span><span class="w">
+</span><span class="c1">;;=&gt; (clojure.core/println "hello")
+</span><span class="w">
+</span><span class="c1">;; note the namespace is added automatically
+;; this actually produces a template
+;; with the enclosed forms.
+</span></code></pre>
+</div>
+
+<p>So if we want to re-write our template using <code class="highlighter-rouge">syntax-quote</code>
+we will write as follow:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="o">`</span><span class="p">(</span><span class="nf">try</span><span class="w">
+   </span><span class="o">~</span><span class="n">operation</span><span class="w">
+   </span><span class="p">(</span><span class="nf">catch</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="n">x</span><span class="o">#</span><span class="w">
+     </span><span class="o">~</span><span class="n">dafault-value</span><span class="p">)))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>The <em>tilde</em> (<code class="highlighter-rouge">~</code>) works pretty much in the same way of <code class="highlighter-rouge">${placeholders}</code>
+of velocity.  To avoid name conflicts with the local variables you have
+to add a <code class="highlighter-rouge">#</code> at the end of the name, which will generate a unique symbol
+name (see <a href="https://clojuredocs.org/clojure.core/gensym">gensym</a>).  Now
+we are all ready to give a name to this template and use it in our code.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defmacro</span><span class="w"> </span><span class="n">default-to</span><span class="w"> </span><span class="p">[</span><span class="n">default-value</span><span class="w"> </span><span class="n">operation</span><span class="p">]</span><span class="w">
+  </span><span class="o">`</span><span class="p">(</span><span class="nf">try</span><span class="w">
+     </span><span class="o">~</span><span class="n">operation</span><span class="w">
+     </span><span class="p">(</span><span class="nf">catch</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="n">x</span><span class="o">#</span><span class="w">
+       </span><span class="o">~</span><span class="n">default-value</span><span class="p">)))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>This is a fully working template, not much different from the Velocity’s
+style template.  So let’s see the template in its rendered form:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">macroexpand-1</span><span class="w">
+ </span><span class="o">'</span><span class="p">(</span><span class="nf">default-to</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span><span class="w">
+
+</span><span class="c1">;;=&gt;
+</span><span class="w"> </span><span class="p">(</span><span class="nf">try</span><span class="w">
+   </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w">
+   </span><span class="p">(</span><span class="nf">catch</span><span class="w"> </span><span class="n">java.lang.Exception</span><span class="w"> </span><span class="n">x__8493__auto__</span><span class="w">
+     </span><span class="mi">10</span><span class="p">))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>As you can see this was the template we designed earlier. Notice that
+the placeholders have been replaced.</p>
+
+<p><a href="https://clojuredocs.org/clojure.core/macroexpand">macroexpand</a> and
+<a href="https://clojuredocs.org/clojure.core/macroexpand-1">macroexpand-1</a> both
+apply the given template and return the code after the placeholders have
+been replaced. The difference between <code class="highlighter-rouge">macroexpand</code> and <code class="highlighter-rouge">macroexpand-1</code>
+is that the latter does only one level of expansion, which means that if
+the code, after the template has been expanded, it still contains more
+macros, those won’t be expanded; conversely <code class="highlighter-rouge">macroexpand</code> will
+recursively expand all the templates until there is no more macro code
+to expand.</p>
+
+<p>Here there are a couple of interesting things to notice.  Firstly the
+<code class="highlighter-rouge">x#</code> which it has been transformed into a unique local variable
+<code class="highlighter-rouge">__8493__auto__</code>. Another interesting thing is that the symbol
+<code class="highlighter-rouge">Exception</code> has been expanded to the fully qualified form (with
+namespace/package).  Using fully qualified symbols will avoid problems
+of name clashing when the macros is used.  A common example can be
+<code class="highlighter-rouge">log/debug</code>.  If while you writing the macro you refer to a <code class="highlighter-rouge">log</code>
+namespace which contains a function named <code class="highlighter-rouge">debug</code>, and when the macro
+user tries to use the macro in a different namespace without having a
+local <code class="highlighter-rouge">log/debug</code> defined, or even worse, having different
+implementation many strange errors could occur. By automatically
+transforming all symbols in their fully qualified form these problems
+are completely avoided.  Last interesting note to observe is that
+<code class="highlighter-rouge">operation</code> was replaced with the actual code <code class="highlighter-rouge">(/ 1 4)</code> and not its
+result. Keep this in mind for later as we’ll see how this can sometime
+be a problem.</p>
+
+<p>Let’s try to see how our macro works.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nf">default-to</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span><span class="w">
+</span><span class="c1">;;=&gt; 1/4
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">default-to</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span><span class="w">   </span><span class="c1">;; Exception
+;;=&gt; 10
+</span></code></pre>
+</div>
+
+<p>Now let’s improve our macro and ask it to log a message to a logging system in
+case of exceptions.
+We can use <a href="https://github.com/ptaoussanis/timbre">timbre</a> logging library.</p>
+
+<p>So let’s starting by load the namespace.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; add the dependency in your project.clj
+;; [com.taoensso/timbre "3.4.0"]
+;; and restart your REPL
+</span><span class="w">
+</span><span class="p">(</span><span class="nf">require</span><span class="w"> </span><span class="o">'</span><span class="p">[</span><span class="n">taoensso.timbre</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">log</span><span class="p">])</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>and now let’s update our little macro.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defmacro</span><span class="w"> </span><span class="n">default-to</span><span class="w"> </span><span class="p">[</span><span class="n">default-value</span><span class="w"> </span><span class="n">operation</span><span class="p">]</span><span class="w">
+  </span><span class="o">`</span><span class="p">(</span><span class="nf">try</span><span class="w">
+     </span><span class="o">~</span><span class="n">operation</span><span class="w">
+     </span><span class="p">(</span><span class="nf">catch</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="n">x</span><span class="o">#</span><span class="w">
+       </span><span class="p">(</span><span class="nf">log/debug</span><span class="w"> </span><span class="s">"The following error occurred:"</span><span class="w"> </span><span class="n">x</span><span class="o">#</span><span class="w">
+                  </span><span class="s">", defaulting to:"</span><span class="w"> </span><span class="o">~</span><span class="n">default-value</span><span class="p">)</span><span class="w">
+       </span><span class="o">~</span><span class="n">default-value</span><span class="p">)))</span><span class="w">
+
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">load-default-value</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"loading default value from database"</span><span class="p">)</span><span class="w">
+  </span><span class="p">(</span><span class="nb">comment</span><span class="w"> </span><span class="n">loading</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">db</span><span class="p">)</span><span class="w">
+  </span><span class="mi">3</span><span class="p">)</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Let’s assume this time that the default value is retrieved using the
+<code class="highlighter-rouge">load-default-value</code> function and use <code class="highlighter-rouge">macroexpand-1</code> to see the
+generated code.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">macroexpand-1</span><span class="w">
+ </span><span class="o">'</span><span class="p">(</span><span class="nf">default-to</span><span class="w"> </span><span class="p">(</span><span class="nf">load-default-value</span><span class="p">)</span><span class="w">
+     </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="p">)))</span><span class="w">
+
+</span><span class="c1">;;=&gt;
+</span><span class="p">(</span><span class="nf">try</span><span class="w">
+ </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">
+ </span><span class="p">(</span><span class="nf">catch</span><span class="w">  </span><span class="n">java.lang.Exception</span><span class="w"> </span><span class="n">x__9554__auto__</span><span class="w">
+  </span><span class="p">(</span><span class="nf">taoensso.timbre/debug</span><span class="w"> </span><span class="s">"The following error occurred:"</span><span class="w"> </span><span class="n">x__9554__auto__</span><span class="w">
+                         </span><span class="s">", defaulting to:"</span><span class="w"> </span><span class="p">(</span><span class="nf">load-default-value</span><span class="p">))</span><span class="w">
+  </span><span class="p">(</span><span class="nf">load-default-value</span><span class="p">)))</span><span class="w">
+
+
+</span><span class="c1">;; let's execute the macro
+</span><span class="p">(</span><span class="nf">default-to</span><span class="w"> </span><span class="p">(</span><span class="nf">load-default-value</span><span class="p">)</span><span class="w">
+   </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;;[stdout]
+;; loading default value from database
+;; DEBUG - The following error occurred: #&lt;ArithmeticException java.lang.ArithmeticException: Divide by zero&gt; , defaulting to: 3
+;; loading default value from database
+</span><span class="w">
+</span><span class="c1">;;=&gt; 3
+</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Again, you can see that the <code class="highlighter-rouge">log/debug</code> has been expanded to the fully
+qualified name. The interesting part is that the <code class="highlighter-rouge">default-value</code> has
+been expanded with the <em>sexpr</em> <code class="highlighter-rouge">(load-default-value)</code> and not with its
+result.  This is important as, in case of exception, the
+<code class="highlighter-rouge">(load-default-value)</code> <strong>will be called twice</strong> because it appear twice
+in the macro. To verify this behaviour you may check the <em>stdout</em> and
+see the message: <em>“loading default value from database”</em> appearing
+twice. Since the <code class="highlighter-rouge">(load-default-value)</code> produces side effect, it might
+be an undesirable behaviour. So let see how we can fix it.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defmacro</span><span class="w"> </span><span class="n">default-to</span><span class="w"> </span><span class="p">[</span><span class="n">default-value</span><span class="w"> </span><span class="n">operation</span><span class="p">]</span><span class="w">
+  </span><span class="o">`</span><span class="p">(</span><span class="nf">try</span><span class="w">
+     </span><span class="o">~</span><span class="n">operation</span><span class="w">
+     </span><span class="p">(</span><span class="nf">catch</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="n">x</span><span class="o">#</span><span class="w">
+       </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">default</span><span class="o">#</span><span class="w"> </span><span class="o">~</span><span class="n">default-value</span><span class="p">]</span><span class="w">
+         </span><span class="p">(</span><span class="nf">log/debug</span><span class="w"> </span><span class="s">"The following error occurred:"</span><span class="w"> </span><span class="n">x</span><span class="o">#</span><span class="w">
+                    </span><span class="s">", defaulting to:"</span><span class="w"> </span><span class="n">default</span><span class="o">#</span><span class="p">)</span><span class="w">
+         </span><span class="n">default</span><span class="o">#</span><span class="p">))))</span><span class="w">
+
+
+</span><span class="p">(</span><span class="nb">macroexpand-1</span><span class="w">
+ </span><span class="o">'</span><span class="p">(</span><span class="nf">default-to</span><span class="w"> </span><span class="p">(</span><span class="nf">load-default-value</span><span class="p">)</span><span class="w">
+     </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="p">)))</span><span class="w">
+
+</span><span class="c1">;;=&gt;
+</span><span class="p">(</span><span class="nf">try</span><span class="w">
+ </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">
+ </span><span class="p">(</span><span class="nf">catch</span><span class="w"> </span><span class="n">java.lang.Exception</span><span class="w"> </span><span class="n">x__6188__auto__</span><span class="w">
+  </span><span class="p">(</span><span class="nf">clojure.core/let</span><span class="w"> </span><span class="p">[</span><span class="n">default__6189__auto__</span><span class="w"> </span><span class="p">(</span><span class="nf">load-default-value</span><span class="p">)]</span><span class="w">
+   </span><span class="p">(</span><span class="nf">taoensso.timbre/debug</span><span class="w"> </span><span class="s">"The following error occurred:"</span><span class="w"> </span><span class="n">x__6188__auto__</span><span class="w">
+                          </span><span class="s">", defaulting to:"</span><span class="w"> </span><span class="n">default__6189__auto__</span><span class="p">)</span><span class="w">
+   </span><span class="n">default__6189__auto__</span><span class="p">)))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>We used a <code class="highlighter-rouge">let</code> form to create a local var for <code class="highlighter-rouge">default-value</code> called
+<code class="highlighter-rouge">default#</code> (remember that the <code class="highlighter-rouge">#</code> sign a the end of the symbol generates
+unique symbol name) and assign the value of the <code class="highlighter-rouge">~default-value</code>
+expansion, then we can use the local var <code class="highlighter-rouge">default#</code> which will contains
+only the result of the operation, in every place we needed the
+<code class="highlighter-rouge">default-value</code>.  Because we perform only one expansion of
+<code class="highlighter-rouge">~default-value</code>, the <code class="highlighter-rouge">(load-default-value)</code> code will be executed only
+once.</p>
+
+<p>Last improvement we can make to this simple function is to account for a
+code block as operation. If instead of specifying only one operation
+we want to be able to specify multiple forms, we need to change the
+macro signature and accommodate the new params.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defmacro</span><span class="w"> </span><span class="n">default-to</span><span class="w"> </span><span class="p">[</span><span class="n">default-value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">operations</span><span class="p">]</span><span class="w">
+  </span><span class="o">`</span><span class="p">(</span><span class="nf">try</span><span class="w">
+     </span><span class="o">~@</span><span class="n">operations</span><span class="w">
+     </span><span class="p">(</span><span class="nf">catch</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="n">x</span><span class="o">#</span><span class="w">
+       </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">default</span><span class="o">#</span><span class="w"> </span><span class="o">~</span><span class="n">default-value</span><span class="p">]</span><span class="w">
+         </span><span class="p">(</span><span class="nf">log/debug</span><span class="w"> </span><span class="s">"The following error occurred:"</span><span class="w"> </span><span class="n">x</span><span class="o">#</span><span class="w">
+                    </span><span class="s">", defaulting to:"</span><span class="w"> </span><span class="n">default</span><span class="o">#</span><span class="p">)</span><span class="w">
+         </span><span class="n">default</span><span class="o">#</span><span class="p">))))</span><span class="w">
+
+</span><span class="p">(</span><span class="nb">macroexpand-1</span><span class="w">
+ </span><span class="o">'</span><span class="p">(</span><span class="nf">default-to</span><span class="w"> </span><span class="p">(</span><span class="nf">load-default-value</span><span class="p">)</span><span class="w">
+    </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"This is a multi sexpr operation"</span><span class="p">)</span><span class="w">
+    </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"Infact it will be captured by &amp;operation as a list"</span><span class="p">)</span><span class="w">
+    </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="p">)))</span><span class="w">
+
+</span><span class="c1">;;=&gt;
+</span><span class="p">(</span><span class="nf">try</span><span class="w">
+ </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"This is a multi sexpr operation"</span><span class="p">)</span><span class="w">
+ </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"Infact it will be captured by &amp;operation as a list"</span><span class="p">)</span><span class="w">
+ </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">
+ </span><span class="p">(</span><span class="nf">catch</span><span class="w"> </span><span class="n">java.lang.Exception</span><span class="w"> </span><span class="n">x__6494__auto__</span><span class="w">
+  </span><span class="p">(</span><span class="nf">clojure.core/let</span><span class="w"> </span><span class="p">[</span><span class="n">default__6495__auto__</span><span class="w"> </span><span class="p">(</span><span class="nf">load-default-value</span><span class="p">)]</span><span class="w">
+   </span><span class="p">(</span><span class="nf">taoensso.timbre/debug</span><span class="w"> </span><span class="s">"The following error occurred:"</span><span class="w"> </span><span class="n">x__6494__auto__</span><span class="w">
+                          </span><span class="s">", defaulting to:"</span><span class="w"> </span><span class="n">default__6495__auto__</span><span class="p">)</span><span class="w">
+   </span><span class="n">default__6495__auto__</span><span class="p">)))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>By changing the macro signature from <code class="highlighter-rouge">[default-value operation]</code> into its variadic form <code class="highlighter-rouge">[default-value &amp; operations]</code>
+we give the possibility to accept a variable number of parameters (variadic functions/macros)
+which will be represented by a sequence of elements. To explode the sequence we use <code class="highlighter-rouge">~@operations</code>.
+The form <code class="highlighter-rouge">~@</code> called <a href="https://clojuredocs.org/clojure.core/unquote-splicing">unquote-splicing</a>
+expands a list into its individual elements.</p>
+
+<p>Let’s see a bit more about <code class="highlighter-rouge">unquote-splicing</code>:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; range return a sequence of numbers
+</span><span class="p">(</span><span class="nb">range</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w">
+</span><span class="c1">;;=&gt; (0 1 2 3 4 5 6 7 8 9)
+</span><span class="w">
+</span><span class="c1">;; if we use the normal unquote
+;; number will appear wrapped in a sequence
+</span><span class="o">`</span><span class="p">(</span><span class="nb">max</span><span class="w"> </span><span class="o">~</span><span class="p">(</span><span class="nb">range</span><span class="w"> </span><span class="mi">10</span><span class="p">))</span><span class="w">    </span><span class="c1">;; wrong, need (apply max ...)
+;;=&gt; (clojure.core/max (0 1 2 3 4 5 6 7 8 9))
+</span><span class="w">
+</span><span class="c1">;; notice here that the number are NOT wrapped
+;; into the sequence but they appear directly
+</span><span class="o">`</span><span class="p">(</span><span class="nb">max</span><span class="w"> </span><span class="o">~@</span><span class="p">(</span><span class="nb">range</span><span class="w"> </span><span class="mi">10</span><span class="p">))</span><span class="w">
+</span><span class="c1">;;=&gt; (clojure.core/max 0 1 2 3 4 5 6 7 8 9)
+</span></code></pre>
+</div>
+
+<p>This concludes this basic introduction to Clojure’s macros.  By now you
+should have all the necessary tools to write basic macros.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Creating Clojure macros is a powerful way to write concise and beautiful code,
+or turn your declarative code into functional code.
+There are few takeaways from this blog post:</p>
+
+<ul>
+  <li>When you can write function, not macros.  <em>Macros are not composable
+and are not usable as high-order functions</em>, so if you can achieve the
+same result with a function, write a function instead.</li>
+  <li>When writing macros as templates use always backquote (or backtick
+` character) to create code templates</li>
+  <li>Denote your placeholders with the tilde (<code class="highlighter-rouge">~</code>)</li>
+  <li>If a placeholder appear more than once in your template wrap it with
+<code class="highlighter-rouge">let</code> binding and create a local var instead.</li>
+  <li>For every var inside the template create a generated symbol by
+appending the hash sign (<code class="highlighter-rouge">#</code>) at the end of the symbol’s name.</li>
+  <li>Expand lists with the <code class="highlighter-rouge">unquote-splicing</code> (<code class="highlighter-rouge">~@</code>) when necessary</li>
+  <li>Use <code class="highlighter-rouge">macroexpand-1</code> and <code class="highlighter-rouge">macroexpand</code> to see the generated code.</li>
+  <li>Unless your macro is for internal use (same namespace), <em>test your
+macros in a different namespace</em> to catch visibility issues.</li>
+  <li>And remember <em>a macro is always executed a compile time not a
+runtime</em>, and the output of a macro should be code.</li>
+</ul>
+
+<p>If you want to get a deeper understanding of the Clojure’s macros
+check the following links:</p>
+
+<ul>
+  <li><a href="http://blog.8thlight.com/colin-jones/2012/05/22/quoting-without-confusion.html">Quoting without confusion</a></li>
+  <li><a href="http://www.braveclojure.com/writing-macros/">http://www.braveclojure.com/writing-macros/</a></li>
+  <li><a href="https://aphyr.com/posts/305-clojure-from-the-ground-up-macros">Kyle Kingsbury’s “Clojure from the ground up: macros”</a></li>
+  <li>John Aspden’s introduction in three parts:
+<a href="http://www.learningclojure.com/2010/09/clojure-macro-tutorial-part-i-getting.html">part-1</a>
+<a href="http://www.learningclojure.com/2010/09/clojure-macro-tutorial-part-ii-compiler.html">part-2</a>
+<a href="http://www.learningclojure.com/2010/09/clojure-macro-tutorial-part-ii-syntax.html">part-3</a></li>
+</ul>
+
+<p>You can find the code of this post at: <a href="https://github.com/BrunoBonacci/clojure-simple-macro">https://github.com/BrunoBonacci/clojure-simple-macro</a></p>
+
+<p><em>Many thanks to Sathya for his feedbacks</em></p>
+
+  </section>
+  
+</article>
+
+
+
+      </div>
+
+      <footer class="footer">
+  <span class="footer__copyright">&copy; 2013-2016 Bruno Bonacci. All rights reserved.</span>
+</footer>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51571233-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+    </div>
+  </body>
+</html>

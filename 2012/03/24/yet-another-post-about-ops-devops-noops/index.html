@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>Yet, another post about Ops, DevOps, NoOps!</title>
+  <meta name="description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+  <meta name="author" content="Bruno Bonacci">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Bits and pieces">
+  <meta name="twitter:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Bits and pieces">
+  <meta property="og:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/images/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/images/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/images/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/images/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/images/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/images/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/images/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-194x194.png" sizes="194x194">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/images/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" href="/images/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://blog.brunobonacci.com//2012/03/24/yet-another-post-about-ops-devops-noops/">
+  <link rel="alternate" type="application/rss+xml" title="Bits and pieces" href="/feed.xml">
+</head>
+
+
+  <body>
+    <span class="mobile btn-mobile-menu">
+  <i class="icon icon-list btn-mobile-menu__icon"></i>
+  <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+</span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+        <a href="/" title="link to home of Bits and pieces">
+          <img src="/images/profile.jpg" class="user-image" alt="My Profile Photo">
+          <h1 class="panel-cover__title panel-title">Bits and pieces</h1>
+        </a>
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description">Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/projects" title="link to Bits and pieces Projects" class="blog-button">Projects</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/#blog" title="link to Bits and pieces blog" class="blog-button">Blog</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/tags" title="link to Bits and pieces tags" class="blog-button">Tags</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/categories" title="link to Bits and pieces categories" class="blog-button">Categories</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+            
+              <!-- Twitter -->
+              <li class="navigation__item">
+                <a href="http://twitter.com/BrunoBonacci" title="@BrunoBonacci on Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+            
+
+            
+
+            
+              <!-- LinkedIn -->
+              <li class="navigation__item">
+                <a href="https://www.linkedin.com/in/brunobonacci" title="brunobonacci on LinkedIn" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">LinkedIn</span>
+                </a>
+              </li>
+            
+
+            
+              <!-- GitHub -->
+              <li class="navigation__item">
+                <a href="https://www.github.com/BrunoBonacci" title="BrunoBonacci on GitHub" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+            
+
+            
+
+            <!-- RSS -->
+            <li class="navigation__item">
+              <a href="/feed.xml" title="Subscribe" target="_blank">
+                <i class="icon icon-rss"></i>
+                <span class="label">RSS</span>
+              </a>
+            </li>
+
+            </ul>
+          </nav>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="24 Mar 2012" class="post-meta__date date">24 Mar 2012</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#methodologies">methodologies</a> <a href="/tags/#devops">devops</a> </span>
+    </div>
+    <h1 class="post-title">Yet, another post about Ops, DevOps, NoOps!</h1>
+  </header>
+
+  <section class="post">
+    <p>In the past few days I’ve seen strong exchange of opinions about the
+different Ops flavours. In particular Adrian
+(<a href="https://twitter.com/adrianco">@adrianco</a>) from Netflix, in a series
+of twitter posts, defined as “NoOps” a certain number of practices
+adopted by Netflix development teams to push in production changes by
+themselves without depending on Ops teams. The twitter posts, and most
+probably, the presence of the “No” prefix, have been largely
+mis-interpreted by Ops communities. Adrian with
+<a href="http://perfcap.blogspot.co.uk/2012/03/ops-devops-and-noops-at-netflix.html">this post</a>,
+tried to clarify what the term NoOps means in NetFlix.</p>
+
+<p>My background is Dev, so I entirely understand Adrian’s point of
+view. I also spent few years in QA trying to make systems more
+scalable, reliable, resilient, etc., and somehow I do understand some
+of the Ops criticisms to generally irresponsible Dev teams. Dev is
+generally measured in delivery throughput, so the more they change the
+better it is. Ops is traditionally measured by stability, so the less
+they change the better it is. How this can possibly go wrong!!
+Finally, some big companies apply the “segregation of duties”
+(madness) that surely doesn’t help the communication between Dev and
+Ops.</p>
+
+<p>In the past few years, we saw the emergent movement of DevOps whose
+main intent is to break this wall between the two disciplines and get
+them to talk. Now NoOps, as it has been perceived by the communities
+(not as described by Adrian), looks like Dev won’t need Ops any more.</p>
+
+<p>To get a better understanding of Ops, DevOps and NoOps I’ll try to explain them with parallel in everyday life.</p>
+
+<h4 id="the-ops-case">The Ops case</h4>
+
+<p>If instead of building software and services we were building a large
+shopping centre, Dev would be represented by the engineering and
+construction team. At project termination, to “run” the shopping
+centre with all facilities, services and shops, a complete different
+team takes over. People from this team don’t have engineering or
+construction skills, but they know how to run the service. They have
+business knowledge, the know the clientèle, they understand the user’s
+needs, they know how to run a shop and maintain relationships with
+vendors and suppliers. Of course they know the sopping centre
+structure very well. So far things sounds very normal.</p>
+
+<h4 id="the-devops-case">The DevOps case</h4>
+
+<p>In the above example, after the buildings are ready to host shops and
+clients, we take another team of engineers and builders (different
+from the one that built the centre), and ask them to run the
+business. Since they have a very good understanding of the structural
+problem and capacity concepts of the individual shopping areas they
+make sure that escalators, lift, and facilities run accordingly. They
+have knowledge of supply chain management, but not necessarily they
+understand the business potentials, and they will do things such as
+limiting the number of people that access the shopping area to avoid
+overcrowding (limiting revenues as well).</p>
+
+<h3 id="the-noops-case">The NoOps case</h3>
+
+<p>In this case the engineering team and the builders that built the
+centre decide to run the shopping centre by themselves. So they try to
+understand the business by accessing data such as daily revenues and
+customer visits of individual shops. They try to improve general
+throughput and improve the structure where needed, but they might miss
+completely some business opportunities because their core skills are
+elsewhere.</p>
+
+<p>Another analogy can be taken from the design and construction of a
+Formula 1 car and the Grand Prix race. Again, engineering teams (DEV)
+design and build a perfect car. NoOps says: “I’ve built it, I’ll drive
+it!!” (good luck). For DevOps case, we will select a good mechanic and
+ask him to run the race for us. Something like: “…you know how
+does’t work, no? this is the steering wheel, this is to accelerate,
+press this start. But remember, never press the red button.!!!” and
+they never say why. Of course inevitably the button is pressed and the
+ejection mechanism activated. In the Ops case, we would carefully
+select a good driver, explain him how the car works, train him on the
+road with the car, collecting precious feedback from him, and finally
+ask him to run the Gran Prix.</p>
+
+<p>On those analogies it appears clearly that the “pure” Ops strategy is
+the best. Building a service and running it requires very different
+skills. Sometime there are few overlapping but both areas need to be
+specialized.</p>
+
+<p>So why this doesn’t work with software development? I personally think
+that has to do with the fact that most of the operational teams tend
+to avoid as much as possible changes and releases. In the real life
+analogy, the Ops team of a shopping centre would never stop
+engineering teams from fixing a broken lift or improving a old area,
+because they know that, although there will be some inconvenience, the
+engineering works will improve the overall business; maybe attracting
+new customers, maybe expanding business opportunities or simply
+improving the service. Similarly the Formula 1 pilot would be very
+happy to get the latest aerodynamics improvements on the car, or the
+new super techno tires, because they’ll improve his chances to win the
+race.</p>
+
+<p>So, where is the catch? The catch is that the common target should
+prevail over the resistance to the change. In the real life analogies
+the driver would have full trust of his engineers, and
+vice-versa. This doesn’t happen in IT mostly because Dev team they
+don’t share responsibilities of running the services, and usually, Ops
+doesn’t benefit from Dev changes that in many cases are poorly tested,
+and they cause problems.</p>
+
+<p>Of course this doesn’t apply to all realities. Where the communication
+and collaboration between those teams is encouraged, and there is
+mutual trust and respect things works better. That’s why DevOps is
+actually more effective than traditional Ops. Netflix pushes things an
+extra mile. If engineers (Dev and Ops) are directly responsible to run
+the service and they respond directly to their system failures, this
+make them aware of certain issues and necessities that usually
+operation team have. Things like resilience, monitoring, admin tools
+are too often tagged as “Nice to have” and never properly implemented.</p>
+
+<p>So NoOps, as pointed out
+<a href="https://gist.github.com/jallspaw/2140086">in this post</a>, is NOT the
+absence of an operation team, but just very good Ops practices ran by
+Dev. In particularly I would say that instead of talking of NoOps we
+are actually talking about SelfOps. In fact at Netflix the DevOps
+teams have built tools to automate and enable Dev teams to Self-serve
+their operations needs (finally the right kind of
+automation). Therefore, in my opinion, NoOps (or SelfOps as I call it)
+is just the best Ops you can have! By building automation tools they
+have removed the historical dependency from Dev. As consequence they
+increased the delivery throughput as the business requires and
+minimized the risk by sharing responsibilities.</p>
+
+<h4 id="in-conclusion">In conclusion</h4>
+
+<p>It’s all down to three key elements: <strong>communication, mutual trust and most important shared responsibility</strong>.</p>
+
+<p>So if you are a Dev, take direct responsibility of the software that
+you build and try to run it together with Ops. If you are an Ops, ask
+your Dev peer to sit together with you and have a look to logs,
+metrics, and other system parameters to get a better understanding of
+the system, and then write some tool to make sure that Dev doesn’t
+need you to push changes to production.</p>
+
+<p>Tomorrow flying to Malaysia for a couple of weeks of relaxing holidays.  :-)</p>
+
+  </section>
+  
+</article>
+
+
+
+      </div>
+
+      <footer class="footer">
+  <span class="footer__copyright">&copy; 2013-2016 Bruno Bonacci. All rights reserved.</span>
+</footer>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51571233-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+    </div>
+  </body>
+</html>

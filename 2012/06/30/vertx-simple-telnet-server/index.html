@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>Vert.x Goodness - Simple Telnet Server</title>
+  <meta name="description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+  <meta name="author" content="Bruno Bonacci">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Bits and pieces">
+  <meta name="twitter:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Bits and pieces">
+  <meta property="og:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/images/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/images/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/images/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/images/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/images/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/images/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/images/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-194x194.png" sizes="194x194">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/images/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" href="/images/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://blog.brunobonacci.com//2012/06/30/vertx-simple-telnet-server/">
+  <link rel="alternate" type="application/rss+xml" title="Bits and pieces" href="/feed.xml">
+</head>
+
+
+  <body>
+    <span class="mobile btn-mobile-menu">
+  <i class="icon icon-list btn-mobile-menu__icon"></i>
+  <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+</span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+        <a href="/" title="link to home of Bits and pieces">
+          <img src="/images/profile.jpg" class="user-image" alt="My Profile Photo">
+          <h1 class="panel-cover__title panel-title">Bits and pieces</h1>
+        </a>
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description">Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/projects" title="link to Bits and pieces Projects" class="blog-button">Projects</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/#blog" title="link to Bits and pieces blog" class="blog-button">Blog</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/tags" title="link to Bits and pieces tags" class="blog-button">Tags</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/categories" title="link to Bits and pieces categories" class="blog-button">Categories</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+            
+              <!-- Twitter -->
+              <li class="navigation__item">
+                <a href="http://twitter.com/BrunoBonacci" title="@BrunoBonacci on Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+            
+
+            
+
+            
+              <!-- LinkedIn -->
+              <li class="navigation__item">
+                <a href="https://www.linkedin.com/in/brunobonacci" title="brunobonacci on LinkedIn" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">LinkedIn</span>
+                </a>
+              </li>
+            
+
+            
+              <!-- GitHub -->
+              <li class="navigation__item">
+                <a href="https://www.github.com/BrunoBonacci" title="BrunoBonacci on GitHub" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+            
+
+            
+
+            <!-- RSS -->
+            <li class="navigation__item">
+              <a href="/feed.xml" title="Subscribe" target="_blank">
+                <i class="icon icon-rss"></i>
+                <span class="label">RSS</span>
+              </a>
+            </li>
+
+            </ul>
+          </nav>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="30 Jun 2012" class="post-meta__date date">30 Jun 2012</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Actor-model">Actor-model</a> <a href="/tags/#concurrency">concurrency</a> <a href="/tags/#Groovy">Groovy</a> <a href="/tags/#lock-free-algorithm">lock-free-algorithm</a> <a href="/tags/#Vert.x">Vert.x</a> </span>
+    </div>
+    <h1 class="post-title">Vert.x Goodness - Simple Telnet Server</h1>
+  </header>
+
+  <section class="post">
+    <p>One of the coding test that I often assign to developers when I do
+interview is to implement a simple Telnet server in Java. Not a
+full-fledged Telnet server compliant to the
+<a href="http://tools.ietf.org/html/rfc854">RFC-854</a>, but just a non-secure,
+small brother with just few commands implemented.</p>
+
+<p>In general I do ask the following things:</p>
+
+<ul>
+  <li>The Telnet server must be able to accept multiple concurrent connections</li>
+  <li>The server must be able to maintain the connection state (working directory) across multiple commands</li>
+  <li>A base directory must be specified, this will be the root directory “/” for the connecting users and they shouldn’t be allowed to reach any parent directory (like chroot)</li>
+  <li>The Telnet server must support at least the following commands:
+    <ul>
+      <li><code class="highlighter-rouge">cd [&lt;path&gt;]</code> - to change the current working directory</li>
+      <li><code class="highlighter-rouge">pwd</code> - to display the current directory</li>
+      <li><code class="highlighter-rouge">mkdir &lt;path&gt;</code> - to create a new directory</li>
+      <li><code class="highlighter-rouge">ls [&lt;path&gt;]</code> - to list the content of the current/specified directory</li>
+      <li><code class="highlighter-rouge">quit</code> - to close the connection</li>
+    </ul>
+  </li>
+  <li>Of course, you can’t spawn external processes to run those commands in their native OS implementation, otherwise would be cheating.</li>
+</ul>
+
+<p>This simple task hide several details and coding challenges such as: session management, threads management, resource usage/closing, security vulnerabilities, scalability problems etc.</p>
+
+<p>A couple of weeks ago I came across <a href="http://vertx.io/">Vert.x</a> as the
+website says: <em>“Effortless asynchronous application development for
+the modern web and enterprise”</em>. The main page shows a code snippet of
+a web-server able to serve static pages/files in about 4-5 lines of
+code. I personally like when I see that a software package is
+presenting on the home page a code snippet that shows how to use their
+software. The reason being that if the software is easy enough to be
+explained in few lines and appear in the home page, maybe I won’t
+waste so much time on learn it. I’ve been designing and developing
+software for more than 20 years, and nowadays big part of my focus
+goes into simplicity and elegance, and Vert.x meet both.</p>
+
+<p>Let’s explore some of the Vert.x key characteristics:</p>
+
+<ul>
+  <li>
+    <p><strong>Vert.x is Polyglot</strong> - you can implement your application in
+<em>Java, Groovy, JavaScript and Ruby</em>. <em>And you can mix-and-match them
+in the same application</em>. For example you can develop your database
+connection in Java, your XML processing in Groovy (Java APIs are way
+too boring compared to Groovy’s one), and add some others script in
+JavaScript or Ruby. New languages support are under development such
+as Python and Scala.</p>
+  </li>
+  <li><strong>Asynchronous</strong> - It supports non-blocking IO (NIO) as default
+implementation for more scalability and performance.</li>
+  <li><strong>Exceptional Threading model</strong> - The design is brilliant! It offers
+a simplified threading model based on the Actors model. In this
+implementation every “Verticle” instance (any Vert.x implementation)
+is guaranteed to run in the same thread at all time. Multiple
+instances are <strong>isolated</strong> in different class loaders and every
+instance will always run in the same thread. This makes very easy to
+implement multi-threaded system with lock-free solutions. Most of
+the time you won’t need to think about multiple concurrent access,
+locks and semaphores.</li>
+  <li><strong>Vert.x is embeddable</strong> - It is packaged and shipped in a container
+solution ready to host web application, but if you want to embed it
+in your application it is very easy.</li>
+  <li><strong>Extensible</strong> - At the core of the design there is an event bus
+that is responsible for inter-verticle communication. This
+asynchronous bus offer the possibility to write modules in any of
+the supported languages and reuse them in multiple
+applications. Additionally you can put multiple instances in a
+cluster directly supported by the core implementation.</li>
+  <li><strong>Simplicity</strong> - It is so easy to write code with Vert.x that in few
+lines you can get very good scalable solutions.</li>
+</ul>
+
+<p>To try out some of those interesting properties I’ve tried to
+implement the Telnet server using Vert.x and Groovy and here is the
+solution explained.</p>
+
+<h2 id="things-you-shouldnt-be-doing-with-vertx">Things you shouldn’t be doing with Vert.x</h2>
+
+<p>Vert.x has two type of Verticles that are mapped in two different
+thread pools. Normal Verticles that are fully on NIO and they run on
+event loop thread pool. By default Vert.x create one event loop thread
+per available CPU core. The second one are Verticles that use
+traditional blocking I/O and they are called worker verticles; those
+verticles run in a thread pool called background thread pool. Now if
+in your Verticle you access a database with a driver that doesn’t
+support NIO, or you print some information to the console, or you
+access files directly or indirectly (such as via the log) or any other
+I/O that is not fully asynchronous you end up blocking one of the
+event loop thread for some blocking I/O reducing effectively the
+performances. If you can, use NIO for all above things; if you can’t
+then run your Verticle as a worker verticle (see
+<a href="http://vertx.io/manual.html#verticle">documentation</a> for more info).</p>
+
+<p>In the following example I’ll make use of blocking IO in a Verticle
+because I’ll print debug messages to the console. Additionally I’ll
+use the traditional Java File implementation that doesn’t support
+NIO. Vert.x comes with a very handy NIO Filesystem access
+implementation, this could be used to improve the code that you’ll
+see. So please consider the following code as example not as template
+to follow.</p>
+
+<h2 id="the-session-management">The Session management.</h2>
+
+<p>The strategy here is pretty simple. Upon a new connection I assign a
+new connectionId (cid) and add it in a unsynchronized local map. I
+don’t have to worry about others threads accessing this map or any
+concurrent modification because by design Vert.x guarantee that this
+code will ever be executed from the same thread. The map will contain
+session information such as current working directory.</p>
+
+<div class="language-groovy highlighter-rouge"><pre class="highlight"><code><span class="c1">// this is the base directory where all user will be segregated (like: "chroot")</span>
+<span class="n">BASE_DIR</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">properties</span><span class="o">.</span><span class="na">baseDir</span> <span class="o">?:</span> <span class="s2">"/tmp"</span><span class="o">).</span><span class="na">canonicalPath</span><span class="o">;</span>
+
+<span class="c1">// This map maintains the session state for every connection.</span>
+<span class="c1">// for this telnet server the state will be limited to the current directory</span>
+<span class="n">_connections</span> <span class="o">=</span> <span class="o">[:];</span>
+
+<span class="c1">// Connection id counter</span>
+<span class="n">_cids</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+<span class="c1">// assigning an id to a new connection</span>
+<span class="kt">def</span> <span class="nf">registerConnection</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">String</span> <span class="n">cid</span> <span class="o">=</span> <span class="s2">"${++_cids}"</span>
+    <span class="n">_connections</span><span class="o">[</span><span class="n">cid</span><span class="o">]</span> <span class="o">=</span> <span class="o">[</span><span class="nl">curDir:</span> <span class="n">BASE_DIR</span><span class="o">]</span>
+    <span class="k">return</span> <span class="n">cid</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<h2 id="the-telnet-server">The Telnet server.</h2>
+
+<p>For socket server will use the NIO and add handlers on new incoming
+connections. Those handlers will take care of registering a new
+connection, handle incoming requests and handle the connection
+close. The code will look like this:</p>
+
+<div class="language-groovy highlighter-rouge"><pre class="highlight"><code><span class="c1">// general configuration</span>
+<span class="n">settings</span> <span class="o">=</span> <span class="o">[</span><span class="nl">port:</span> <span class="mi">1234</span><span class="o">];</span>
+
+<span class="c1">// Vert.x server and event-bus</span>
+<span class="kt">def</span> <span class="n">server</span> <span class="o">=</span> <span class="n">vertx</span><span class="o">.</span><span class="na">createNetServer</span><span class="o">()</span>
+<span class="kt">def</span> <span class="n">bus</span> <span class="o">=</span> <span class="n">vertx</span><span class="o">.</span><span class="na">eventBus</span>
+
+<span class="c1">// Connection handler. Here requests are captured, parsed, and executed.</span>
+<span class="n">server</span><span class="o">.</span><span class="na">connectHandler</span> <span class="o">{</span> <span class="n">sock</span> <span class="o">-&gt;</span>
+    <span class="c1">// upon a new connection, assigning a new connection id (cid)</span>
+    <span class="n">String</span> <span class="n">cid</span> <span class="o">=</span> <span class="n">registerConnection</span><span class="o">();</span>
+    <span class="n">println</span> <span class="s2">"[$cid]# got a new connection id: $cid - currently ${_connections.size()} are alive."</span><span class="o">;</span>
+
+    <span class="c1">// welcome the user with a message</span>
+    <span class="n">sock</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">welcome</span><span class="o">())</span>
+
+    <span class="c1">// handle the connection close.</span>
+    <span class="n">sock</span><span class="o">.</span><span class="na">closedHandler</span> <span class="o">{</span>
+        <span class="n">_connections</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">cid</span><span class="o">);</span>
+        <span class="n">println</span> <span class="s2">"[$cid]# The connection is now closed"</span>
+    <span class="o">}</span>
+
+    <span class="c1">// handle incoming requests from a single connection</span>
+    <span class="c1">// a request, might contains multiple commands, splitting them by line.</span>
+    <span class="n">sock</span><span class="o">.</span><span class="na">dataHandler</span> <span class="o">{</span> <span class="n">buffer</span> <span class="o">-&gt;</span>
+        <span class="kt">def</span> <span class="n">lines</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="n">buffer</span><span class="o">.</span><span class="na">bytes</span><span class="o">).</span><span class="na">trim</span><span class="o">().</span><span class="na">split</span><span class="o">(</span><span class="s2">"\r\n"</span><span class="o">).</span><span class="na">collect</span> <span class="o">{</span> <span class="n">it</span><span class="o">.</span><span class="na">trim</span><span class="o">()</span> <span class="o">}</span>
+        <span class="n">lines</span><span class="o">.</span><span class="na">each</span> <span class="o">{</span>
+            <span class="n">println</span> <span class="s2">"[$cid]&gt; $it"</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">it</span> <span class="o">==</span> <span class="s2">""</span><span class="o">)</span> <span class="k">return</span>
+
+            <span class="c1">// if a command is found send it to the commands-handler</span>
+            <span class="n">bus</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="s2">"commands"</span><span class="o">,</span> <span class="o">[</span><span class="nl">command:</span> <span class="n">it</span><span class="o">,</span> <span class="nl">cid:</span> <span class="n">cid</span><span class="o">])</span> <span class="o">{</span>
+                <span class="n">resp</span> <span class="o">-&gt;</span>
+                <span class="c1">// once you get a response for a command</span>
+                <span class="c1">// then send it back to the user</span>
+                <span class="n">String</span> <span class="n">outMessage</span> <span class="o">=</span> <span class="n">prepareOutput</span><span class="o">(</span><span class="n">resp</span><span class="o">.</span><span class="na">body</span><span class="o">.</span><span class="na">message</span><span class="o">)</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">outMessage</span> <span class="o">!=</span> <span class="s2">""</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">sock</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="s2">"$outMessage\r\n"</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">println</span> <span class="s2">"[$cid]&lt; "</span> <span class="o">+</span> <span class="n">outMessage</span><span class="o">.</span><span class="na">replaceAll</span><span class="o">(</span><span class="s2">"\n"</span><span class="o">,</span> <span class="s2">"\n[$cid]&lt; "</span><span class="o">)</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+
+                <span class="c1">// if the command was "quit", close the connection.</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">resp</span><span class="o">.</span><span class="na">body</span><span class="o">.</span><span class="na">status</span> <span class="o">==</span> <span class="s2">"ACTION"</span> <span class="o">&amp;&amp;</span> <span class="n">resp</span><span class="o">.</span><span class="na">body</span><span class="o">.</span><span class="na">action</span> <span class="o">==</span> <span class="s2">"QUIT"</span><span class="o">)</span>
+                    <span class="n">sock</span><span class="o">.</span><span class="na">close</span><span class="o">()</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}.</span><span class="na">listen</span><span class="o">(</span> <span class="n">settings</span><span class="o">.</span><span class="na">port</span> <span class="o">);</span>
+
+<span class="n">println</span> <span class="s2">"""
+---------------------------------------------------------------------
+                   Simple Vert.x Telnet Server
+---------------------------------------------------------------------
+(*) Server started at $BASE_DIR and listening on port: $settings.port
+"""</span>
+</code></pre>
+</div>
+
+<h2 id="commands-dispatching">Commands dispatching</h2>
+
+<p>Once I get a command, the command is sent to the bus to the commands
+handler that will process the request and reply via the bus. In this
+case the command handler try to match the request with a list of valid
+command patterns, then call the associated function and reply to the
+bus with the output of the command itself.</p>
+
+<div class="language-groovy highlighter-rouge"><pre class="highlight"><code><span class="c1">// Regular expression to verify/extract pathnames from commands</span>
+<span class="n">PATH_ELEM</span> <span class="o">=</span> <span class="s2">"[A-Za-z0-9.-]+"</span>
+<span class="n">PATH</span> <span class="o">=</span> <span class="s2">"(/?$PATH_ELEM(/$PATH_ELEM)*/?|/)"</span>
+
+<span class="c1">// Commands handler</span>
+<span class="n">bus</span><span class="o">.</span><span class="na">registerHandler</span><span class="o">(</span><span class="s2">"commands"</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">msg</span> <span class="o">-&gt;</span>
+    <span class="kt">def</span> <span class="n">cmd</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="na">body</span><span class="o">.</span><span class="na">command</span>
+    <span class="k">switch</span> <span class="o">(</span><span class="n">cmd</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">case</span> <span class="o">~</span><span class="s">$/cd( $PATH)?/$</span><span class="o">:</span>
+            <span class="kt">def</span> <span class="n">path</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="o">?</span> <span class="n">cmd</span><span class="o">[</span><span class="mi">3</span><span class="o">..-</span><span class="mi">1</span><span class="o">]</span> <span class="o">:</span> <span class="s2">""</span>
+            <span class="n">msg</span><span class="o">.</span><span class="na">reply</span><span class="o">(</span><span class="n">cd</span><span class="o">(</span><span class="n">path</span><span class="o">,</span> <span class="n">msg</span><span class="o">.</span><span class="na">body</span><span class="o">.</span><span class="na">cid</span><span class="o">));</span>
+            <span class="k">break</span><span class="o">;</span>
+        <span class="k">case</span> <span class="o">~</span><span class="s">$/ls( $PATH)?/$</span><span class="o">:</span>
+            <span class="kt">def</span> <span class="n">path</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="o">?</span> <span class="n">cmd</span><span class="o">[</span><span class="mi">3</span><span class="o">..-</span><span class="mi">1</span><span class="o">]</span> <span class="o">:</span> <span class="s2">""</span>
+            <span class="n">msg</span><span class="o">.</span><span class="na">reply</span><span class="o">(</span><span class="n">ls</span><span class="o">(</span><span class="n">path</span><span class="o">,</span> <span class="n">msg</span><span class="o">.</span><span class="na">body</span><span class="o">.</span><span class="na">cid</span><span class="o">));</span>
+            <span class="k">break</span><span class="o">;</span>
+        <span class="k">case</span> <span class="o">~</span><span class="s">$/mkdir $PATH/$</span><span class="o">:</span>
+            <span class="kt">def</span> <span class="n">path</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">[</span><span class="mi">6</span><span class="o">..-</span><span class="mi">1</span><span class="o">]</span>
+            <span class="n">msg</span><span class="o">.</span><span class="na">reply</span><span class="o">(</span><span class="n">mkdir</span><span class="o">(</span><span class="n">path</span><span class="o">,</span> <span class="n">msg</span><span class="o">.</span><span class="na">body</span><span class="o">.</span><span class="na">cid</span><span class="o">));</span>
+            <span class="k">break</span><span class="o">;</span>
+        <span class="k">case</span> <span class="o">~</span><span class="s">$/quit/$</span><span class="o">:</span>
+            <span class="n">msg</span><span class="o">.</span><span class="na">reply</span><span class="o">([</span><span class="nl">status:</span> <span class="s2">"ACTION"</span><span class="o">,</span> <span class="nl">action:</span> <span class="s2">"QUIT"</span><span class="o">,</span> <span class="nl">message:</span> <span class="s2">"Goodbye!!!"</span><span class="o">]);</span>
+            <span class="k">break</span><span class="o">;</span>
+        <span class="nl">default:</span>
+            <span class="n">msg</span><span class="o">.</span><span class="na">reply</span><span class="o">([</span><span class="nl">status:</span> <span class="s2">"ERROR"</span><span class="o">,</span> <span class="nl">message:</span> <span class="s2">"### ERROR: Sorry, this command is unrecognized!"</span><span class="o">]);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>At this point the command implementation is very easy. The change directory “cd” command will look like this:</p>
+
+<div class="language-groovy highlighter-rouge"><pre class="highlight"><code><span class="c1">////////////////////////////////////////////////////////////////////////// cd</span>
+<span class="kt">def</span> <span class="nf">cd</span><span class="o">(</span><span class="kt">def</span> <span class="n">path</span><span class="o">,</span> <span class="n">String</span> <span class="n">cid</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">path</span> <span class="o">==</span> <span class="s2">""</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="n">path</span>
+    <span class="kt">def</span> <span class="n">newPath</span> <span class="o">=</span> <span class="n">virtual2real</span><span class="o">(</span><span class="n">path</span><span class="o">,</span> <span class="n">cid</span><span class="o">);</span>
+
+    <span class="k">if</span> <span class="o">(!</span><span class="n">newPath</span><span class="o">.</span><span class="na">exists</span><span class="o">()</span> <span class="o">||</span> <span class="o">!</span><span class="n">newPath</span><span class="o">.</span><span class="na">isDirectory</span><span class="o">())</span>
+        <span class="k">return</span> <span class="o">[</span><span class="nl">status:</span> <span class="s2">"ERROR"</span><span class="o">,</span> <span class="nl">message:</span> <span class="s2">"### ERROR: $path: no such directory!"</span><span class="o">.</span><span class="na">toString</span><span class="o">()]</span>
+
+    <span class="c1">// changing directory</span>
+    <span class="n">_connections</span><span class="o">[</span><span class="n">cid</span><span class="o">].</span><span class="na">curDir</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">newPath</span><span class="o">.</span><span class="na">canonicalPath</span><span class="o">);</span>
+
+    <span class="k">return</span> <span class="o">[</span><span class="nl">status:</span> <span class="s2">"OK"</span><span class="o">,</span> <span class="nl">message:</span> <span class="s2">""</span><span class="o">];</span>
+<span class="o">}</span>
+
+
+
+<span class="n">File</span> <span class="nf">virtual2real</span><span class="o">(</span><span class="kt">def</span> <span class="n">path</span><span class="o">,</span> <span class="kt">def</span> <span class="n">cid</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kt">def</span> <span class="n">newPath</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">BASE_DIR</span><span class="o">);</span>
+
+    <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">path</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s2">"/"</span><span class="o">))</span>
+            <span class="n">newPath</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s2">"$BASE_DIR$path"</span><span class="o">);</span>
+        <span class="k">else</span>
+            <span class="n">newPath</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s2">"${_connections[cid].curDir}/$path"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// security: in case goes above root like: /../../</span>
+    <span class="k">if</span> <span class="o">(!</span><span class="n">newPath</span><span class="o">.</span><span class="na">canonicalPath</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="n">BASE_DIR</span><span class="o">))</span>
+        <span class="n">newPath</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">BASE_DIR</span><span class="o">);</span>
+
+    <span class="k">return</span> <span class="n">newPath</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>Remember that users will be limited to see directory only under the
+<code class="highlighter-rouge">BASE_DIR</code> like a sort of chroot command from Linux. When the user
+specifys <code class="highlighter-rouge">cd /dir1</code> in his telnet session, this directory it refers to
+<code class="highlighter-rouge">"$BASE_DIR/dir1"</code> on the server side. In the <code class="highlighter-rouge">virutal2real()</code>
+function I transform a user path into a server real pathname. To avoid
+that malicious users do things like <code class="highlighter-rouge">"cat /../../../etc/passwd"</code> and
+bypass my root directory I have to make sure that any path they
+specify is still under the <code class="highlighter-rouge">$BASE_DIR</code> and if not, then I will force
+the <code class="highlighter-rouge">$BASE_DIR</code> as root directory. A similar behaviour is enforced in
+your Linux system when you try to enter the following command <code class="highlighter-rouge">"cd
+/../.."</code> and you will still end up to the root directory <code class="highlighter-rouge">"/"</code>, in
+other words the root directory is the parent of itself.</p>
+
+<h2 id="conclusion">Conclusion.</h2>
+
+<p>We have seen how easy is to safely write multi-thread application in
+Vert.x. The threading model that Vert.x implements, takes care of many
+aspects of concurrent programming, effectively helping the developer
+to avoid using shared state objects and having to synchronize
+access. The full implementation of this system with some other
+additional implemented commands is available on GitHub at
+<a href="https://github.com/BrunoBonacci/vertx-telnet">https://github.com/BrunoBonacci/vertx-telnet</a>. However
+this code isn’t well designed and implemented, and it is just for
+demonstrate the simplicity of writing network servers with Vert.x.</p>
+
+<p>For instance the above code doesn’t support authentication, ignores
+totally the different encoding between clients and servers, it has a
+monolithic implementation (it is only one Groovy script) and, as I’ve
+already mentioned earlier, it does synchronous I/O printing debugging
+information out to the server console as well as accessing the file
+system with blocking I/O functions.</p>
+
+<p>Nevertheless its simplicity, this sever can handle hundreds of
+concurrent users easily. However since every command execution is
+going to run in a single thread, you won’t be able, with this
+implementation, to scale up and use the full capacity of your
+multiprocessor machine. Vert.x comes in your help in this allowing you
+to spawn multiple instances scaling more efficiently up your server
+capacity. Having said that, the above code has a design flaw that you
+can easily fix. By running multiple instances of this small server,
+Vert.x will start sending requests in round-robin fashion to all
+instances. Since every instance is isolated from the other with a
+different class loader, the map with the connection state
+(_connections) is not going to be shared. Actually you will have one
+new instance of this map for every server instance, so incoming
+request might ending up in a instance that doesn’t hold the connection
+state for that particular request. An easy way to fix this in line
+with the Actor model is to extract the map and registration process
+into a separate Verticle with only one instance and connect the
+registration through the event bus. This allow to maintain the session
+management handled by a single thread and scale the server up to the
+number of available processors. Vert.x offers also another way. There
+is the possibility to share some data structures like map and set with
+immutable objects. This come handy to implement things like shared
+cache etc.</p>
+
+<p>I really enjoyed exploring Vert.x, although it proposes itself as main
+competitor for Node.js, I think it has far more capabilities than a
+simple web-server. Its good design makes Vert.x as an excellent
+alternative for many of the web-server implementations of high-volumes
+services. Certainly in the next week weeks I will explore more this
+interesting aspect of Vert.x and coming up with new Vert.x goodnesses.</p>
+
+<hr />
+<p>Full source code available at: <a href="https://github.com/BrunoBonacci/vertx-telnet">https://github.com/BrunoBonacci/vertx-telnet</a></p>
+
+  </section>
+  
+</article>
+
+
+
+      </div>
+
+      <footer class="footer">
+  <span class="footer__copyright">&copy; 2013-2016 Bruno Bonacci. All rights reserved.</span>
+</footer>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51571233-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>Microservices with API Gateway, AWS Lambda and JVM languages</title>
+  <meta name="description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+  <meta name="author" content="Bruno Bonacci">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Bits and pieces">
+  <meta name="twitter:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Bits and pieces">
+  <meta property="og:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/images/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/images/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/images/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/images/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/images/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/images/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/images/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-194x194.png" sizes="194x194">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/images/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" href="/images/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://blog.brunobonacci.com//2016/10/10/aws-api-gateway-and-lambda-with-jvm/">
+  <link rel="alternate" type="application/rss+xml" title="Bits and pieces" href="/feed.xml">
+</head>
+
+
+  <body>
+    <span class="mobile btn-mobile-menu">
+  <i class="icon icon-list btn-mobile-menu__icon"></i>
+  <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+</span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+        <a href="/" title="link to home of Bits and pieces">
+          <img src="/images/profile.jpg" class="user-image" alt="My Profile Photo">
+          <h1 class="panel-cover__title panel-title">Bits and pieces</h1>
+        </a>
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description">Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/projects" title="link to Bits and pieces Projects" class="blog-button">Projects</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/#blog" title="link to Bits and pieces blog" class="blog-button">Blog</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/tags" title="link to Bits and pieces tags" class="blog-button">Tags</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/categories" title="link to Bits and pieces categories" class="blog-button">Categories</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+            
+              <!-- Twitter -->
+              <li class="navigation__item">
+                <a href="http://twitter.com/BrunoBonacci" title="@BrunoBonacci on Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+            
+
+            
+
+            
+              <!-- LinkedIn -->
+              <li class="navigation__item">
+                <a href="https://www.linkedin.com/in/brunobonacci" title="brunobonacci on LinkedIn" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">LinkedIn</span>
+                </a>
+              </li>
+            
+
+            
+              <!-- GitHub -->
+              <li class="navigation__item">
+                <a href="https://www.github.com/BrunoBonacci" title="BrunoBonacci on GitHub" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+            
+
+            
+
+            <!-- RSS -->
+            <li class="navigation__item">
+              <a href="/feed.xml" title="Subscribe" target="_blank">
+                <i class="icon icon-rss"></i>
+                <span class="label">RSS</span>
+              </a>
+            </li>
+
+            </ul>
+          </nav>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="10 Oct 2016" class="post-meta__date date">10 Oct 2016</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#AWS">AWS</a> <a href="/tags/#API-Gateway">API-Gateway</a> <a href="/tags/#Lambda">Lambda</a> </span>
+    </div>
+    <h1 class="post-title">Microservices with API Gateway, AWS Lambda and JVM languages</h1>
+  </header>
+
+  <section class="post">
+    <p><strong>Originally posted at: <a href="https://engineering.thetrainline.com/2016/10/10/microservices-with-api-gateway-aws-lambda-and-jvm-languages/">https://engineering.thetrainline.com/</a></strong></p>
+
+<p>At Trainline we use AWS Lambda <sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup> in conjunction with API Gateway
+<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup> for some of our microservices. Different teams use different
+languages, but in the Data Engineering team we use Clojure <sup id="fnref:3"><a href="#fn:3" class="footnote">3</a></sup> -
+which is a JVM based functional programming language.  Here we share
+some of the experiences we’ve had developing and deploying REST based
+APIs using JVM based Lambdas.</p>
+
+<p>Although we normally use Clojure, in this blog post we will present a
+Java based example (for the benefit of a wider audience). However, we
+expect that the same results would apply to all JVM based languages
+(Clojure, Scala, Groovy, etc.)</p>
+
+<p>This post is split into two parts. The first part describes our
+experience building REST services with API Gateway + Lambda, while the
+second part dives deeper into the usage of JVM languages for Lambda
+development.</p>
+
+<p>We will explore the implication of using AWS Gateway and AWS Lambda
+for microservice development, and we will present our measurement
+of the added latency.</p>
+
+<p>In our Lambda example we go beyond the simple single-thread request
+processing pattern and we leverage the full power of a naturally
+multi-threaded environment such as the JVM. Although this might not
+be the <em>standard</em> way to develop AWS Lambda we believe it is important
+to gain a deeper understanding of JVM based Lambda implementation.</p>
+
+<p>We will show with empirical evidence that the JVM is subject to a
+<strong>freeze/thaw</strong> cycle in which all threads are temporarily frozen
+while the Lambda is not processing a user request. As for the previous
+part we will also explore implication of this behaviour.</p>
+
+<p>The technology choice has to take into account many different factors
+such as: speed of which you can deliver the solution, security,
+performance, scalability, maintainability, operations, costs and the
+team skill-set.  Balancing all these factors is a essential part of
+modern software development. Although, there is a number of things to
+keep in mind when deploying microservices with API Gateway + JVM based
+Lambdas, our overall experience with these solution is very positive.</p>
+
+<h2 id="part-1-microservices-with-api-gateway--aws-lambda">Part 1: Microservices with API Gateway + AWS Lambda.</h2>
+
+<p>AWS API Gateway is a great product, which provides a good deal of
+control and flexibility. For this reason we plan to use it in front of
+all microservices to leverage more <em>serverless architecture</em>
+<sup id="fnref:4"><a href="#fn:4" class="footnote">4</a></sup>. However there are a number of issues to take into account before
+applying this strategy.</p>
+
+<ul>
+  <li>First and most importantly, API Gateway doesn’t run within a
+VPC <sup id="fnref:5"><a href="#fn:5" class="footnote">5</a></sup>, so every endpoint is exposed
+to the public Internet. There are a number of ways to secure
+endpoints, including custom authorizers and client certificates
+<sup id="fnref:6"><a href="#fn:6" class="footnote">6</a></sup>, however it is something that needs to be kept in mind while
+designing APIs.</li>
+  <li>The second point to consider is <strong>latency</strong>. Because API Gateway
+exposes public APIs, it makes use of the AWS CDN CloudFront
+<sup id="fnref:7"><a href="#fn:7" class="footnote">7</a></sup>. Every request goes out through the customer’s VPC Internet
+Gateway, to some CloudFront endpoint, before making its way back
+to the calling service. Since we were unable to find published
+resources which quantify these latencies, we decided to measure
+them ourselves.</li>
+</ul>
+
+<p>In this post when talking about <em>latency</em> we are referring to the
+request/response duration which includes network transfer and request
+processing time, unless otherwise specified.</p>
+
+<h3 id="the-scenario">The scenario.</h3>
+
+<p>The two questions we were keen to answer were:</p>
+
+<ul>
+  <li><strong>What is the API Gateway latency distribution?</strong></li>
+  <li><strong>What is the API Gateway + Lambda latency distribution?</strong></li>
+</ul>
+
+<p>In other words, we wanted to understand how much latency is
+added per request if we use these two technologies for our
+services.</p>
+
+<p>To answer the first question we created the following environment:</p>
+
+<ul>
+  <li>1 x m4.xlarge EC2 instance with a load test tool.</li>
+  <li>1 x m4.xlarge EC2 instance running NGINX, serving a single static JSON file.</li>
+  <li>Both instances were in the same region, same availability zone,
+same VPC, and same subnet.</li>
+</ul>
+
+<p>The load test tool we used was Gatling <sup id="fnref:8"><a href="#fn:8" class="footnote">8</a></sup>. It is an Open Source fully
+asynchronous load generator. (When measuring latencies it is very
+important to use asynchronous load generators to avoid a common
+latency measurement mistake known as “<strong>Coordinated omission</strong>” <sup id="fnref:9"><a href="#fn:9" class="footnote">9</a></sup>).</p>
+
+<p>Gatling simulates ramping up from 1 request per second to 100 request
+per second, measuring the latencies at every step. We already knew
+that API Gateway scales automatically to several thousands requests
+per second, so the objective of this test was not to see how far we
+could push it. Instead we wanted to measure the typical latency we can
+expect for the type of services we are targeting with this technology
+(which are low to medium traffic microservices).</p>
+
+<h4 id="measuring-latency-via-direct-connection">Measuring latency via direct connection</h4>
+
+<p>Firstly, we measured latencies when the load test tool directly calls
+the APIs within the same VPC and AZ. This emulates the
+case when two services in the same VPC and AZ communicate
+directly. Here we can see the results:</p>
+
+<ul>
+  <li>Direct connection latencies over time (no API Gateway):</li>
+</ul>
+
+<p><img src="/images/aws-lambda/direct-latency1.png" alt="direct-latency" /></p>
+
+<ul>
+  <li>Direct connection latencies over throughput (no API Gateway):</li>
+</ul>
+
+<p><img src="/images/aws-lambda/direct-latency2.png" alt="direct-latency" /></p>
+
+<ul>
+  <li>Direct connection latency quantiles (no API Gateway):</li>
+</ul>
+
+<p><img src="/images/aws-lambda/direct-summary.png" alt="direct-summary" /></p>
+
+<p>As expected the latencies of a direct connection between two services
+in the same VPC / subnet are very low, and most importantly very
+stable. The median latency is sub-millisecond, with a very
+stable and low 99th percentile.</p>
+
+<h4 id="measuring-latency-via-api-gateway-connection">Measuring latency via API Gateway connection</h4>
+
+<p>The second measurement we performed is when the load test tool accesses the
+service via API Gateway. This reveals how much
+latency overhead is added by using API Gateway.</p>
+
+<ul>
+  <li>Proxied connection latencies over time (via API Gateway):</li>
+</ul>
+
+<p><img src="/images/aws-lambda/api-gateway-latency1.png" alt="api-gateway-latency" /></p>
+
+<ul>
+  <li>Proxied connection latencies over throughput (via API Gateway):</li>
+</ul>
+
+<p><img src="/images/aws-lambda/api-gateway-latency2.png" alt="api-gateway-latency" /></p>
+
+<ul>
+  <li>Proxied connection latency quantiles (via API Gateway):</li>
+</ul>
+
+<p><img src="/images/aws-lambda/api-gateway-summary.png" alt="api-gateway-summary" /></p>
+
+<p>Here we can clearly see that the latency is more unstable. The added
+latency for every request is between 12ms and 42ms, the jitter is the
+in order of 10ms, and the maximum time for a single request was
+1516ms. This worst case of 1.5s added on top of
+the typical response time is high, but luckily it doesn’t happen very
+often.</p>
+
+<h4 id="measuring-latency-via-api-gateway--lambda">Measuring latency via API Gateway + Lambda</h4>
+
+<p>Finally we wanted to see how much latency is added when implementing
+microservices as AWS Lambda functions with API Gateway on top. The
+test Lambda itself is trivial - it just doubles a number (code shown
+later). The typical execution time of the doubling code (including the
+request and response marshalling) is trivial; in the order of
+150-200μs.  Therefore all the latency reported in the following charts
+may be fairly attributed to the API Gateway and Lambda machinery.</p>
+
+<ul>
+  <li>API Gateway + Lambda latency over time:</li>
+</ul>
+
+<p><img src="/images/aws-lambda/api-gateway-lambda-latency1.png" alt="api-gateway-lambda-latency" /></p>
+
+<ul>
+  <li>API Gateway + Lambda latency over throughput:</li>
+</ul>
+
+<p><img src="/images/aws-lambda/api-gateway-lambda-latency2.png" alt="api-gateway-lambda-latency" /></p>
+
+<ul>
+  <li>API Gateway + Lambda latency quantiles:</li>
+</ul>
+
+<p><img src="/images/aws-lambda/api-gateway-lambda-summary.png" alt="api-gateway-lambda-summary" /></p>
+
+<p>As shown here, the latencies are much higher when API Gateway and
+Lambda are used. Microservices implemented using API Gateway + Lambda
+incur a latency ‘tax’ of <strong>37-109ms per request</strong>. The wide range of
+latency and the high spikes are probably attributable to Lambda
+container creation. An interesting observation is that the latencies
+seems to be more jittery at lower throughput levels (15-35 requests
+per second).  On its own, 37-109ms per request is not too
+bad. However, if you consider a typical microservice architecture
+where one frontline service makes a number of requests to other
+services before returning the final response, you can see how these
+latencies would become the dominant part of a user request, and
+(probably) an unacceptable overhead.</p>
+
+<h2 id="part-2-aws-lambdas-java-threads-and-the-jvm-freezethaw">Part 2: AWS Lambdas, Java threads and the JVM freeze/thaw.</h2>
+
+<p>So far we have seen some of the things to keep in mind when
+considering the use of API Gateway and Lambda for microservices. Now
+we will explore in more detail our findings around using AWS Lambda
+with JVM based languages.  While developing a Lambda service we
+stumbled upon an issue which lead us to gain a deeper understanding of
+AWS Lambda itself.</p>
+
+<h3 id="the-scenario-1">The scenario.</h3>
+
+<p>Monitoring production APIs is a standard requirement these days. AWS
+Lambda has a few metrics available by default in CloudWatch
+<sup id="fnref:10"><a href="#fn:10" class="footnote">10</a></sup>. However, if you require more detailed metrics you have to fall
+back on more traditional approaches and tools. At Trainline we use New
+Relic for most of our production monitoring, and therefore we opted to
+use it for monitoring Lambdas. Amongst other things, this gives us a
+single place to see most of our service metrics. One thing to keep in
+mind is that the behaviour described in this article is <em>NOT</em> peculiar
+to New Relic itself, and it will be common to any tool where metrics
+are published asynchronously. <em>In fact, is not even specific to
+monitoring tools at all, it is just how we came about to find this
+specific Lambda’s behaviour. Any background operation or communication
+to a database or external service would suffer for the same issues we
+are describing in this post</em>.</p>
+
+<p>We make use of the New Relic Insights API <sup id="fnref:11"><a href="#fn:11" class="footnote">11</a></sup>, which
+boils down to a HTTP POST with a JSON payload containing the events
+and facets we wish to track.</p>
+
+<p>A common approach for event based monitoring like this is to buffer a
+number of events in memory and then use a background thread to publish
+the data to the tool (in our case New Relic). (In this discussion we
+will refer to a <em>“background thread”</em> as a thread which is not
+processing client requests). The approach has several advantages:</p>
+
+<ul>
+  <li><strong>it doesn’t impact the request thread</strong>. Events are passed to a
+dedicated thread so that the main request thread is not impacted.</li>
+  <li><strong>buffering</strong>. It buffers a configurable number of events in
+memory before making the “expensive” (100ms-120ms) request to the
+API.</li>
+  <li><strong>decoupling</strong>. The processing of the Lambda requests and the
+metrics collection concerns are well separated, and they have well
+defined failure handling modes. For example if the POST to
+New Relic API fails for any reason it won’t impact the request
+thread, and handling it could be as easy as retrying the
+request some time later.</li>
+</ul>
+
+<p>The following image depict the scenario where the <code class="highlighter-rouge">λ-thread</code> and the
+<code class="highlighter-rouge">BufferingAgent</code> belong to the same JVM process which is running the
+AWS Lambda. The <code class="highlighter-rouge">BufferingAgent</code> runs in a <em>background thread</em>.</p>
+
+<p><img src="/images/aws-lambda/background-thread.png" alt="background-thread" /></p>
+
+<h2 id="the-problem">The problem.</h2>
+
+<p><strong>We found that the approach described above doesn’t work on AWS
+Lambda.</strong> The following section details our findings and explains why
+it doesn’t work.</p>
+
+<p>In the main AWS documentation <sup id="fnref:12"><a href="#fn:12" class="footnote">12</a></sup> there isn’t much detail about the Lambda
+lifecycle. Another blog post <sup id="fnref:13"><a href="#fn:13" class="footnote">13</a></sup> tries to explain how containers are
+allocated and reused. However none of the resources we’ve found
+detail exactly what happens to the container / JVM once the execution of the
+request terminates.</p>
+
+<p>What we expected is that background threads would keep working - as in a
+standalone JVM - and therefore we could push the metrics to New Relic.
+What really happens is that we can’t get any data into New Relic and
+from time-to-time we get a <code class="highlighter-rouge">SocketException</code> with a
+<code class="highlighter-rouge">OperationNotPermittedException</code>.</p>
+
+<p>Once we ruled out any programming error in our code, we noticed that
+the same code was working correctly when the HTTP POST to New Relic was
+done in the Lambda request thread (synchronously), rather than in the
+background thread. So we started investigating how threads get
+scheduled in an AWS Lambda. The question we tried to answer was: <em>“What
+happens to the JVM when the a Lambda request completes?”</em></p>
+
+<h3 id="what-happens-to-the-jvm-when-the-a-lambda-request-completes">What happens to the JVM when the a lambda request completes?</h3>
+
+<p>In some of the AWS documentation and blog posts <sup id="fnref:13:1"><a href="#fn:13" class="footnote">13</a></sup> we found reference to a
+<em>container freeze/thaw</em> process, but there was not enough detail to understand
+what is actually happening.</p>
+
+<p>In order to find out how threads are scheduled in Lambda based JVMs we
+did the following experiment. We wrote a simple AWS Lambda function
+which, the first time it gets initialised, starts a background thread
+which logs a message. It then goes to sleep for <code class="highlighter-rouge">1 second</code>, and then
+loops. The Lambda itself expects a value, and it returns the value
+doubled.</p>
+
+<p>Here is the sample code for the <code class="highlighter-rouge">handleRequest</code> for our <code class="highlighter-rouge">FreezeThawLambda</code> class:</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code>    <span class="kd">public</span> <span class="n">Value</span> <span class="nf">handleRequest</span><span class="o">(</span><span class="n">Value</span> <span class="n">request</span><span class="o">,</span> <span class="n">Context</span> <span class="n">context</span><span class="o">){</span>
+        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"request value:"</span> <span class="o">+</span> <span class="n">request</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">Value</span><span class="o">(</span> <span class="n">request</span><span class="o">.</span><span class="na">getValue</span><span class="o">()</span> <span class="o">*</span> <span class="mi">2</span><span class="o">);</span>
+    <span class="o">}</span>
+</code></pre>
+</div>
+
+<p>And this is what the request/response POJO looks like:</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Value</span> <span class="o">{</span>
+
+    <span class="kt">long</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">0L</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setValue</span><span class="o">(</span> <span class="kt">long</span> <span class="n">aValue</span> <span class="o">){</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">aValue</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getValue</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="n">value</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nf">Value</span><span class="o">(){</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nf">Value</span><span class="o">(</span> <span class="kt">long</span> <span class="n">aValue</span> <span class="o">){</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">aValue</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>When the AWS Lambda machinery instantiates our Lambda we start a
+background thread with this code.</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code>    <span class="kd">public</span> <span class="nf">FreezeThawLambda</span><span class="o">(){</span>
+        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"FreezeThawLambda created."</span><span class="o">);</span>
+        <span class="n">startBackgroundThread</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">startBackgroundThread</span><span class="o">(){</span>
+        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"Starting background thread."</span><span class="o">);</span>
+        <span class="k">new</span> <span class="nf">Thread</span><span class="o">(){</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+                <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+                <span class="k">while</span><span class="o">(</span> <span class="kc">true</span> <span class="o">){</span>
+                    <span class="kt">long</span> <span class="n">start</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
+                    <span class="n">FreezeThawLambda</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span>
+                    <span class="kt">long</span> <span class="n">stop</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
+                    <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span> <span class="s">"background thread alive, iteration: "</span> <span class="o">+</span> <span class="o">++</span><span class="n">i</span> <span class="o">+</span> <span class="s">" slept for: "</span> <span class="o">+</span> <span class="n">duration</span><span class="o">(</span><span class="n">start</span><span class="o">,</span> <span class="n">stop</span><span class="o">));</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}.</span><span class="na">start</span><span class="o">();</span>
+    <span class="o">}</span>
+</code></pre>
+</div>
+
+<p>The full code used for this test can be found on our Github repository <sup id="fnref:14"><a href="#fn:14" class="footnote">14</a></sup>.</p>
+
+<p>If this code was running on a <em>“normal”</em> JVM the output would look
+like the following:</p>
+
+<div class="language-text highlighter-rouge"><pre class="highlight"><code>2016-09-06 12:04:32 &lt;&gt; INFO  FreezeThawLambda:12 - FreezeThawLambda created.
+2016-09-06 12:04:32 &lt;&gt; INFO  FreezeThawLambda:26 - Starting background thread.
+2016-09-06 12:04:33 &lt;&gt; INFO  FreezeThawLambda:34 - background thread alive, iteration: 1 slept for: 1002
+2016-09-06 12:04:34 &lt;&gt; INFO  FreezeThawLambda:34 - background thread alive, iteration: 2 slept for: 1004
+2016-09-06 12:04:35 &lt;&gt; INFO  FreezeThawLambda:34 - background thread alive, iteration: 3 slept for: 1000
+2016-09-06 12:04:36 &lt;&gt; INFO  FreezeThawLambda:34 - background thread alive, iteration: 4 slept for: 1003
+2016-09-06 12:04:37 &lt;&gt; INFO  FreezeThawLambda:34 - background thread alive, iteration: 5 slept for: 1001
+2016-09-06 12:04:38 &lt;&gt; INFO  FreezeThawLambda:34 - background thread alive, iteration: 6 slept for: 1003
+</code></pre>
+</div>
+
+<p>As you can see, the background thread gets scheduled pretty
+regularly at <code class="highlighter-rouge">1 second</code> intervals.</p>
+
+<p>Once deployed to AWS lambda and run for a few test requests, the output
+found in CloudWatch looks like the following:</p>
+
+<div class="language-text highlighter-rouge"><pre class="highlight"><code>2016-09-06 11:09:45 &lt;&gt; INFO FreezeThawLambda:12 - FreezeThawLambda created.
+2016-09-06 11:09:45 &lt;&gt; INFO FreezeThawLambda:26 - Starting background thread.
+2016-09-06 11:09:45 &lt;&gt; INFO FreezeThawLambda:19 - request value:20
+2016-09-06 11:09:47 &lt;&gt; INFO FreezeThawLambda:34 - background thread alive, iteration: 1 slept for: 2058
+2016-09-06 11:09:47 &lt;&gt; INFO FreezeThawLambda:19 - request value:20
+2016-09-06 11:09:48 &lt;&gt; INFO FreezeThawLambda:34 - background thread alive, iteration: 2 slept for: 1523
+2016-09-06 11:09:48 &lt;&gt; INFO FreezeThawLambda:19 - request value:20
+2016-09-06 11:09:49 &lt;&gt; INFO FreezeThawLambda:19 - request value:20
+2016-09-06 11:10:01 &lt;&gt; INFO FreezeThawLambda:34 - background thread alive, iteration: 3 slept for: 12166
+2016-09-06 11:10:01 &lt;&gt; INFO FreezeThawLambda:19 - request value:20
+2016-09-06 11:10:06 &lt;&gt; INFO FreezeThawLambda:34 - background thread alive, iteration: 4 slept for: 5951
+2016-09-06 11:10:06 &lt;&gt; INFO FreezeThawLambda:19 - request value:20
+2016-09-06 11:10:25 &lt;&gt; INFO FreezeThawLambda:34 - background thread alive, iteration: 5 slept for: 18364
+2016-09-06 11:10:25 &lt;&gt; INFO FreezeThawLambda:19 - request value:20
+2016-09-06 11:10:26 &lt;&gt; INFO FreezeThawLambda:34 - background thread alive, iteration: 6 slept for: 1552
+2016-09-06 11:10:26 &lt;&gt; INFO FreezeThawLambda:19 - request value:20
+</code></pre>
+</div>
+
+<p>The first thing to notice is that no output was sent to CloudWatch
+<em>unless a request was in-flight</em>. The first request would have
+instantiate the container, and after that the background thread should
+have been running and producing one log entry every second. However,
+as you can see from the logs above, the background log lines are <em>not</em>
+being emitted once per second. Instead they appear at variable intervals with
+irregular sleep times. The second thing to notice is that the
+background log lines are interleaved with the acutal request log
+lines. What we found is that the background thread is only emitting
+lines <em>while a request is being processed</em>.</p>
+
+<p>What we think is happening - and what our experimental evidence
+seems to suggest - is that after the Lambda request thread completes the
+AWS Lambda machinery it <code class="highlighter-rouge">freezes</code> the JVM, and later <code class="highlighter-rouge">thaws</code> it when a new
+request is incoming.</p>
+
+<p>If we had to speculate about how this is happening, we would imagine
+that the AWS Lambda scheduler uses <strong>Linux cgroups</strong> <sup id="fnref:15"><a href="#fn:15" class="footnote">15</a></sup> and <strong>Linux
+Kernel namespaces</strong> <sup id="fnref:16"><a href="#fn:16" class="footnote">16</a></sup> to isolate lambda executions.  Once the
+processing of a Lambda request is completed the <strong>CPU shares</strong> for the
+given container get set to zero. <strong>CPU shares</strong> define the amount of
+CPU each container is allocated to use. They are denominated as 1024
+shares for each CPU core.  So for example 512 CPU shares equates to
+half of one CPU core, while 1024 is a full CPU core, etc. We would
+imagine that setting it to zero would tell the scheduler to never
+allocate time to a given process, effectively causing the JVM to
+<strong>freeze</strong>. Upon a new Lambda request, the CPU shares are restored to
+their original value, causing the JVM process to <strong>thaw</strong> to a normal
+running state. Of course, this is just speculation - as AWS don’t make
+the Lambda internals public domain.</p>
+
+<p>Although it isn’t relevant how AWS implemented their Lambda
+infrastructure, we think it is important to have a deeper understanding
+of the Lambda lifecycle so that JVM developers who want to use
+this service know what behaviour they can expect.</p>
+
+<p>We can easily understand the commercial reasons behind the freeze/thaw
+process, so that AWS Lambda users are billed for the <em>“effective”</em>
+time they use CPU resources, but as JVM developers we need to consider
+some of the consequences:</p>
+
+<ul>
+  <li><em>No progress can be made outside the request timespan by any
+thread.</em> Therefore, forget about asynchronously pushing metrics to
+monitoring systems, and pre-fetching or refreshing internal
+caches.</li>
+  <li>The JVM Garbage Collector won’t be able run minor collection in
+background - unless there is a running request. Similarly, the JVM Young
+Generation GC which is known to <strong>stop-the-world</strong> <sup id="fnref:17"><a href="#fn:17" class="footnote">17</a></sup> will only happen
+when a request is being processed. In turn, it will add more
+latency to the request processing.</li>
+</ul>
+
+<p><em>(update1)</em></p>
+
+<p>Obviously the freeze/thaw process doesn’t kick-in on every request,
+this would impact the latency too much. Instead, like the following
+measurement seems to suggest, the freeze/thaw process acts on the
+request’s queue length, maybe with the addition of a grace period.</p>
+
+<p><img src="/images/aws-lambda/api-gateway-lambda-latency2.png" alt="api-gateway-lambda-latency" /></p>
+
+<p>As the above chart shows, at lower throughput levels the latency is
+more jittery, over <strong>20-25 req/s</strong> it becomes more stable. This seems
+to suggest that when the request queue is empty, which it will be most
+of the time at lower throughput levels, then the container is frozen
+after the request processing is completed. Upon arrival of new
+requests the container is thawed back to its original state and the
+request is handled. At higher throughput levels the queue will be
+always containing new requests to process so that there is no need
+to freeze the container.</p>
+
+<p>Bruno Bonacci <br />
+<a href="https://twitter.com/brunobonacci">@BrunoBonacci</a> <br />
+Data Engineering team @ Trainline.com</p>
+
+<p><em>Many thanks to John Telford and Frederik Brysse for the early
+feedback and the many corrections.</em></p>
+
+<h2 id="references"><a name="References"></a>References</h2>
+
+<h2 id="updates">Updates:</h2>
+
+<ul>
+  <li><strong>2017-02-04 - update1 on freeze/thaw strategy</strong></li>
+</ul>
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p><a href="">https://aws.amazon.com/lambda/details/</a>&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:2">
+      <p><a href="">https://aws.amazon.com/api-gateway/</a>&nbsp;<a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:3">
+      <p><a href="">https://clojure.org/</a>&nbsp;<a href="#fnref:3" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:4">
+      <p><a href="">https://d0.awsstatic.com/whitepapers/AWS_Serverless_Multi-Tier_Architectures.pdf</a>&nbsp;<a href="#fnref:4" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:5">
+      <p><a href="">https://aws.amazon.com/vpc/</a>&nbsp;<a href="#fnref:5" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:6">
+      <p><a href="">https://aws.amazon.com/api-gateway/faqs/</a>&nbsp;<a href="#fnref:6" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:7">
+      <p><a href="">https://forums.aws.amazon.com/message.jspa?messageID=647833</a>&nbsp;<a href="#fnref:7" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:8">
+      <p><a href="">http://gatling.io/</a>&nbsp;<a href="#fnref:8" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:9">
+      <p><a href="">https://www.infoq.com/presentations/latency-pitfalls</a>&nbsp;<a href="#fnref:9" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:10">
+      <p><a href="">http://docs.aws.amazon.com/lambda/latest/dg/monitoring-functions-metrics.html</a>&nbsp;<a href="#fnref:10" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:11">
+      <p><a href="">https://docs.newrelic.com/docs/insights/new-relic-insights/adding-querying-data/insert-custom-events-insights-api</a>&nbsp;<a href="#fnref:11" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:12">
+      <p><a href="">http://docs.aws.amazon.com/lambda/latest/dg/lambda-introduction.html</a>&nbsp;<a href="#fnref:12" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:13">
+      <p><a href="">https://aws.amazon.com/blogs/compute/container-reuse-in-lambda/</a>&nbsp;<a href="#fnref:13" class="reversefootnote">&#8617;</a>&nbsp;<a href="#fnref:13:1" class="reversefootnote">&#8617;<sup>2</sup></a></p>
+    </li>
+    <li id="fn:14">
+      <p><a href="">https://github.com/trainline/lambda-freeze-thaw</a>&nbsp;<a href="#fnref:14" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:15">
+      <p><a href="">https://en.wikipedia.org/wiki/Cgroups</a>&nbsp;<a href="#fnref:15" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:16">
+      <p><a href="">https://en.wikipedia.org/wiki/Linux_namespaces</a>&nbsp;<a href="#fnref:16" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:17">
+      <p><a href="">http://stackoverflow.com/questions/18582827/garbage-collector-for-young-generation</a> <em>(Gil Tene’s comment)</em>&nbsp;<a href="#fnref:17" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+  </section>
+  
+</article>
+
+
+
+      </div>
+
+      <footer class="footer">
+  <span class="footer__copyright">&copy; 2013-2016 Bruno Bonacci. All rights reserved.</span>
+</footer>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51571233-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+    </div>
+  </body>
+</html>
