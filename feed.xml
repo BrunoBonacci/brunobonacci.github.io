@@ -5,8 +5,8 @@
     <description>Between bits and bytes and all other pieces.&lt;br/&gt;A tech blog about Clojure, BigData, and Software Architecture.</description>
     <link>http://blog.brunobonacci.com//</link>
     <atom:link href="http://blog.brunobonacci.com//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sun, 22 Oct 2017 16:35:23 +0100</pubDate>
-    <lastBuildDate>Sun, 22 Oct 2017 16:35:23 +0100</lastBuildDate>
+    <pubDate>Sun, 22 Oct 2017 18:17:18 +0100</pubDate>
+    <lastBuildDate>Sun, 22 Oct 2017 18:17:18 +0100</lastBuildDate>
     <generator>Jekyll v3.4.5</generator>
     
       <item>
@@ -353,7 +353,7 @@ unaware of this.&lt;/p&gt;
       &lt;p&gt;&lt;a href=&quot;https://users.dcc.uchile.cl/~abassi/Cursos/41a/lambdacalc.pdf&quot;&gt;An Introduction to the Lambda Calculus - Goldberg 2000&lt;/a&gt;&amp;nbsp;&lt;a href=&quot;#fnref:2&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
     &lt;li id=&quot;fn:3&quot;&gt;
-      &lt;p&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=eis11j_iGMs&quot;&gt;Lambda Calculus - Computerphile&lt;/a&gt;  &lt;sup id=&quot;fnref:3:1&quot;&gt;&lt;a href=&quot;#fn:3&quot; class=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt;: &lt;a href=&quot;https://www.youtube.com/watch?v=eis11j_iGMs&quot;&gt;Lambda Calculus - Computerphile&lt;/a&gt;&amp;nbsp;&lt;a href=&quot;#fnref:3&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=eis11j_iGMs&quot;&gt;Lambda Calculus - Computerphile&lt;/a&gt;&amp;nbsp;&lt;a href=&quot;#fnref:3&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
     &lt;li id=&quot;fn:4&quot;&gt;
       &lt;p&gt;&lt;a href=&quot;https://github.com/clojure/clojure/blob/clojure-1.9.0-alpha14/src/clj/clojure/core.clj#L6579&quot;&gt;clojure.core/case source code&lt;/a&gt;&amp;nbsp;&lt;a href=&quot;#fnref:4&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
