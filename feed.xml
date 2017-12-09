@@ -5,8 +5,8 @@
     <description>Between bits and bytes and all other pieces.&lt;br/&gt;A tech blog about Clojure, BigData, and Software Architecture.</description>
     <link>http://blog.brunobonacci.com//</link>
     <atom:link href="http://blog.brunobonacci.com//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sun, 22 Oct 2017 18:17:18 +0100</pubDate>
-    <lastBuildDate>Sun, 22 Oct 2017 18:17:18 +0100</lastBuildDate>
+    <pubDate>Sat, 09 Dec 2017 10:58:56 +0000</pubDate>
+    <lastBuildDate>Sat, 09 Dec 2017 10:58:56 +0000</lastBuildDate>
     <generator>Jekyll v3.4.5</generator>
     
       <item>
@@ -505,15 +505,45 @@ sys     0m0.008s
 &lt;/div&gt;
 
 &lt;p&gt;Now leaving aside the fact that for some reason both &lt;code class=&quot;highlighter-rouge&quot;&gt;planck&lt;/code&gt; and
-&lt;code class=&quot;highlighter-rouge&quot;&gt;lumo&lt;/code&gt; got the wrong result, the difference in timing is impressive.
-The most impressive result is the &lt;code class=&quot;highlighter-rouge&quot;&gt;pixie-vm&lt;/code&gt; JIT performance which in
-this special case of tight loop it goes even faster than the JVM.
-Even removing the JVM cold start and Clojure compilation JVM still
-performs around &lt;code class=&quot;highlighter-rouge&quot;&gt;6.3s&lt;/code&gt;.&lt;/p&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;lumo&lt;/code&gt; got the wrong result [&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;], the difference in timing
+is impressive.  The most impressive result is the &lt;code class=&quot;highlighter-rouge&quot;&gt;pixie-vm&lt;/code&gt; JIT
+performance which in this special case of tight loop it goes even
+faster than the JVM.  Even removing the JVM cold start and Clojure
+compilation JVM still performs around &lt;code class=&quot;highlighter-rouge&quot;&gt;6.3s&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;I don’t know whether the work on &lt;code class=&quot;highlighter-rouge&quot;&gt;pixie&lt;/code&gt; it is going to proceed,
 however the benchmark result is the testament of the great work
 that &lt;em&gt;Timothy Baldridge et al.&lt;/em&gt; have put into this project.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h5 id=&quot;footnotes&quot;&gt;Footnotes:&lt;/h5&gt;
+
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot;&gt;
+      &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;planck&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;lumo&lt;/code&gt; and ClojureScript in general are hosted
+on top of JavaScript. &lt;a href=&quot;https://www.ecma-international.org/ecma-262/6.0/#sec-terms-and-definitions-number-value&quot;&gt;JavaScript
+specifications&lt;/a&gt;
+defines only one type of primitive numeric value which is a
+double-precision 64-bit &lt;strong&gt;floating point&lt;/strong&gt; binary &lt;strong&gt;format IEEE
+754-2008&lt;/strong&gt; value. This floating point format defines 53-bits for
+the mantissa which stores the actual number, some of which could
+be decimal part. If you are representing a integer value then you
+can use all 53-bits for the integer part. Therefore the largest
+integer you can represent in this case is &lt;code class=&quot;highlighter-rouge&quot;&gt;2^53 -1&lt;/code&gt; which is
+&lt;strong&gt;9007199254740991&lt;/strong&gt;. The reason why &lt;code class=&quot;highlighter-rouge&quot;&gt;planck&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;lumo&lt;/code&gt; show a
+different result is that the result of the operation is way larger
+than the max integer in JavaScript so the sum operator computes
+the result and it rounds it up to the nearest representable value
+in &lt;em&gt;IEEE 754-2008 format&lt;/em&gt; (see: &lt;a href=&quot;https://www.ecma-international.org/ecma-262/6.0/#sec-applying-the-additive-operators-to-numbers&quot;&gt;Applying the Additive Operators
+to
+Numbers&lt;/a&gt;). Clojure
+over Java or .Net and &lt;code class=&quot;highlighter-rouge&quot;&gt;pixie&lt;/code&gt; use a 64-bit integer format which it
+can fully represent the result of the operation.&amp;nbsp;&lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
 </description>
         <pubDate>Thu, 10 Aug 2017 01:00:00 +0100</pubDate>
         <link>http://blog.brunobonacci.com//2017/08/10/lumo-vs-planck-vs-clojure-vs-pixie/</link>
