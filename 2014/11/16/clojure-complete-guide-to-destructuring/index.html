@@ -163,7 +163,7 @@
   </header>
 
   <section class="post">
-    <p><em>Last update on 2018-03-03.</em></p>
+    <p><em>Last update on 2018-02-22.</em></p>
 
 <p>Destructuring is a simple, yet powerful feature of Clojure.
 There are several ways in which you can leverage destructuring
@@ -774,6 +774,51 @@ the compiler and no value will be bound.</p>
 </span></code></pre>
 </div>
 
+<h4 id="multi-matching-values-with-namespaced-keys">Multi-matching values with namespaced keys</h4>
+
+<p>Namespaced keys are good way to not conflate multiple meaning to a
+single key, and by assigning different namespaces to a key you can give
+different meaning.  However you need to be careful when destructuring
+namespaced keys in Clojure to never have the same key name
+destructured multiple times in the same structure.</p>
+
+<p>For example let’s assume you have a map as follow:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="p">{</span><span class="no">:id</span><span class="w"> </span><span class="s">"id"</span><span class="w">
+            </span><span class="no">:fistname</span><span class="w"> </span><span class="s">"John"</span><span class="w">
+            </span><span class="no">:lastname</span><span class="w"> </span><span class="s">"Smith"</span><span class="w">
+            </span><span class="no">:customer/id</span><span class="w"> </span><span class="s">"customer/id"</span><span class="p">})</span><span class="w">
+
+</span></code></pre>
+</div>
+
+<p>The key <code class="highlighter-rouge">:id</code> might represent the id of that particular record while
+<code class="highlighter-rouge">:customer/id</code> might be the <code class="highlighter-rouge">:id</code> coming from the CRM system for the same
+person.  Clearly they are two different IDs in Clojure.</p>
+
+<p>But check this out, if you mix them both in a single destructuring
+form you might have unexpected behaviours.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; nothing strange here
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="no">:id</span><span class="p">]}</span><span class="w"> </span><span class="n">value</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">id</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; id
+</span><span class="w">
+</span><span class="c1">;; nothing strange here
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="no">:customer/id</span><span class="p">]}</span><span class="w"> </span><span class="n">value</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">id</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; customer/id
+</span><span class="w">
+</span><span class="c1">;; KEY MIXUP - BAD
+;; in the next two examples we attempt to destructure both keys
+;; at the same time with two different namespaces.
+;; NOTICE the one which appear later in the structure wins.
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="no">:id</span><span class="w"> </span><span class="no">:customer/id</span><span class="p">]}</span><span class="w"> </span><span class="n">value</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">id</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; customer/id
+</span><span class="w">
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="no">:customer/id</span><span class="w"> </span><span class="no">:id</span><span class="p">]}</span><span class="w"> </span><span class="n">value</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">id</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; id
+</span></code></pre>
+</div>
+
 <h2 id="conclusion">Conclusion</h2>
 
 <p>As we seen, value destructuring is a powerful Clojure’s feature. It
@@ -843,6 +888,7 @@ that the code becomes clearer and event more readable.</p>
 <ul>
   <li>2017-05-13 - added destructuring of namespaced keys.</li>
   <li>2017-05-23 - added common mistakes / gotchas.</li>
+  <li>2018-02-22 - added more gotchas</li>
 </ul>
 
 <p>References:</p>
