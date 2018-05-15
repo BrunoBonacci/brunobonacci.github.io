@@ -163,7 +163,7 @@
   </header>
 
   <section class="post">
-    <p><em>Last update on 2018-02-22.</em></p>
+    <p><em>Last update on 2018-05-15.</em></p>
 
 <p>Destructuring is a simple, yet powerful feature of Clojure.
 There are several ways in which you can leverage destructuring
@@ -194,6 +194,7 @@ format: <code class="highlighter-rouge">[ lat lng ]</code>.</p>
 accepts two parameters and returns the geohash for a specific location.</p>
 
 <div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">geohash</span><span class="w"> </span><span class="p">[</span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">]</span><span class="w">
+   </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"geohash:"</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">)</span><span class="w">
    </span><span class="c1">;; this function take two separate values as params.
 </span><span class="w">   </span><span class="c1">;; and it return a geohash for that position
 </span><span class="p">)</span><span class="w">
@@ -207,6 +208,8 @@ do as follow:</p>
       </span><span class="n">lat</span><span class="w">   </span><span class="p">(</span><span class="nb">first</span><span class="w"> </span><span class="n">coord</span><span class="p">)</span><span class="w">
       </span><span class="n">lng</span><span class="w">   </span><span class="p">(</span><span class="nb">second</span><span class="w"> </span><span class="n">coord</span><span class="p">)]</span><span class="w">
   </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; geohash: 51.503331 -0.1195
 </span></code></pre>
 </div>
 
@@ -215,6 +218,8 @@ For example the following code is equivalent to the previous one.</p>
 
 <div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[[</span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nf">current-position</span><span class="p">)]</span><span class="w">
   </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; geohash: 51.503331 -0.1195
 </span></code></pre>
 </div>
 
@@ -312,6 +317,8 @@ it returned a map, this is probably how you would write the code without destruc
       </span><span class="n">lat</span><span class="w">   </span><span class="p">(</span><span class="no">:lat</span><span class="w"> </span><span class="n">coord</span><span class="p">)</span><span class="w">
       </span><span class="n">lng</span><span class="w">   </span><span class="p">(</span><span class="no">:lng</span><span class="w"> </span><span class="n">coord</span><span class="p">)]</span><span class="w">
   </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; geohash: 51.503331 -0.1195
 </span></code></pre>
 </div>
 
@@ -320,6 +327,8 @@ Maps have two ways to destructure data.</p>
 
 <div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="n">lat</span><span class="w"> </span><span class="no">:lat,</span><span class="w"> </span><span class="n">lng</span><span class="w"> </span><span class="no">:lng</span><span class="p">}</span><span class="w"> </span><span class="p">(</span><span class="nf">current-position</span><span class="p">)]</span><span class="w">
   </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; geohash: 51.503331 -0.1195
 </span></code></pre>
 </div>
 
@@ -335,6 +344,8 @@ however most commonly Clojure’s map are destructured in the follwoing way.</p>
 
 <div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">]}</span><span class="w"> </span><span class="p">(</span><span class="nf">current-position</span><span class="p">)]</span><span class="w">
   </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; geohash: 51.503331 -0.1195
 </span></code></pre>
 </div>
 
@@ -346,10 +357,17 @@ entire map with the <code class="highlighter-rouge">:as</code> clause in the sam
   </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"calculating geohash for coordinates: "</span><span class="w"> </span><span class="n">coord</span><span class="p">)</span><span class="w">
   </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
 
+</span><span class="c1">;; calculating geohash for coordinates:  {:lat 51.503331, :lng -0.1195}
+;; geohash: 51.503331 -0.1195
+</span><span class="w">
 
 </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">]</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">coord</span><span class="p">}</span><span class="w"> </span><span class="p">(</span><span class="nf">current-position</span><span class="p">)]</span><span class="w">
   </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"calculating geohash for coordinates: "</span><span class="w"> </span><span class="n">coord</span><span class="p">)</span><span class="w">
   </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; calculating geohash for coordinates:  {:lat 51.503331, :lng -0.1195}
+;; geohash: 51.503331 -0.1195
+</span><span class="w">
 </span></code></pre>
 </div>
 
@@ -359,6 +377,9 @@ can even be namespaced. The following code snippet is equivalent to the previous
 <div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="no">:lat</span><span class="w"> </span><span class="no">:lng</span><span class="p">]</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">coord</span><span class="p">}</span><span class="w"> </span><span class="p">(</span><span class="nf">current-position</span><span class="p">)]</span><span class="w">
   </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"calculating geohash for coordinates: "</span><span class="w"> </span><span class="n">coord</span><span class="p">)</span><span class="w">
   </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; calculating geohash for coordinates:  {:lat 51.503331, :lng -0.1195}
+;; geohash: 51.503331 -0.1195
 </span></code></pre>
 </div>
 
@@ -368,6 +389,9 @@ can use the <code class="highlighter-rouge">:strs</code> instead of <code class=
 <div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:strs</span><span class="w"> </span><span class="p">[</span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">]</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">coord</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="s">"lat"</span><span class="w"> </span><span class="mf">51.503331</span><span class="n">,</span><span class="w"> </span><span class="s">"lng"</span><span class="w"> </span><span class="mf">-0.119500</span><span class="p">}]</span><span class="w">
   </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"calculating geohash for coordinates: "</span><span class="w"> </span><span class="n">coord</span><span class="p">)</span><span class="w">
   </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; calculating geohash for coordinates:  {lat 51.503331, lng -0.1195}
+;; geohash: 51.503331 -0.1195
 </span></code></pre>
 </div>
 
@@ -377,6 +401,9 @@ In this case you should use <code class="highlighter-rouge">:syms</code> instead
 <div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:syms</span><span class="w"> </span><span class="p">[</span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">]</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">coord</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="ss">'lat</span><span class="w"> </span><span class="mf">51.503331</span><span class="n">,</span><span class="w"> </span><span class="ss">'lng</span><span class="w"> </span><span class="mf">-0.119500</span><span class="p">}]</span><span class="w">
   </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"calculating geohash for coordinates: "</span><span class="w"> </span><span class="n">coord</span><span class="p">)</span><span class="w">
   </span><span class="p">(</span><span class="nf">geohash</span><span class="w"> </span><span class="n">lat</span><span class="w"> </span><span class="n">lng</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; calculating geohash for coordinates:  {lat 51.503331, lng -0.1195}
+;; geohash: 51.503331 -0.1195
 </span></code></pre>
 </div>
 
@@ -632,7 +659,14 @@ be slightly changed. Given the following map:</p>
 </span><span class="c1">;; Smith - CEO
 </span><span class="w">
 
-</span><span class="c1">;; a default value might be provided
+</span><span class="c1">;; Clojure 1.9
+;; a default value might be provided
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">lastname</span><span class="w"> </span><span class="n">corporate/position</span><span class="p">]</span><span class="w">
+       </span><span class="no">:or</span><span class="w"> </span><span class="p">{</span><span class="n">position</span><span class="w"> </span><span class="s">"Employee"</span><span class="p">}}</span><span class="w"> </span><span class="n">contact</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="s">"-"</span><span class="w"> </span><span class="n">position</span><span class="p">))</span><span class="w">
+
+</span><span class="c1">;; Clojure 1.8 or previous
+;; a default value might be provided
 </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">lastname</span><span class="w"> </span><span class="n">corporate/position</span><span class="p">]</span><span class="w">
        </span><span class="no">:or</span><span class="w"> </span><span class="p">{</span><span class="n">corporate/position</span><span class="w"> </span><span class="s">"Employee"</span><span class="p">}}</span><span class="w"> </span><span class="n">contact</span><span class="p">]</span><span class="w">
   </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="s">"-"</span><span class="w"> </span><span class="n">position</span><span class="p">))</span><span class="w">
@@ -640,6 +674,11 @@ be slightly changed. Given the following map:</p>
 </span><span class="w">
 </span></code></pre>
 </div>
+
+<p>Notice in this last example there is change between Clojure up to 1.8
+and Clojure 1.9. In Clojure 1.9 the default key for a namespaced key
+must be without the namespace otherwise you get a compilation exception.
+Same applies on the next example.</p>
 
 <p>Finally a reminder that double-colon <code class="highlighter-rouge">::</code> is a shortcut to represent
 current namespace.</p>
@@ -652,6 +691,13 @@ current namespace.</p>
    </span><span class="no">::id</span><span class="w">       </span><span class="s">"LDF123"</span><span class="w">
    </span><span class="no">::position</span><span class="w"> </span><span class="s">"CEO"</span><span class="p">})</span><span class="w">
 
+</span><span class="c1">;; Clojure 1.9
+</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">lastname</span><span class="w"> </span><span class="no">::position</span><span class="p">]</span><span class="w">
+       </span><span class="no">:or</span><span class="w"> </span><span class="p">{</span><span class="n">position</span><span class="w"> </span><span class="s">"Employee"</span><span class="p">}}</span><span class="w"> </span><span class="n">contact</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="s">"-"</span><span class="w"> </span><span class="n">position</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; Smith - CEO
+</span><span class="w">
+</span><span class="c1">;; Clojure 1.8 or previous
 </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">lastname</span><span class="w"> </span><span class="no">::position</span><span class="p">]</span><span class="w">
        </span><span class="no">:or</span><span class="w"> </span><span class="p">{</span><span class="no">::position</span><span class="w"> </span><span class="s">"Employee"</span><span class="p">}}</span><span class="w"> </span><span class="n">contact</span><span class="p">]</span><span class="w">
   </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="s">"-"</span><span class="w"> </span><span class="n">position</span><span class="p">))</span><span class="w">
@@ -726,17 +772,20 @@ The compiler won’t complain, and the default value won’t be bound.</p>
   </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"connecting to:"</span><span class="w"> </span><span class="n">host</span><span class="w"> </span><span class="s">"port:"</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="s">"db-name:"</span><span class="w"> </span><span class="n">db-name</span><span class="w">
            </span><span class="s">"username:"</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="s">"password:"</span><span class="w"> </span><span class="n">password</span><span class="p">))</span><span class="w">
 
+</span><span class="p">(</span><span class="nf">connect-db</span><span class="w"> </span><span class="s">"server"</span><span class="p">)</span><span class="w">
+
 </span><span class="c1">;; connecting to: server port: 12345 db-name: my-db username: nil password: secret
 ;;                notice the username is `nil` ---------------^
 </span></code></pre>
 </div>
 
-<h4 id="keywords-in-defaults">Keywords in defaults</h4>
+<h4 id="keywords-in-defaults-fixed-in-19">Keywords in defaults (fixed in 1.9)</h4>
 
 <p>Similarly if you put keywords in the default’s map values won’t be
-bound and the compiler won’t complain.</p>
+bound and the compiler won’t complain up to Clojure 1.8.
+In Clojure 1.9 this is fixed, and a compilation error will be raised.</p>
 
-<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; BAD DEFAULTS
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; BAD DEFAULTS - Clojure 1.8
 </span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">connect-db</span><span class="w"> </span><span class="p">[</span><span class="n">host</span><span class="w"> </span><span class="c1">; mandatory parameter
 </span><span class="w">                  </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">port</span><span class="w"> </span><span class="n">db-name</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="n">password</span><span class="p">]</span><span class="w">
                      </span><span class="no">:or</span><span class="w">   </span><span class="p">{</span><span class="no">:port</span><span class="w">     </span><span class="mi">12345</span><span class="w">
@@ -753,12 +802,12 @@ bound and the compiler won’t complain.</p>
 </span></code></pre>
 </div>
 
-<h4 id="defaults-in-a-vector">Defaults in a vector</h4>
+<h4 id="defaults-in-a-vector-fixed-in-19">Defaults in a vector (fixed in 1.9)</h4>
 
 <p>If by mistake you put all defaults in a vector, again, no error from
-the compiler and no value will be bound.</p>
+the compiler (up to Clojure 1.8) and no value will be bound.</p>
 
-<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; BAD DEFAULTS
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; BAD DEFAULTS - Clojure 1.8
 </span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">connect-db</span><span class="w"> </span><span class="p">[</span><span class="n">host</span><span class="w"> </span><span class="c1">; mandatory parameter
 </span><span class="w">                  </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">port</span><span class="w"> </span><span class="n">db-name</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="n">password</span><span class="p">]</span><span class="w">
                      </span><span class="no">:or</span><span class="w">   </span><span class="p">[</span><span class="n">port</span><span class="w">     </span><span class="mi">12345</span><span class="w">
@@ -871,7 +920,6 @@ that the code becomes clearer and event more readable.</p>
 </span><span class="p">{</span><span class="no">:syms</span><span class="w"> </span><span class="p">[</span><span class="n">contact/firstname</span><span class="w"> </span><span class="n">contact/lastname</span><span class="p">]</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">person</span><span class="p">}</span><span class="w">     </span><span class="p">{</span><span class="ss">'contact/firstname</span><span class="w"> </span><span class="s">"John"</span><span class="w">     </span><span class="ss">'contact/lastname</span><span class="w"> </span><span class="s">"Smith"</span><span class="p">}</span><span class="w">
 </span><span class="c1">;; firstname = John, lastname = Smith, person = {:firstname "John" :lastname "Smith"}
 </span><span class="w">
-
 </span></code></pre>
 </div>
 
@@ -880,7 +928,7 @@ that the code becomes clearer and event more readable.</p>
 <p>For this article I’ve used:</p>
 
 <ul>
-  <li>Clojure 1.6.0, 1.7.0 and 1.8.0</li>
+  <li>Clojure 1.6.0, 1.7.0, 1.8.0 and 1.9.0</li>
 </ul>
 
 <p>Updates:</p>
@@ -889,6 +937,7 @@ that the code becomes clearer and event more readable.</p>
   <li>2017-05-13 - added destructuring of namespaced keys.</li>
   <li>2017-05-23 - added common mistakes / gotchas.</li>
   <li>2018-02-22 - added more gotchas</li>
+  <li>2018-05-15 - updated with Clojure 1.9 notes</li>
 </ul>
 
 <p>References:</p>
