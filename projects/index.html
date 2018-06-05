@@ -202,7 +202,9 @@ learning modules and to create a community behind the project.</p>
 declarative approach.  The purpose of the library is to simply and
 effectively handle retries declaratively making sure that in a large
 distributed system these retries won’t cause <em>self-similar mass
-behavior</em> and causing more arm than benefit.</p>
+behavior</em> and causing more arm than benefit. The circuit breaker
+is implemented fully in Clojure and offers good features for
+observability..</p>
 
 <ul>
   <li><strong>Github</strong>: <a href="https://github.com/BrunoBonacci/safely">https://github.com/BrunoBonacci/safely</a></li>
@@ -219,6 +221,37 @@ insensitive checks.</p>
 
 <ul>
   <li><strong>Github</strong>: <a href="https://github.com/BrunoBonacci/where">https://github.com/BrunoBonacci/where</a></li>
+</ul>
+
+<hr />
+
+<h3 id="clj-sophia">clj-sophia</h3>
+
+<p>An idiomatic Clojure driver for <a href="http://sophia.systems/">Sophia
+DB</a>. Sophia is RAM-Disk hybrid storage
+designed to provide best possible on-disk performance without
+degradation in time.  Sophia is an embedded key/value store which
+implements a LSM storage system. Very fast and fully ACID
+(Serialized Snapshot Isolation - SSI) transactional support..</p>
+
+<ul>
+  <li><strong>Github</strong>: <a href="https://github.com/BrunoBonacci/clj-sophia">https://github.com/BrunoBonacci/clj-sophia</a></li>
+</ul>
+
+<hr />
+
+<h3 id="ring-boost">ring-boost</h3>
+
+<p>A library to boost performances of Clojure web applications with
+off-heap serverside caching. Serverside caching is uniquely
+positionated for effective caching it does NOT require all clients to
+implement caching directives on the client side.
+The cached payload is stored off-heap and on disk so that it doesn’t
+put more pressure on the Garbage Collector.
+The caching logic can be completely customized to tailor your needs.</p>
+
+<ul>
+  <li><strong>Github</strong>: <a href="https://github.com/BrunoBonacci/ring-boost">https://github.com/BrunoBonacci/ring-boost</a></li>
 </ul>
 
 <hr />
