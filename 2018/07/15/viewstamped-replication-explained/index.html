@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>Viewstamped Replication expleined</title>
+  <meta name="description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+  <meta name="author" content="Bruno Bonacci">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Bits and pieces">
+  <meta name="twitter:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Bits and pieces">
+  <meta property="og:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/images/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/images/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/images/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/images/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/images/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/images/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/images/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-194x194.png" sizes="194x194">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/images/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" href="/images/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://blog.brunobonacci.com//2018/07/15/viewstamped-replication-explained/">
+  <link rel="alternate" type="application/rss+xml" title="Bits and pieces" href="/feed.xml">
+</head>
+
+
+  <body>
+    <span class="mobile btn-mobile-menu">
+  <i class="icon icon-list btn-mobile-menu__icon"></i>
+  <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+</span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+        <a href="/" title="link to home of Bits and pieces">
+          <img src="/images/profile.jpg" class="user-image" alt="My Profile Photo">
+          <h1 class="panel-cover__title panel-title">Bits and pieces</h1>
+        </a>
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description">Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/projects" title="link to Bits and pieces Projects" class="blog-button">Projects</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/#blog" title="link to Bits and pieces blog" class="blog-button">Blog</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/tags" title="link to Bits and pieces tags" class="blog-button">Tags</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/categories" title="link to Bits and pieces categories" class="blog-button">Categories</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+            
+              <!-- Twitter -->
+              <li class="navigation__item">
+                <a href="http://twitter.com/BrunoBonacci" title="@BrunoBonacci on Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+            
+
+            
+
+            
+              <!-- LinkedIn -->
+              <li class="navigation__item">
+                <a href="https://www.linkedin.com/in/brunobonacci" title="brunobonacci on LinkedIn" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">LinkedIn</span>
+                </a>
+              </li>
+            
+
+            
+              <!-- GitHub -->
+              <li class="navigation__item">
+                <a href="https://www.github.com/BrunoBonacci" title="BrunoBonacci on GitHub" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+            
+
+            
+
+            <!-- RSS -->
+            <li class="navigation__item">
+              <a href="/feed.xml" title="Subscribe" target="_blank">
+                <i class="icon icon-rss"></i>
+                <span class="label">RSS</span>
+              </a>
+            </li>
+
+            </ul>
+          </nav>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="15 Jul 2018" class="post-meta__date date">15 Jul 2018</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Papers">Papers</a> </span>
+    </div>
+    <h1 class="post-title">Viewstamped Replication expleined</h1>
+  </header>
+
+  <section class="post">
+    <p>Viewstamped Replication is one of the earliest consensus algorithms
+for distributed systems. It is designed around the log replication
+concept of state machines and it can be efficiently implemented for
+modern systems. The revisited version of the paper offers a number of
+improvements on the algorithm from the original paper which both:
+simplifies it and makes it more suitable for high volume
+systems. The original paper was published in 1988 which is ten years
+before the Paxos algorithm <sup id="fnref:4"><a href="#fn:4" class="footnote">1</a></sup> was published.</p>
+
+<p>I will explain how the protocol works in detail covering as well a
+number of optimizations which are described in the papers. The
+“revisited” version offers a simplified version of the protocol with
+improvements which were made by the authors in later works and published
+after the original paper. Therefore most of the content here will be
+driven from the more 2012 paper.</p>
+
+<p><img src="/images/vr-paper/viewstamped-papers.png" alt="viewstamped replication" /></p>
+
+<ul>
+  <li>Paper links:
+    <ul>
+      <li><em>Viewstamped Replication: A New Primary Copy method to Support Highly-Available Distributed Systems, B. Oki, B. Liskov, (1988)</em> <sup id="fnref:1"><a href="#fn:1" class="footnote">2</a></sup> <br />
+<a href="http://pmg.csail.mit.edu/papers/vr.pdf">http://pmg.csail.mit.edu/papers/vr.pdf</a></li>
+      <li><em>Viewstamped Replication Revisited, B. Liskov, J.Cowling (2012)</em> <sup id="fnref:2"><a href="#fn:2" class="footnote">3</a></sup> <br />
+<a href="http://pmg.csail.mit.edu/papers/vr-revisited.pdf">http://pmg.csail.mit.edu/papers/vr-revisited.pdf</a></li>
+      <li><em>Viewstamped Replication presentation at PapersWeLove London</em> <sup id="fnref:3"><a href="#fn:3" class="footnote">4</a></sup></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="what-is-viewstamped-replication">What is “Viewstamped Replication”?</h2>
+
+<p>It is a replication protocol. It aims to guarantee consistent view
+over replicated data.  And it is a “consensus algorithm”. To provide
+consistent view over replicated data, replicas must agree on
+replicated state.</p>
+
+<p>It is designed to be a pluggable protocol which works on the
+communication layer between the clients and the servers and
+between the servers themselves.  The idea is that you can take a non
+distributed system and using this replication protocol you can turn a
+single node system into a high-available, fault tolerant distributed
+system.</p>
+
+<p><strong>To achieve fault-tolerance, the system must introduce redundancy in
+time and space</strong>. <em>Redundancy in time</em> is to combat the unreliability
+of the network. Messages can be dropped, reordered or arbitrarily
+delayed, therefore protocol must account for it and allow requests to
+be replayed if necessary without causing duplication in the system.
+<em>Redundancy in space</em> is generally achieved via adding redundant
+copies in different machine with different fault-domain isolation.
+the aim is to be able to stay in operation in face of a node failure,
+whether is a system crash or a hardware failure, the system must be
+able to continue normal operation within certain limits.</p>
+
+<p>Together, the <em>redundancy in time and space</em> provide the ability to
+tolerate and recover from temporary network partitions, systems
+crashes, hardware failure and a wide range of network related issues.</p>
+
+<p>However the system can only tolerate a number of failures depending on
+the cluster (or <strong>ensemble</strong> size). In particular to tolerate 𝑓
+failures it requires an ensemble of <code class="highlighter-rouge">2𝑓 + 1</code> replicas. The type of
+failures that the protocol can tolerate are <strong>non Byzantine failures</strong> <sup id="fnref:5"><a href="#fn:5" class="footnote">5</a></sup>
+which means that all the nodes in the ensemble will be either in a
+working state, or in a failed state or simply isolated. However, every
+node in the system will not deviate from the protocol and it will not
+lie about its state. Therefore, if the system must be able to tolerate
+one node to be unresponsive, then the minimum ensemble size is 3
+nodes. If the system must be able to tolerate 2 concurrent failures,
+then the minimum size of the cluster required is 5 nodes, and so
+on. <code class="highlighter-rouge">𝑓 + 1</code> nodes is called <strong>quorum</strong>. It is not possible to create a
+quorum with less than 3 nodes, therefore the minimum ensemble size is
+3.</p>
+
+<h2 id="replicated-state-machines">Replicated State Machines</h2>
+
+<p>Viewstamped Replication is based on the <em>State Machine Replication</em> concept <sup id="fnref:6"><a href="#fn:6" class="footnote">6</a></sup>.
+A State Machine has an <em>initial state</em> and a <em>operation log</em>. The idea is
+that if you apply the ordered set of operation in the operation log to the
+initial state you will end up always with the same final state, <em>given that
+all the operations in the operation log are <strong>deterministic</strong></em>.</p>
+
+<p>Therefore, if we replicate the initial state and the operation log into
+other machines and repeat the same operations the final state on all the
+machines will be same.</p>
+
+<p><img src="/images/vr-paper/vr-replicated-stm.gif" alt="Replicated State Machines" /></p>
+
+<p>It is crucial that the <em>order of operations is preserved</em> as
+operations are not required to be commutative. Additionally <em>all
+sources of indeterminism must be eliminated</em> before the operation are
+added to the operation log.  For example if you have a operation which
+generate a unique random id, the primary replica will need to generate
+the random id and then add an operation in the log which already
+contains the generated number such that when the replicas apply the
+operation won’t need to generate the random unique id themselves which
+will cause the replica state to diverge.</p>
+
+<p>The objective of Viewstamped Replication is to ensure that there is a
+strictly consistent view on the operation log. In other words is
+ensures that all replicas agree on which operations are in the log
+and their exact order.</p>
+
+<h2 id="anatomy-of-a-replica">Anatomy of a Replica</h2>
+
+<p>The ensemble or cluster is made of replica nodes. Each replica is
+composed of the following parts.</p>
+
+<p><img src="/images/vr-paper/anatomy.png" alt="anatomy of a replica" /></p>
+
+<p>The operation log (<code class="highlighter-rouge">op-log</code>) is a (mostly) append only sequence of
+operations.  Operations are applied against the current state which
+could be external to the replica itself. Operations must be
+<em>deterministic</em> which means that every application of the same
+operation with the same arguments must produce the same
+result. Additionally, if the operations produce side effect or write
+to an external system you have to ensure the operation is applied only
+once by the use of transactional support or by making operation
+<em>idempotent</em> so that multiple application of the same operation won’t
+produce duplication in the target system.  Each operation in the
+operation-log has a positional identifier which is a monotonically
+increasing number.</p>
+
+<p>The last inserted operation number is the high water mark for the operation
+log and it is recorded as the <code class="highlighter-rouge">op-num</code> which is a monotonically
+increasing number as well. It identifies which operation has been
+already received and it is used in parts of the protocol.</p>
+
+<p>Operations in the <code class="highlighter-rouge">op-log</code> are appended first, then shared with other
+replicas and once there is a confirmation that enough replicas have
+received the operation then it is actually executed. We will see how
+this process works in more details later. The <code class="highlighter-rouge">commit-num</code> represents
+the number of the last operation which was executed in the replica. It
+also implies that all the previous operations have been executed as
+well. <code class="highlighter-rouge">commit-num</code> is a monotonically increasing number.</p>
+
+<p>The <em>view-number</em> (<code class="highlighter-rouge">view-num</code>) is a monotonically increasing number
+which changes every time there is a change of primary replica in
+the ensemble.</p>
+
+<p>Each replica must also know who the current primary replica is.
+This is stored in the <code class="highlighter-rouge">primary</code> field.</p>
+
+<p>The <code class="highlighter-rouge">status</code> field shows the current replica operation mode.
+As we will see later, the <code class="highlighter-rouge">status</code> can assume different values
+depending whether the replica is ready to process client requests,
+or it is getting ready and doing internal preparation.</p>
+
+<p>Every replica node will also have a list of all the replica
+nodes in the ensemble with their IP addresses and their
+unique identifiers. Some parts of the protocol require
+the replicas to communicate with other replicas therefore
+they must know how to contact the other nodes.</p>
+
+<p>The <code class="highlighter-rouge">client-table</code> is used to keep track of client’s requests.
+Clients are identified by a unique id, and each client can only make
+one request at the time. Since communication is assumed to be
+unreliable, clients can re-issue the last request without the risk of
+duplication in the system. Every client request has a monotonically
+increasing number which identify the request of a particular
+client. Each time the primary receives a client requests it add the
+request to the client table. If the client re-sends the same requests
+because didn’t receive the response the primary can verify that the
+request was already processed and send the cached response.</p>
+
+<p><em>For brevity, the pictures which will follow will omit some details</em>.</p>
+
+<h2 id="the-protocol">The Protocol</h2>
+
+<p>Next we are going to analyse the protocol in details.  The protocol is
+presented in the paper in its simplest form first.  Then the paper
+goes on describing a number of optimisations which do not change the
+basic structure of the protocol but make it efficient and practical to
+implement for real world application.  Efficiency is a major concern
+throughout both papers as the authors were building real-world systems.</p>
+
+<h3 id="client-requests-handling">Client requests handling</h3>
+
+<p>In this section we are going to see how a client request is processed
+and the data replicated. We are going to see, in details, how the protocol
+ensures that at least a quorum of replicas acknowledges the request
+before executing the request.</p>
+
+<p><img src="/images/vr-paper/client1.gif" alt="client request processing" /></p>
+
+<p>Clients have a unique identifier (<code class="highlighter-rouge">client-id</code>), and they communicate
+only with the primary. If a client contacts a replica which is not the
+primary, the replica drops the requests, and returns an error message
+to the client advising it to connect to the primary.  Each client can
+only send one request at the time, and each request has a request
+number (<code class="highlighter-rouge">request#</code>) which is a monotonically increasing number.  The
+client prepares <code class="highlighter-rouge">&lt;REQUEST&gt;</code> message which contains the <code class="highlighter-rouge">client-id</code>,
+the request <code class="highlighter-rouge">request#</code> and the operation (<code class="highlighter-rouge">op</code>) to perform.</p>
+
+<p>The primary only processes the requests if its <code class="highlighter-rouge">status</code> is <code class="highlighter-rouge">normal</code>,
+otherwise it drops the request and sends a error message to the client
+advising to try later.  When the primary receives the request from the
+client, it checks whether the request is already present in the client
+table.  If the request’s number is greater of the one in the client
+table then it is a new request, otherwise it means that the client
+might not have received last response and it is re-sending the
+previous request. In this case the request is dropped and the primary
+re-send last response present in the client table.</p>
+
+<p>If it is a new request, then the primary increases the operation
+number (<code class="highlighter-rouge">op-num</code>), it appends the requested operation to its operation
+log (<code class="highlighter-rouge">op-log</code>) and it update the <code class="highlighter-rouge">client-table</code> with the new request.</p>
+
+<p>Then it needs to notify all the replicas about the new request, so it
+creates a <code class="highlighter-rouge">&lt;PREPARE&gt;</code> message which contains: the current view number
+(<code class="highlighter-rouge">view-num</code>), the operation’s <code class="highlighter-rouge">op-num</code>, the last commit number
+(<code class="highlighter-rouge">commit-num</code>), and the <code class="highlighter-rouge">message</code> which is the client request itself,
+and it sends the message to all the replicas.</p>
+
+<p>When a replica receives a <code class="highlighter-rouge">&lt;PREPARE&gt;</code> request, it first check whether
+the view number is the same <code class="highlighter-rouge">view-num</code>, if its view number is
+different than the message <code class="highlighter-rouge">view-num</code> it means that a new primary was
+nominated and, depending on who is behind, it needs to get up to date.
+If its view-number is smaller than the message <code class="highlighter-rouge">view-num</code>, then it
+means that this particular node is behind, so it needs to change its
+<code class="highlighter-rouge">status</code> to <code class="highlighter-rouge">revovery</code> and initiate a state transfer from the new
+primary (we will see the primary change process called <strong>view change</strong>
+later).  If its view-number is greater than the message <code class="highlighter-rouge">view-num</code>,
+then it means that the other replica need to get up-to-date, so it
+drop the message.  Finally if the <code class="highlighter-rouge">view-num</code> is the same, then it
+looks at the <code class="highlighter-rouge">op-num</code> in the message. The <code class="highlighter-rouge">op-num</code> needs to be
+<em>strictly consecutive</em>.  If there are gaps it means that this replica
+missed one or more <code class="highlighter-rouge">&lt;PREPARE&gt;</code> messages, so it drops the message and
+it initiate a recovery with a state transfer.  If the <code class="highlighter-rouge">op-num</code> is
+<em>strictly consecutive</em> then it increment its <code class="highlighter-rouge">op-num</code>, append the
+operation to the <code class="highlighter-rouge">op-log</code> and update the client table.</p>
+
+<p>Now the replica sends an acknowledgement to the primary that the
+operation, and all previous operations, were successfully prepared. It
+create a <code class="highlighter-rouge">&lt;PREPARE-OK&gt;</code> message with its <code class="highlighter-rouge">view-num</code>, the <code class="highlighter-rouge">op-num</code> and
+its identity.  Sending a <code class="highlighter-rouge">&lt;PREPARE-OK&gt;</code> for a given <code class="highlighter-rouge">op-num</code> means
+that all the previous operations in the log have been prepared as well
+(no gaps).</p>
+
+<p>The primary waits for <code class="highlighter-rouge">𝑓 + 1</code> including itself <code class="highlighter-rouge">&lt;PREPARE-OK&gt;</code>
+messages, at which point it knows that a <strong>quorum</strong> of nodes knows
+about the operation to perform therefore it is considered safe to
+proceed as it is guaranteed that the operation will survive the loss
+of <code class="highlighter-rouge">𝑓</code> nodes. When it receives enough <code class="highlighter-rouge">&lt;PREPARE-OK&gt;</code> then it perform
+the operation, possibly with side effect, it increases its commit
+number <code class="highlighter-rouge">commit-num</code>, and update the client table with the operation
+result. Again, advancing the <code class="highlighter-rouge">commit-num</code> must be done in strict order,
+and it also means that <strong>all previous operations have been committed</strong>
+as well.</p>
+
+<p>Finally it prepares a <code class="highlighter-rouge">&lt;REPLY&gt;</code> message with the current <code class="highlighter-rouge">view-num</code>
+the client request number <code class="highlighter-rouge">request#</code> and the operation result
+(<code class="highlighter-rouge">response</code>) and it sends it to the client.</p>
+
+<p>At this point the primary is the only node that has performed the
+operation (and advanced its <code class="highlighter-rouge">commit-num</code>) while the replicas have only
+prepared the operation but not applied. Before they can safely apply
+they need confirmation from the primary that it is safe to do so.</p>
+
+<p>This can happen in two ways.</p>
+
+<p><img src="/images/vr-paper/client2.gif" alt="client request processing" /></p>
+
+<p>Let’s assume that the same client or a new client comes along and
+makes a new request.  The client will create a <code class="highlighter-rouge">&lt;REQUEST&gt;</code> message and
+send it to the primary as well.  The primary will process the request
+as usual, check the client table, increase the <code class="highlighter-rouge">op-num</code> and append to
+the <code class="highlighter-rouge">op-log</code>, then it creates a <code class="highlighter-rouge">&lt;PREPARE&gt;</code> message with the
+<code class="highlighter-rouge">view-num</code>, the <code class="highlighter-rouge">op-num</code>, the client’s <code class="highlighter-rouge">message</code> <em>but it also includes
+its <code class="highlighter-rouge">commit-num</code> which now shows that the primary advanced its
+position</em>.</p>
+
+<p>When the replicas receives the <code class="highlighter-rouge">&lt;PREPARE&gt;</code> it follows the normal
+process; It checks the <code class="highlighter-rouge">view-num</code>, checks the <code class="highlighter-rouge">op-num</code>, increment its
+operation number append to the <code class="highlighter-rouge">op-log</code> and update the client table,
+then it sends a <code class="highlighter-rouge">&lt;PREPARE-OK&gt;</code> to the primary for the operation it
+received.</p>
+
+<p>However the <code class="highlighter-rouge">&lt;PREPARE&gt;</code> message from the primary also contained the
+<code class="highlighter-rouge">commit-num</code> which showed that the primary has now executed the
+operation against its state and it is notifying the replicas that it
+is safe to do so as well. So the replicas will perform all requests in
+their <code class="highlighter-rouge">op-log</code> between the last <code class="highlighter-rouge">commit-num</code> and the <code class="highlighter-rouge">commit-num</code> in
+the <code class="highlighter-rouge">&lt;PREPARE&gt;</code> message <strong>strictly following the order of operations</strong>
+and advance its <code class="highlighter-rouge">commit-num</code> as well. At this point both, primary and
+replicas have performed the <em>committed</em> operations in their state.</p>
+
+<p>So we seen how the primary uses the <code class="highlighter-rouge">&lt;PREPARE&gt;</code> message to inform
+replicas about new operations as well as operations which are now safe
+to perform.  But what if there is not a new request coming in? what if
+the system is experiencing a low request rate, maybe because it is the
+middle of the night and all users are asleep? If the primary doesn’t
+receive a new client request within a certain time then it will create
+a <code class="highlighter-rouge">&lt;COMMIT&gt;</code> message to inform replicas about which operations can now
+be performed.</p>
+
+<p><img src="/images/vr-paper/client3.gif" alt="client request processing" /></p>
+
+<p>The <code class="highlighter-rouge">&lt;COMMIT&gt;</code> message will only contain the current view number
+(<code class="highlighter-rouge">view-num</code>) and the last committed operation (<code class="highlighter-rouge">commit-num</code>).  When a
+replica receives a <code class="highlighter-rouge">&lt;COMMIT&gt;</code> it will execute all operation in their
+<code class="highlighter-rouge">op-log</code> between the last <code class="highlighter-rouge">commit-num</code> and the <code class="highlighter-rouge">commit-num</code> in the
+<code class="highlighter-rouge">&lt;COMMIT&gt;</code> message <strong>strictly following the order of operations</strong> and
+advance its <code class="highlighter-rouge">commit-num</code> as well.</p>
+
+<p>The <code class="highlighter-rouge">&lt;PREPARE&gt;</code> message together with the <code class="highlighter-rouge">&lt;COMMIT&gt;</code> message act as a
+sort of heartbeat for the primary. Replicas use this to identify when
+a primary might be dead and elect a new primary. This process is
+called <strong>view change</strong> and it is what we are going to discuss next.</p>
+
+<h3 id="view-change-protocol">View change protocol</h3>
+
+<p>The <em>view change protocol</em> is used when one of the replicas
+detects that the current primary is unavailable and it proceeds
+to inform the rest of the ensemble. If a quorum of nodes agrees
+then the ensemble will transition to a new primary.
+This part of the protocol ensures that the new primary has all the
+latest information to act as the new leader.</p>
+
+<h4 id="leader-selection">Leader “selection”</h4>
+
+<p>In my view, one of the most interesting parts of the ViewStamped
+Replication protocol is the way the new primary node is
+selected. Other consensus protocols (such as Paxos and Raft) have
+rather sophisticated way to elect a new primary (or leader) with
+candidates having to step up, ask for votes, ballots, turns
+etc. ViewStamped Replication takes a completely different approach. It
+uses a <strong>deterministic function</strong> over a fix property of the replica
+nodes, something like a unique identifier or IP address.</p>
+
+<p>For example, if the replica nodes IP addresses don’t change you could
+use the <code class="highlighter-rouge">sort</code> function which given a list of nodes IPs will return a
+deterministic sequence of nodes.  The ViewStamped Replication
+algorithm simply uses the sorted list of IPs to determine who is the
+next primary node, and <em>in round-robin fashion</em> all nodes will, in
+turn, become the new primary when the previous one is unavailable.  I
+find this strategy very simple and effective. There is no vote to
+cast, candidates stepping up, election turns, ballots, just a
+predefined sequence of who’s turn is.</p>
+
+<p>For example if you have a three nodes cluster with the following IP addresses</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>10.5.3.12           10.5.1.20  (1)
+10.5.1.20  ~sort~&gt;  10.5.2.28  (2)
+10.5.2.28           10.5.3.12  (3)
+</code></pre>
+</div>
+
+<p>The node <code class="highlighter-rouge">10.5.1.20</code> will be the first primary, and
+everybody knows that it will be the first. When that node dies or is
+partitioned away from the rest of the cluster, the next node to become
+the primary will be the <code class="highlighter-rouge">10.5.2.28</code> followed by <code class="highlighter-rouge">10.5.3.12</code> and then
+starting from the beginning again.</p>
+
+<p>The protocol ensures that if the node who is set to be the next
+primary, somehow, has fallen behind and it is not the most up-to-date,
+it will be able to gather the latest information from the other nodes
+and get ready for the job. We will see this in more details in this
+section.</p>
+
+<h4 id="the-view-change">The view change</h4>
+
+<p>Let’s start with a working cluster. Replicas <code class="highlighter-rouge">R1</code> to <code class="highlighter-rouge">R5</code> are all up
+and running, <code class="highlighter-rouge">R1</code> is the first primary node, followed by <code class="highlighter-rouge">R2</code> and so
+on. Since ensembles are formed by <code class="highlighter-rouge">2𝑓 + 1</code> nodes, this cluster can
+survive and continue processing requests in the face of two failed
+nodes.</p>
+
+<p><code class="highlighter-rouge">R1</code> is currently accepting client’s requests and those are handled as
+seen earlier. Therefore for each client request a <code class="highlighter-rouge">&lt;PREPARE&gt;</code> message
+is sent to all replicas and they reply with a
+<code class="highlighter-rouge">&lt;PREPARE-OK&gt;</code>. <code class="highlighter-rouge">&lt;COMMIT&gt;</code> messages are also used to signal which
+operations are committed by the primary.</p>
+
+<p><img src="/images/vr-paper/view-change.gif" alt="view change" /></p>
+
+<p>Let’s assume that the primary <code class="highlighter-rouge">R1</code> crashes or is isolated from the
+rest of the cluster.  No more <code class="highlighter-rouge">&lt;PREPARE&gt;</code> or <code class="highlighter-rouge">&lt;COMMIT&gt;</code> messages will
+be received by the rest of the cluster. As said previously these messages
+act as heartbeat for the primary health.</p>
+
+<p>At some point, in one of the nodes (<code class="highlighter-rouge">R4</code> for example) a timeout will
+expire, and it will detect that it didn’t hear from the primary since
+a predefined amount of time.  At this point the replica will change
+its <code class="highlighter-rouge">status</code> to <code class="highlighter-rouge">view-change</code>, increase its view number (<code class="highlighter-rouge">view-num</code>)
+and create a <code class="highlighter-rouge">&lt;START-VIEW-CHANGE&gt;</code> message with the new <code class="highlighter-rouge">view-num</code> and
+its identity. It will then send this message to all the replicas.</p>
+
+<p>When the other replicas receive a <code class="highlighter-rouge">&lt;START-VIEW-CHANGE&gt;</code> message with a
+<code class="highlighter-rouge">view-num</code> bigger than the one they have, they set their <code class="highlighter-rouge">status</code> to
+<code class="highlighter-rouge">view-change</code> and set the <code class="highlighter-rouge">view-num</code> to the view number in the message
+and reply with <code class="highlighter-rouge">&lt;START-VIEW-CHANGE&gt;</code> to all replicas.</p>
+
+<p>When a replica receives <code class="highlighter-rouge">𝑓 + 1</code> (including itself)
+<code class="highlighter-rouge">&lt;START-VIEW-CHANGE&gt;</code> message with its <code class="highlighter-rouge">view-num</code> then it means that
+the majority of the nodes agrees on the view change so it sends a
+<code class="highlighter-rouge">&lt;DO-VIEW-CHANGE&gt;</code> to the new primary (selected as described above).
+The <code class="highlighter-rouge">&lt;DO-VIEW-CHANGE&gt;</code> message contains the new <code class="highlighter-rouge">view-num</code> the last
+view number in which the state was normal <code class="highlighter-rouge">old-view-number</code>, its
+<code class="highlighter-rouge">op-num</code> and its operation log (<code class="highlighter-rouge">op-log</code>) and its commit number
+(<code class="highlighter-rouge">commit-num</code>).</p>
+
+<p>When the new primary, in this case node <code class="highlighter-rouge">R2</code>, it receives <code class="highlighter-rouge">𝑓 + 1</code>
+(including itself) <code class="highlighter-rouge">&lt;DO-VIEW-CHANGE&gt;</code> with the same <code class="highlighter-rouge">view-num</code> it
+compares the messages against its own information and pick the most
+up-to-date. It will set the <code class="highlighter-rouge">view-num</code> the new <code class="highlighter-rouge">view-num</code>, it will
+take the operation log (<code class="highlighter-rouge">op-log</code>) from the replicas with the highest
+<code class="highlighter-rouge">old-view-number</code>. If many replicas have the same <code class="highlighter-rouge">old-view-number</code> it
+will pick the one with the largest <code class="highlighter-rouge">op-log</code>, it will take the <code class="highlighter-rouge">op-num</code>
+from the chosen <code class="highlighter-rouge">op-log</code> and the highest <code class="highlighter-rouge">commit-num</code> and execute all
+committed operations in the operation log between its old <code class="highlighter-rouge">commit-num</code>
+value and the new <code class="highlighter-rouge">commit-num</code> value.  At this point the new primary
+is ready to accept requests from the client so it sets its <code class="highlighter-rouge">status</code> to
+<code class="highlighter-rouge">normal</code>.  Finally it sends a <code class="highlighter-rouge">&lt;START-VIEW&gt;</code> message to all replicas
+with the new <code class="highlighter-rouge">view-num</code>, the most up to date <code class="highlighter-rouge">op-log</code>, the
+corresponding <code class="highlighter-rouge">op-num</code> and the highest <code class="highlighter-rouge">commit-num</code>.</p>
+
+<p>When the other replicas receive the <code class="highlighter-rouge">&lt;START-VIEW&gt;</code> message they
+replace their own local information with the data in the
+<code class="highlighter-rouge">&lt;START-VIEW&gt;</code> message, specifically they take: the <code class="highlighter-rouge">op-log</code>, the
+<code class="highlighter-rouge">op-num</code> and the <code class="highlighter-rouge">view-num</code>.  They change their <code class="highlighter-rouge">status</code> to <code class="highlighter-rouge">normal</code>
+and they execute all the operation from their old <code class="highlighter-rouge">commit-num</code> to the
+new <code class="highlighter-rouge">commit-num</code> and they send a <code class="highlighter-rouge">&lt;PREPARE-OK&gt;</code> for all operation in
+the <code class="highlighter-rouge">op-log</code> which haven’t been committed yet.</p>
+
+<p>Some time later the failed node (<code class="highlighter-rouge">R1</code>) might come back alive either
+because the partition is now terminated or because the crashed nodes
+it has been restarted. At this point the <code class="highlighter-rouge">R1</code> might still think it is
+the primary and be waiting for requests from clients. However, since
+the ensemble transitioned to a new primary in the meantime, it is
+likely that clients will be sending requests to the new primary and it
+is likely that the new primary is sending <code class="highlighter-rouge">&lt;PREPARE&gt;</code>/<code class="highlighter-rouge">&lt;COMMIT&gt;</code>
+messages to all the replicas, including the one which previously
+failed. At this point the failed replica will notice that
+<code class="highlighter-rouge">&lt;PREPARE&gt;</code>/<code class="highlighter-rouge">&lt;COMMIT&gt;</code> messages have a <code class="highlighter-rouge">view-num</code> greater than
+its <code class="highlighter-rouge">view-num</code> and it will understand that the cluster transitioned to
+a new primary and that it needs to get up to date.</p>
+
+<p>In this case it will set its <code class="highlighter-rouge">status</code> to <code class="highlighter-rouge">recovery</code> and issue a
+<code class="highlighter-rouge">&lt;GET-STATE&gt;</code> request to any of the other replicas. The <code class="highlighter-rouge">&lt;GET-STATE&gt;</code>
+will contains its current values of the <code class="highlighter-rouge">view-num</code>, <code class="highlighter-rouge">op-num</code> and
+<code class="highlighter-rouge">commit-num</code> together with its identity. The <code class="highlighter-rouge">&lt;GET-STATE&gt;</code> message is
+the same message used by the replicas to get up to date when the fall
+behind.  The replica who receives the <code class="highlighter-rouge">&lt;GET-STATE&gt;</code> message will only
+respond if its <code class="highlighter-rouge">status</code> is <code class="highlighter-rouge">normal</code>.</p>
+
+<p>If the <code class="highlighter-rouge">view-num</code> in the <code class="highlighter-rouge">&lt;GET-STATE&gt;</code> message is the same as its
+<code class="highlighter-rouge">view-num</code> it means that the requesting node just fell behind, so it
+will prepare a <code class="highlighter-rouge">&lt;NEW-STATE&gt;</code> message with its <code class="highlighter-rouge">view-num</code>, its
+<code class="highlighter-rouge">commit-num</code> and its <code class="highlighter-rouge">op-num</code> and the portion of the <code class="highlighter-rouge">op-log</code> between
+the <code class="highlighter-rouge">op-num</code> in the <code class="highlighter-rouge">&lt;GET-STATE&gt;</code> and its <code class="highlighter-rouge">op-num</code>.</p>
+
+<p>If the <code class="highlighter-rouge">view-num</code> in the <code class="highlighter-rouge">&lt;GET-STATE&gt;</code> message is different,then it
+means that the node was in a partition during a view change.  In this
+case it will prepare a <code class="highlighter-rouge">&lt;NEW-STATE&gt;</code> message with new <code class="highlighter-rouge">view-num</code>, its
+<code class="highlighter-rouge">commit-num</code> and its <code class="highlighter-rouge">op-num</code> and the portion of the <code class="highlighter-rouge">op-log</code> between
+the <code class="highlighter-rouge">commit-num</code> in the <code class="highlighter-rouge">&lt;GET-STATE&gt;</code> this time and its <code class="highlighter-rouge">op-num</code>, this
+is because some operations in the minority group might not have
+survived the view-change.</p>
+
+<p>This is concludes the discussion about the ViewStamped Replication
+protocol.  We seen how requests are handled in the normal case, and we
+have seen how the ensemble safely transition to a new primary in case
+it detects a failure or partition in the previous one. We also seen
+how the protocol design accounts for unreliable network and allows for
+any message to be dropped, delayed or reordered and still work
+correctly.</p>
+
+<h2 id="protocol-optimisations">Protocol optimisations</h2>
+
+<p>Some of the limitations described earlier were imposed to allow to
+focus the discussion over the protocol correctness and clarity.  In
+this section we’ll see how some of the optimisations proposed by the
+authors make this protocol not only realistic to implement for a real
+world system, but also efficient and practical.</p>
+
+<h3 id="persistent-state">Persistent state</h3>
+
+<p>While the protocol as described above doesn’t require the internal
+replica state to be persisted to work properly you can store the state
+in a durable storage to speed up crash recovery. In fact in a large
+system the operation log (<code class="highlighter-rouge">op-log</code>) could become, over time, quite
+large. It would be unreasonable and ineffective to keep the entire
+operation log only in memory. Upon a crash, or when a replica is
+restarted it will require to get a copy of the <code class="highlighter-rouge">op-log</code> from another
+replica (via <code class="highlighter-rouge">&lt;GET-STATE&gt;</code>) and if the replica has to transfer
+terabytes of data the operation could take a long time.</p>
+
+<p>Storing the internal replica state into a durable storage can speed up
+the recovery in the event the process is crashed or restarted.  In
+fact in this case, new replica process will only need to fetch the
+tail of the operation log since its last committed operation
+(<code class="highlighter-rouge">commit-num</code>).</p>
+
+<p>Since the persistent state is not required to run the protocol
+correctly, then the implementer can make design decisions based on the
+efficient use of the storage. For example it could decide to <code class="highlighter-rouge">fsyinc</code>
+only when there are enough changes to fill a buffer, as supposed to
+<em>fsync-ing</em> on every request which it would be slow and inefficient.
+Additionally the durability of the state could be managed completely
+asynchronously from the protocol execution.</p>
+
+<h3 id="witnesses">Witnesses</h3>
+
+<p>Running the protocol has a cost. As we seen the primary has to wait
+for a <em>quorum</em> of nodes to respond on every <code class="highlighter-rouge">&lt;PREPARE&gt;</code> request before
+executing the client request. In a large cluster, as the number of
+nodes increases, it also increases the number of nodes that the
+primary has to wait for a response and it increases the likelihood the
+at one being slower and having to wait for longer. In such cases we
+can divide the ensemble into <em>active replicas</em> and <em>witness replicas</em>.</p>
+
+<p>Active replicas account for <code class="highlighter-rouge">𝑓 + 1</code> nodes which run the full protocol
+and keep the state. The <em>primary</em> is <em>always</em> an active replica. The
+reminder of the nodes are called <em>witnesses</em> and only participate to
+the view changes and recovery.</p>
+
+<h3 id="batching">Batching</h3>
+
+<p>In a high volume system there will be a huge number of <code class="highlighter-rouge">&lt;PREPARE&gt;</code>
+messages flying around. To reduce the latency cost of running the
+protocol the <em>primary replica</em> could batch a number of operation
+before sending a <code class="highlighter-rouge">&lt;PREPARE&gt;</code> messages to the other replicas.  In this
+case the <code class="highlighter-rouge">&lt;PREPARE&gt;</code> messages will include <em>all the operations</em> in the
+batch and the <code class="highlighter-rouge">&lt;PREPARE-OK&gt;</code> message will confirm that <em>all
+operations</em> in the batch have been prepared.  Several batching
+strategies can be applied for example the <em>primary</em> could wait for at
+most <em>20 milliseconds</em> or when 50 operations have been batched or
+whichever comes first, and then send the batch in a single <code class="highlighter-rouge">&lt;PREPARE&gt;</code>
+message.</p>
+
+<p>The same strategy could be applied on the client side for batching
+client’s requests, given that the client table is adjusted to
+accommodate a batch of requests.</p>
+
+<h3 id="fast-read-only-requests-on-primary">Fast read-only requests on Primary</h3>
+
+<p>In the general definition of the protocol, read-only requests, which
+do not alter the state are served via the normal request processing.
+However since read requests do not need to survive a partition, they
+could be served <em>unilaterally</em> by the <em>primary</em> without contacting the
+other replicas.</p>
+
+<p>The advantage of this optimisation is that read requests could benefit
+of shorter latency as there is no additional cost of running the
+protocol. However, in some case it is possible for the <em>primary</em>
+to serve <em>stale responses</em>. Let’s consider the following case:</p>
+
+<p><img src="/images/vr-paper/read-on-primary.gif" alt="Stale responses" /></p>
+
+<p>An ensemble with three replica nodes (<code class="highlighter-rouge">R1</code>, <code class="highlighter-rouge">R2</code>, <code class="highlighter-rouge">R3</code>) and <code class="highlighter-rouge">R2</code> is
+the current <em>primary</em>.  A bunch of clients are connected to the
+primary and issuing requests. Requests manipulate a set of named
+registers. The current value of the register <code class="highlighter-rouge">a</code> is <code class="highlighter-rouge">1</code>.  At a certain
+point a partition occur which isolates the primary (<code class="highlighter-rouge">R2</code>) from the
+rest of the ensemble and from most of the clients. Once the <em>view
+change protocol</em> kicks in replica <code class="highlighter-rouge">R3</code> will be elected as a new
+primary, and clients will reconnect to the new primary.</p>
+
+<p>At this point one of the clients could request a change of the
+registry <code class="highlighter-rouge">a = 2</code> and the change would succeed because a <em>quorum</em> of
+replica nodes is available (<code class="highlighter-rouge">R1</code> and <code class="highlighter-rouge">R3</code>).</p>
+
+<p>In the meanwhile the old primary (<code class="highlighter-rouge">R2</code>) is unaware of the change to
+the register <code class="highlighter-rouge">a</code> because the partition is still isolating
+communications.  Therefore is not even aware that a new primary
+replica has been selected and it is no more the current primary.</p>
+
+<p>An unfortunate client which is in the same side of the partition as
+the old primary (<code class="highlighter-rouge">R2</code>) might still be able to talk to the old primary.
+In this case if the client is requesting the current value of register
+<code class="highlighter-rouge">a</code>, it will get a stale value.</p>
+
+<p>To avoid this problem and make read-only requests possible to be
+served unilaterally by the primary we can make the use of <strong>leases</strong>.
+<em>A primary can only serve read-only requests without running the
+protocol and consulting with the other replicas if and only if, its
+lease is not expired.</em> When the lease expires, the primary must run
+the protocol and get the grant for a new lease which will ensure the
+view hasn’t changed in the meantime.  In case of a partition, the
+ensemble will have to wait for the lease to expire before triggering a
+view-change and select a new primary.</p>
+
+<h3 id="read-only-requests-on-other-replicas">Read-only requests on other replicas</h3>
+
+<p>In high request volume systems, where the number of read requests are
+much higher than the write requests, and if clients systems can accept
+stale reads (eventually consistent reads), then read-only requests can
+be made directly to the follower replicas. It is a effective way to
+reduce the load on the Primary and scale out the reads across all
+replicas. The primary is always handling the writes.</p>
+
+<p>In this situations it might be useful to track causality of client
+requests, for example a client makes a write followed by a read of the
+same value (read your own writes).  Causality can be achieved by
+tracking the operation number <code class="highlighter-rouge">op-num</code> for a client write request and
+propagating back this information to the client. Clients interested in
+causal ordering can issue a read request to a follower replica stating
+the <code class="highlighter-rouge">op-num</code>. In this case the replica knows that it must respond to
+that request only after it advanced its <code class="highlighter-rouge">commit-num</code> past the
+request’s <code class="highlighter-rouge">op-num</code>.</p>
+
+<p><img src="/images/vr-paper/read-on-follower.gif" alt="Stale responses" /></p>
+
+<p>For example the client is connecting to the primary and ask for a
+write operation such as a registry increment (<code class="highlighter-rouge">write a = a + 1</code>), the
+primary will process the request as usual, but along with the response
+it will communicate the operation number (<code class="highlighter-rouge">op-num</code>) for this request.
+The client records the <code class="highlighter-rouge">op-num</code> and it uses to make subsequent
+requests to the follower replicas for a read-only request. The replica,
+if it hasn’t processed the operation in the client request <code class="highlighter-rouge">op-num</code> it
+will have to wait until it the primary communicate that it is safe to
+do so and then reply.</p>
+
+<h3 id="ensemble-reconfiguration">Ensemble reconfiguration</h3>
+
+<p>As seen so far, each node needs to be known to the others for the
+protocol to work correctly.  However, modern systems, especially in a
+cloud environment, tend to change frequently their ensemble
+configuration. Maybe as a response to the increasing or decreasing of
+load (elastically scalable systems), or just as a consequence of
+operational necessities (hardware replacement, network reconfiguration
+etc).</p>
+
+<p>To face this increasingly common requirement the authors proposed a
+protocol extension to allow a reconfiguration of the ensemble. With
+this extension is possible to add, remove, or replace some or all
+nodes.  The only limit is that the minimum allowed number of nodes is
+three, below this limit is not possible to achieve a quorum.</p>
+
+<p>In order to support reconfiguration the replicas have to track
+additional properties. A monotonically increasing number called
+<code class="highlighter-rouge">epoch-num</code> tracks every reconfiguration, a property called
+<code class="highlighter-rouge">old-config</code> holds the previous configuration (list of nodes IPs,
+names, and IDs). Finally a new status called <code class="highlighter-rouge">transitioning</code> is used
+to mark when a reconfiguration is in progress.</p>
+
+<p>A special client, typically with admin rights, will issue a
+<code class="highlighter-rouge">&lt;RECONFIGURATION&gt;</code> request. The request includes the current
+<code class="highlighter-rouge">epoch-num</code>, the <code class="highlighter-rouge">client-id</code>, the <code class="highlighter-rouge">request#</code> and the <code class="highlighter-rouge">new-config</code> with
+the list of all ensemble nodes which is expected to replace the
+current configuration.</p>
+
+<p>The request will be sent to the primary and processed as a normal
+request.  However, as soon as a <code class="highlighter-rouge">&lt;RECONFIGURATION&gt;</code> request is
+received by the primary it will stop accepting new client’s requests.
+The other replicas will process the request as usual and send a
+<code class="highlighter-rouge">&lt;PREPARE-OK&gt;</code> message back to the primary. Once the primary receives
+a quorum of <code class="highlighter-rouge">&lt;PREPARE-OK&gt;</code> responses it will increase the <code class="highlighter-rouge">epoch-num</code>
+and send a <code class="highlighter-rouge">&lt;COMMIT&gt;</code> message to all replicas.  At this point it sends
+a <code class="highlighter-rouge">&lt;START-EPOCH&gt;</code> to all new replicas (all the replicas which are part
+of the new configuration but not of the old configuration) and it sets
+the <code class="highlighter-rouge">status = transitioning</code>. The <code class="highlighter-rouge">&lt;START-EPOCH&gt;</code> contains the new
+<code class="highlighter-rouge">epoch-num</code> the primary <code class="highlighter-rouge">op-num</code> and both: the old and new
+configuration.</p>
+
+<p>When the new replicas receive the <code class="highlighter-rouge">&lt;START-EPOCH&gt;</code> message they update
+the configuration taking <code class="highlighter-rouge">old-config</code> and <code class="highlighter-rouge">new-config</code> from the
+message itself, they reset the <code class="highlighter-rouge">view-num</code> to zero and set their
+<code class="highlighter-rouge">status = transitioning</code>.  If a new replica is missing data in
+their <code class="highlighter-rouge">op-log</code> it will issue a <code class="highlighter-rouge">&lt;GET-STATE&gt;</code> request to the old
+replicas. Once the new replica is up to date, then it sets its <code class="highlighter-rouge">status
+= normal</code>, send a <code class="highlighter-rouge">&lt;EPOCH-STARTED&gt;</code> with the new <code class="highlighter-rouge">epoch-num</code> and its
+identity to the old group, and finally, the new primary will start to
+accept client requests.</p>
+
+<p>This protocol extension allows to control the size of the ensemble
+for both: sizing up and sizing down. Additionally it can be used to
+replace a defective machine or also to migrate the entire cluster
+to a new set of more powerful machines.</p>
+
+<h2 id="conclusions">Conclusions</h2>
+
+<p>As we seen the Viewstamped Replication algorithm is a fairly simple
+consensus algorithm and quite interesting replication protocol.  It is
+quite simple to understand and, together with the many optimisations
+proposed, it can be implemented efficiently for real world
+application.  Since it operates only on the interactions between
+replicas and clients it can be used as a “<em>library</em>” wrapper atop an
+existing system rendering the system distributed, high available and
+strictly consistent.  For example it possible to take a single node
+file system and turn it into a distributed high available file system,
+which it was the initial motivation of the viewstamped replication
+protocol in first place. Moreover it could be used to wrap
+communications of systems such as Redis and Memcache or any other
+non-distributed system and turn it into a distributed, fault tolerant,
+high available and strictly consistent system.</p>
+
+<hr />
+
+<p>Links and resources:</p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:4">
+      <p><a href="https://lamport.azurewebsites.net/pubs/lamport-paxos.pdf">Paxos algorithm - The Part-Time Parliament, Leslie Lamport (1998)</a>&nbsp;<a href="#fnref:4" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:1">
+      <p><a href="http://pmg.csail.mit.edu/papers/vr.pdf">Viewstamped Replication: A New Primary Copy method to Support Highly-Available Distributed Systems, B. Oki, B. Liskov, (1988)</a>&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:2">
+      <p><a href="http://pmg.csail.mit.edu/papers/vr-revisited.pdf">Viewstamped Replication Revisited, B. Liskov, J.Cowling (2012)</a>&nbsp;<a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:3">
+      <p><a href="https://www.youtube.com/watch?v=1EzNa-zAYS8">Viewstamped Replication presentation at PapersWeLove London</a>&nbsp;<a href="#fnref:3" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:5">
+      <p><a href="https://www.microsoft.com/en-us/research/publication/byzantine-generals-problem/">The Byzantine Generals Problem, L. Lamport (1982)</a>&nbsp;<a href="#fnref:5" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:6">
+      <p><a href="https://www.cs.cornell.edu/fbs/publications/SMSurvey.pdf">Implementing Fault-Tolerant Services Using the State Machine Approach: A Tutorial, Schneider, Fred (1990)</a>&nbsp;<a href="#fnref:6" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+  </section>
+  <section id="disqus_thread"></section><!-- /#disqus_thread -->
+</article>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'bitsandpieces2'; // required: replace example with your forum shortname
+        var disqus_config = function () {
+          this.page.url = 'http://blog.brunobonacci.com/2018/07/15/viewstamped-replication-explained/';
+          this.page.identifier = '/2018/07/15/viewstamped-replication-explained';
+          this.page.title = 'Viewstamped Replication expleined';
+        };
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script'); s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+      </div>
+
+      <footer class="footer">
+  <span class="footer__copyright">&copy; 2013-2016 Bruno Bonacci. All rights reserved.</span>
+</footer>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51571233-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+    </div>
+  </body>
+</html>
