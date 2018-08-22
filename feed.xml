@@ -10,7 +10,7 @@
     <generator>Jekyll v3.4.5</generator>
     
       <item>
-        <title>Viewstamped Replication expleined</title>
+        <title>Viewstamped Replication explained</title>
         <description>&lt;p&gt;Viewstamped Replication is one of the earliest consensus algorithms
 for distributed systems. It is designed around the log replication
 concept of state machines and it can be efficiently implemented for
