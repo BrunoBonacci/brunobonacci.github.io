@@ -167,7 +167,7 @@
 for distributed systems. It is designed around the log replication
 concept of state machines and it can be efficiently implemented for
 modern systems. The revisited version of the paper offers a number of
-improvements on the algorithm from the original paper which both:
+improvements to the algorithm from the original paper which both:
 simplifies it and makes it more suitable for high volume
 systems. The original paper was published in 1988 which is ten years
 before the Paxos algorithm <sup id="fnref:4"><a href="#fn:4" class="footnote">1</a></sup> was published.</p>
@@ -195,16 +195,16 @@ driven from the more 2012 paper.</p>
 
 <h2 id="what-is-viewstamped-replication">What is “Viewstamped Replication”?</h2>
 
-<p>It is a replication protocol. It aims to guarantee consistent view
+<p>It is a replication protocol. It aims to guarantee a consistent view
 over replicated data.  And it is a “consensus algorithm”. To provide
-consistent view over replicated data, replicas must agree on
+a consistent view over replicated data, replicas must agree on the
 replicated state.</p>
 
 <p>It is designed to be a pluggable protocol which works on the
 communication layer between the clients and the servers and
-between the servers themselves.  The idea is that you can take a non
-distributed system and using this replication protocol you can turn a
-single node system into a high-available, fault tolerant distributed
+between the servers themselves.  The idea is that you can take a
+non-distributed system and using this replication protocol you can turn a
+single node system into a high-available, fault-tolerant distributed
 system.</p>
 
 <p><strong>To achieve fault-tolerance, the system must introduce redundancy in
@@ -213,7 +213,7 @@ of the network. Messages can be dropped, reordered or arbitrarily
 delayed, therefore protocol must account for it and allow requests to
 be replayed if necessary without causing duplication in the system.
 <em>Redundancy in space</em> is generally achieved via adding redundant
-copies in different machine with different fault-domain isolation.
+copies in different machines with different fault-domain isolation.
 the aim is to be able to stay in operation in face of a node failure,
 whether is a system crash or a hardware failure, the system must be
 able to continue normal operation within certain limits.</p>
@@ -222,10 +222,10 @@ able to continue normal operation within certain limits.</p>
 tolerate and recover from temporary network partitions, systems
 crashes, hardware failure and a wide range of network related issues.</p>
 
-<p>However the system can only tolerate a number of failures depending on
+<p>However, the system can only tolerate a number of failures depending on
 the cluster (or <strong>ensemble</strong> size). In particular to tolerate 𝑓
 failures it requires an ensemble of <code class="highlighter-rouge">2𝑓 + 1</code> replicas. The type of
-failures that the protocol can tolerate are <strong>non Byzantine failures</strong> <sup id="fnref:5"><a href="#fn:5" class="footnote">5</a></sup>
+failures that the protocol can tolerate are <strong>non-Byzantine failures</strong> <sup id="fnref:5"><a href="#fn:5" class="footnote">5</a></sup>
 which means that all the nodes in the ensemble will be either in a
 working state, or in a failed state or simply isolated. However, every
 node in the system will not deviate from the protocol and it will not
@@ -240,21 +240,21 @@ quorum with less than 3 nodes, therefore the minimum ensemble size is
 <h2 id="replicated-state-machines">Replicated State Machines</h2>
 
 <p>Viewstamped Replication is based on the <em>State Machine Replication</em> concept <sup id="fnref:6"><a href="#fn:6" class="footnote">6</a></sup>.
-A State Machine has an <em>initial state</em> and a <em>operation log</em>. The idea is
+A State Machine has an <em>initial state</em> and an <em>operation log</em>. The idea is
 that if you apply the ordered set of operation in the operation log to the
 initial state you will end up always with the same final state, <em>given that
 all the operations in the operation log are <strong>deterministic</strong></em>.</p>
 
 <p>Therefore, if we replicate the initial state and the operation log into
 other machines and repeat the same operations the final state on all the
-machines will be same.</p>
+machines will be the same.</p>
 
 <p><img src="/images/vr-paper/vr-replicated-stm.gif" alt="Replicated State Machines" /></p>
 
 <p>It is crucial that the <em>order of operations is preserved</em> as
 operations are not required to be commutative. Additionally <em>all
-sources of indeterminism must be eliminated</em> before the operation are
-added to the operation log.  For example if you have a operation which
+sources of indeterminism must be eliminated</em> before the operation is
+added to the operation log.  For example, if you have an operation which
 generate a unique random id, the primary replica will need to generate
 the random id and then add an operation in the log which already
 contains the generated number such that when the replicas apply the
@@ -262,7 +262,7 @@ operation won’t need to generate the random unique id themselves which
 will cause the replica state to diverge.</p>
 
 <p>The objective of Viewstamped Replication is to ensure that there is a
-strictly consistent view on the operation log. In other words is
+strictly consistent view on the operation log. In other words, is
 ensures that all replicas agree on which operations are in the log
 and their exact order.</p>
 
@@ -273,7 +273,7 @@ composed of the following parts.</p>
 
 <p><img src="/images/vr-paper/anatomy.png" alt="anatomy of a replica" /></p>
 
-<p>The operation log (<code class="highlighter-rouge">op-log</code>) is a (mostly) append only sequence of
+<p>The operation log (<code class="highlighter-rouge">op-log</code>) is a (mostly) append-only sequence of
 operations.  Operations are applied against the current state which
 could be external to the replica itself. Operations must be
 <em>deterministic</em> which means that every application of the same
@@ -308,7 +308,7 @@ This is stored in the <code class="highlighter-rouge">primary</code> field.</p>
 
 <p>The <code class="highlighter-rouge">status</code> field shows the current replica operation mode.
 As we will see later, the <code class="highlighter-rouge">status</code> can assume different values
-depending whether the replica is ready to process client requests,
+depending on whether the replica is ready to process client requests,
 or it is getting ready and doing internal preparation.</p>
 
 <p>Every replica node will also have a list of all the replica
@@ -322,7 +322,7 @@ Clients are identified by a unique id, and each client can only make
 one request at the time. Since communication is assumed to be
 unreliable, clients can re-issue the last request without the risk of
 duplication in the system. Every client request has a monotonically
-increasing number which identify the request of a particular
+increasing number which identifies the request of a particular
 client. Each time the primary receives a client requests it add the
 request to the client table. If the client re-sends the same requests
 because didn’t receive the response the primary can verify that the
@@ -332,16 +332,16 @@ request was already processed and send the cached response.</p>
 
 <h2 id="the-protocol">The Protocol</h2>
 
-<p>Next we are going to analyse the protocol in details.  The protocol is
+<p>Next, we are going to analyse the protocol in details.  The protocol is
 presented in the paper in its simplest form first.  Then the paper
 goes on describing a number of optimisations which do not change the
 basic structure of the protocol but make it efficient and practical to
-implement for real world application.  Efficiency is a major concern
+implement for real-world application.  Efficiency is a major concern
 throughout both papers as the authors were building real-world systems.</p>
 
 <h3 id="client-requests-handling">Client requests handling</h3>
 
-<p>In this section we are going to see how a client request is processed
+<p>In this section, we are going to see how a client request is processed
 and the data replicated. We are going to see, in details, how the protocol
 ensures that at least a quorum of replicas acknowledges the request
 before executing the request.</p>
@@ -350,7 +350,7 @@ before executing the request.</p>
 
 <p>Clients have a unique identifier (<code class="highlighter-rouge">client-id</code>), and they communicate
 only with the primary. If a client contacts a replica which is not the
-primary, the replica drops the requests, and returns an error message
+primary, the replica drops the requests and returns an error message
 to the client advising it to connect to the primary.  Each client can
 only send one request at the time, and each request has a request
 number (<code class="highlighter-rouge">request#</code>) which is a monotonically increasing number.  The
@@ -358,18 +358,18 @@ client prepares <code class="highlighter-rouge">&lt;REQUEST&gt;</code> message w
 the request <code class="highlighter-rouge">request#</code> and the operation (<code class="highlighter-rouge">op</code>) to perform.</p>
 
 <p>The primary only processes the requests if its <code class="highlighter-rouge">status</code> is <code class="highlighter-rouge">normal</code>,
-otherwise it drops the request and sends a error message to the client
+otherwise, it drops the request and sends an error message to the client
 advising to try later.  When the primary receives the request from the
 client, it checks whether the request is already present in the client
 table.  If the request’s number is greater of the one in the client
-table then it is a new request, otherwise it means that the client
+table then it is a new request, otherwise, it means that the client
 might not have received last response and it is re-sending the
-previous request. In this case the request is dropped and the primary
+previous request. In this case, the request is dropped and the primary
 re-send last response present in the client table.</p>
 
 <p>If it is a new request, then the primary increases the operation
 number (<code class="highlighter-rouge">op-num</code>), it appends the requested operation to its operation
-log (<code class="highlighter-rouge">op-log</code>) and it update the <code class="highlighter-rouge">client-table</code> with the new request.</p>
+log (<code class="highlighter-rouge">op-log</code>) and it updates the <code class="highlighter-rouge">client-table</code> with the new request.</p>
 
 <p>Then it needs to notify all the replicas about the new request, so it
 creates a <code class="highlighter-rouge">&lt;PREPARE&gt;</code> message which contains: the current view number
@@ -377,27 +377,27 @@ creates a <code class="highlighter-rouge">&lt;PREPARE&gt;</code> message which c
 (<code class="highlighter-rouge">commit-num</code>), and the <code class="highlighter-rouge">message</code> which is the client request itself,
 and it sends the message to all the replicas.</p>
 
-<p>When a replica receives a <code class="highlighter-rouge">&lt;PREPARE&gt;</code> request, it first check whether
+<p>When a replica receives a <code class="highlighter-rouge">&lt;PREPARE&gt;</code> request, it first checks whether
 the view number is the same <code class="highlighter-rouge">view-num</code>, if its view number is
 different than the message <code class="highlighter-rouge">view-num</code> it means that a new primary was
 nominated and, depending on who is behind, it needs to get up to date.
 If its view-number is smaller than the message <code class="highlighter-rouge">view-num</code>, then it
 means that this particular node is behind, so it needs to change its
-<code class="highlighter-rouge">status</code> to <code class="highlighter-rouge">revovery</code> and initiate a state transfer from the new
+<code class="highlighter-rouge">status</code> to <code class="highlighter-rouge">recovery</code> and initiate a state transfer from the new
 primary (we will see the primary change process called <strong>view change</strong>
 later).  If its view-number is greater than the message <code class="highlighter-rouge">view-num</code>,
-then it means that the other replica need to get up-to-date, so it
-drop the message.  Finally if the <code class="highlighter-rouge">view-num</code> is the same, then it
+then it means that the other replica needs to get up-to-date, so it
+drops the message.  Finally, if the <code class="highlighter-rouge">view-num</code> is the same, then it
 looks at the <code class="highlighter-rouge">op-num</code> in the message. The <code class="highlighter-rouge">op-num</code> needs to be
 <em>strictly consecutive</em>.  If there are gaps it means that this replica
 missed one or more <code class="highlighter-rouge">&lt;PREPARE&gt;</code> messages, so it drops the message and
-it initiate a recovery with a state transfer.  If the <code class="highlighter-rouge">op-num</code> is
-<em>strictly consecutive</em> then it increment its <code class="highlighter-rouge">op-num</code>, append the
-operation to the <code class="highlighter-rouge">op-log</code> and update the client table.</p>
+it initiates a recovery with a state transfer.  If the <code class="highlighter-rouge">op-num</code> is
+<em>strictly consecutive</em> then it increments its <code class="highlighter-rouge">op-num</code>, appends the
+operation to the <code class="highlighter-rouge">op-log</code> and updates the client table.</p>
 
-<p>Now the replica sends an acknowledgement to the primary that the
+<p>Now the replica sends an acknowledgment to the primary that the
 operation, and all previous operations, were successfully prepared. It
-create a <code class="highlighter-rouge">&lt;PREPARE-OK&gt;</code> message with its <code class="highlighter-rouge">view-num</code>, the <code class="highlighter-rouge">op-num</code> and
+creates a <code class="highlighter-rouge">&lt;PREPARE-OK&gt;</code> message with its <code class="highlighter-rouge">view-num</code>, the <code class="highlighter-rouge">op-num</code> and
 its identity.  Sending a <code class="highlighter-rouge">&lt;PREPARE-OK&gt;</code> for a given <code class="highlighter-rouge">op-num</code> means
 that all the previous operations in the log have been prepared as well
 (no gaps).</p>
@@ -406,18 +406,18 @@ that all the previous operations in the log have been prepared as well
 messages, at which point it knows that a <strong>quorum</strong> of nodes knows
 about the operation to perform therefore it is considered safe to
 proceed as it is guaranteed that the operation will survive the loss
-of <code class="highlighter-rouge">𝑓</code> nodes. When it receives enough <code class="highlighter-rouge">&lt;PREPARE-OK&gt;</code> then it perform
+of <code class="highlighter-rouge">𝑓</code> nodes. When it receives enough <code class="highlighter-rouge">&lt;PREPARE-OK&gt;</code> then it performs
 the operation, possibly with side effect, it increases its commit
 number <code class="highlighter-rouge">commit-num</code>, and update the client table with the operation
 result. Again, advancing the <code class="highlighter-rouge">commit-num</code> must be done in strict order,
 and it also means that <strong>all previous operations have been committed</strong>
 as well.</p>
 
-<p>Finally it prepares a <code class="highlighter-rouge">&lt;REPLY&gt;</code> message with the current <code class="highlighter-rouge">view-num</code>
+<p>Finally, it prepares a <code class="highlighter-rouge">&lt;REPLY&gt;</code> message with the current <code class="highlighter-rouge">view-num</code>
 the client request number <code class="highlighter-rouge">request#</code> and the operation result
 (<code class="highlighter-rouge">response</code>) and it sends it to the client.</p>
 
-<p>At this point the primary is the only node that has performed the
+<p>At this point, the primary is the only node that has performed the
 operation (and advanced its <code class="highlighter-rouge">commit-num</code>) while the replicas have only
 prepared the operation but not applied. Before they can safely apply
 they need confirmation from the primary that it is safe to do so.</p>
@@ -441,7 +441,7 @@ operation number append to the <code class="highlighter-rouge">op-log</code> and
 then it sends a <code class="highlighter-rouge">&lt;PREPARE-OK&gt;</code> to the primary for the operation it
 received.</p>
 
-<p>However the <code class="highlighter-rouge">&lt;PREPARE&gt;</code> message from the primary also contained the
+<p>However, the <code class="highlighter-rouge">&lt;PREPARE&gt;</code> message from the primary also contained the
 <code class="highlighter-rouge">commit-num</code> which showed that the primary has now executed the
 operation against its state and it is notifying the replicas that it
 is safe to do so as well. So the replicas will perform all requests in
@@ -487,10 +487,10 @@ latest information to act as the new leader.</p>
 <p>In my view, one of the most interesting parts of the ViewStamped
 Replication protocol is the way the new primary node is
 selected. Other consensus protocols (such as Paxos and Raft) have
-rather sophisticated way to elect a new primary (or leader) with
+a rather sophisticated way to elect a new primary (or leader) with
 candidates having to step up, ask for votes, ballots, turns
 etc. ViewStamped Replication takes a completely different approach. It
-uses a <strong>deterministic function</strong> over a fix property of the replica
+uses a <strong>deterministic function</strong> over a fixed property of the replica
 nodes, something like a unique identifier or IP address.</p>
 
 <p>For example, if the replica nodes IP addresses don’t change you could
@@ -503,7 +503,7 @@ find this strategy very simple and effective. There is no vote to
 cast, candidates stepping up, election turns, ballots, just a
 predefined sequence of who’s turn is.</p>
 
-<p>For example if you have a three nodes cluster with the following IP addresses</p>
+<p>For example, if you have a three nodes cluster with the following IP addresses</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>10.5.3.12           10.5.1.20  (1)
 10.5.1.20  ~sort~&gt;  10.5.2.28  (2)
@@ -532,7 +532,7 @@ survive and continue processing requests in the face of two failed
 nodes.</p>
 
 <p><code class="highlighter-rouge">R1</code> is currently accepting client’s requests and those are handled as
-seen earlier. Therefore for each client request a <code class="highlighter-rouge">&lt;PREPARE&gt;</code> message
+seen earlier. Therefore for each client request, a <code class="highlighter-rouge">&lt;PREPARE&gt;</code> message
 is sent to all replicas and they reply with a
 <code class="highlighter-rouge">&lt;PREPARE-OK&gt;</code>. <code class="highlighter-rouge">&lt;COMMIT&gt;</code> messages are also used to signal which
 operations are committed by the primary.</p>
@@ -541,8 +541,7 @@ operations are committed by the primary.</p>
 
 <p>Let’s assume that the primary <code class="highlighter-rouge">R1</code> crashes or is isolated from the
 rest of the cluster.  No more <code class="highlighter-rouge">&lt;PREPARE&gt;</code> or <code class="highlighter-rouge">&lt;COMMIT&gt;</code> messages will
-be received by the rest of the cluster. As said previously these messages
-act as heartbeat for the primary health.</p>
+be received by the rest of the cluster. As said previously these messages act as a heartbeat for the primary health.</p>
 
 <p>At some point, in one of the nodes (<code class="highlighter-rouge">R4</code> for example) a timeout will
 expire, and it will detect that it didn’t hear from the primary since
@@ -565,7 +564,7 @@ view number in which the state was normal <code class="highlighter-rouge">old-vi
 <code class="highlighter-rouge">op-num</code> and its operation log (<code class="highlighter-rouge">op-log</code>) and its commit number
 (<code class="highlighter-rouge">commit-num</code>).</p>
 
-<p>When the new primary, in this case node <code class="highlighter-rouge">R2</code>, it receives <code class="highlighter-rouge">𝑓 + 1</code>
+<p>When the new primary, in this case, node <code class="highlighter-rouge">R2</code>, it receives <code class="highlighter-rouge">𝑓 + 1</code>
 (including itself) <code class="highlighter-rouge">&lt;DO-VIEW-CHANGE&gt;</code> with the same <code class="highlighter-rouge">view-num</code> it
 compares the messages against its own information and pick the most
 up-to-date. It will set the <code class="highlighter-rouge">view-num</code> the new <code class="highlighter-rouge">view-num</code>, it will
@@ -574,9 +573,9 @@ take the operation log (<code class="highlighter-rouge">op-log</code>) from the 
 will pick the one with the largest <code class="highlighter-rouge">op-log</code>, it will take the <code class="highlighter-rouge">op-num</code>
 from the chosen <code class="highlighter-rouge">op-log</code> and the highest <code class="highlighter-rouge">commit-num</code> and execute all
 committed operations in the operation log between its old <code class="highlighter-rouge">commit-num</code>
-value and the new <code class="highlighter-rouge">commit-num</code> value.  At this point the new primary
+value and the new <code class="highlighter-rouge">commit-num</code> value.  At this point, the new primary
 is ready to accept requests from the client so it sets its <code class="highlighter-rouge">status</code> to
-<code class="highlighter-rouge">normal</code>.  Finally it sends a <code class="highlighter-rouge">&lt;START-VIEW&gt;</code> message to all replicas
+<code class="highlighter-rouge">normal</code>.  Finally, it sends a <code class="highlighter-rouge">&lt;START-VIEW&gt;</code> message to all replicas
 with the new <code class="highlighter-rouge">view-num</code>, the most up to date <code class="highlighter-rouge">op-log</code>, the
 corresponding <code class="highlighter-rouge">op-num</code> and the highest <code class="highlighter-rouge">commit-num</code>.</p>
 
@@ -590,18 +589,18 @@ the <code class="highlighter-rouge">op-log</code> which haven’t been committed
 
 <p>Some time later the failed node (<code class="highlighter-rouge">R1</code>) might come back alive either
 because the partition is now terminated or because the crashed nodes
-it has been restarted. At this point the <code class="highlighter-rouge">R1</code> might still think it is
+it has been restarted. At this point, the <code class="highlighter-rouge">R1</code> might still think it is
 the primary and be waiting for requests from clients. However, since
 the ensemble transitioned to a new primary in the meantime, it is
 likely that clients will be sending requests to the new primary and it
 is likely that the new primary is sending <code class="highlighter-rouge">&lt;PREPARE&gt;</code>/<code class="highlighter-rouge">&lt;COMMIT&gt;</code>
 messages to all the replicas, including the one which previously
-failed. At this point the failed replica will notice that
+failed. At this point, the failed replica will notice that
 <code class="highlighter-rouge">&lt;PREPARE&gt;</code>/<code class="highlighter-rouge">&lt;COMMIT&gt;</code> messages have a <code class="highlighter-rouge">view-num</code> greater than
 its <code class="highlighter-rouge">view-num</code> and it will understand that the cluster transitioned to
 a new primary and that it needs to get up to date.</p>
 
-<p>In this case it will set its <code class="highlighter-rouge">status</code> to <code class="highlighter-rouge">recovery</code> and issue a
+<p>In this case, it will set its <code class="highlighter-rouge">status</code> to <code class="highlighter-rouge">recovery</code> and issue a
 <code class="highlighter-rouge">&lt;GET-STATE&gt;</code> request to any of the other replicas. The <code class="highlighter-rouge">&lt;GET-STATE&gt;</code>
 will contains its current values of the <code class="highlighter-rouge">view-num</code>, <code class="highlighter-rouge">op-num</code> and
 <code class="highlighter-rouge">commit-num</code> together with its identity. The <code class="highlighter-rouge">&lt;GET-STATE&gt;</code> message is
@@ -615,7 +614,7 @@ will prepare a <code class="highlighter-rouge">&lt;NEW-STATE&gt;</code> message 
 <code class="highlighter-rouge">commit-num</code> and its <code class="highlighter-rouge">op-num</code> and the portion of the <code class="highlighter-rouge">op-log</code> between
 the <code class="highlighter-rouge">op-num</code> in the <code class="highlighter-rouge">&lt;GET-STATE&gt;</code> and its <code class="highlighter-rouge">op-num</code>.</p>
 
-<p>If the <code class="highlighter-rouge">view-num</code> in the <code class="highlighter-rouge">&lt;GET-STATE&gt;</code> message is different,then it
+<p>If the <code class="highlighter-rouge">view-num</code> in the <code class="highlighter-rouge">&lt;GET-STATE&gt;</code> message is different, then it
 means that the node was in a partition during a view change.  In this
 case it will prepare a <code class="highlighter-rouge">&lt;NEW-STATE&gt;</code> message with new <code class="highlighter-rouge">view-num</code>, its
 <code class="highlighter-rouge">commit-num</code> and its <code class="highlighter-rouge">op-num</code> and the portion of the <code class="highlighter-rouge">op-log</code> between
@@ -677,7 +676,7 @@ can divide the ensemble into <em>active replicas</em> and <em>witness replicas</
 
 <p>Active replicas account for <code class="highlighter-rouge">𝑓 + 1</code> nodes which run the full protocol
 and keep the state. The <em>primary</em> is <em>always</em> an active replica. The
-reminder of the nodes are called <em>witnesses</em> and only participate to
+remainder of the nodes are called <em>witnesses</em> and only participate to
 the view changes and recovery.</p>
 
 <h3 id="batching">Batching</h3>
