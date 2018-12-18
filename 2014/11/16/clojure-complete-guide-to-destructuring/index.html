@@ -163,7 +163,7 @@
   </header>
 
   <section class="post">
-    <p><em>Last update on 2018-05-15.</em></p>
+    <p><em>Updated to Clojure 1.10 - Last update on 2018-12-18.</em></p>
 
 <p>Destructuring is a simple, yet powerful feature of Clojure.
 There are several ways in which you can leverage destructuring
@@ -659,13 +659,13 @@ be slightly changed. Given the following map:</p>
 </span><span class="c1">;; Smith - CEO
 </span><span class="w">
 
-</span><span class="c1">;; Clojure 1.9
+</span><span class="c1">;; Clojure 1.9 and subsequent releases
 ;; a default value might be provided
 </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">lastname</span><span class="w"> </span><span class="n">corporate/position</span><span class="p">]</span><span class="w">
        </span><span class="no">:or</span><span class="w"> </span><span class="p">{</span><span class="n">position</span><span class="w"> </span><span class="s">"Employee"</span><span class="p">}}</span><span class="w"> </span><span class="n">contact</span><span class="p">]</span><span class="w">
   </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="n">lastname</span><span class="w"> </span><span class="s">"-"</span><span class="w"> </span><span class="n">position</span><span class="p">))</span><span class="w">
 
-</span><span class="c1">;; Clojure 1.8 or previous
+</span><span class="c1">;; Clojure 1.8 or previous (doesn't work on CLJ 1.9+)
 ;; a default value might be provided
 </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">lastname</span><span class="w"> </span><span class="n">corporate/position</span><span class="p">]</span><span class="w">
        </span><span class="no">:or</span><span class="w"> </span><span class="p">{</span><span class="n">corporate/position</span><span class="w"> </span><span class="s">"Employee"</span><span class="p">}}</span><span class="w"> </span><span class="n">contact</span><span class="p">]</span><span class="w">
@@ -785,7 +785,7 @@ The compiler won’t complain, and the default value won’t be bound.</p>
 bound and the compiler won’t complain up to Clojure 1.8.
 In Clojure 1.9 this is fixed, and a compilation error will be raised.</p>
 
-<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; BAD DEFAULTS - Clojure 1.8
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; BAD DEFAULTS - Clojure 1.8 (doesn't work on CLJ 1.9+)
 </span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">connect-db</span><span class="w"> </span><span class="p">[</span><span class="n">host</span><span class="w"> </span><span class="c1">; mandatory parameter
 </span><span class="w">                  </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">port</span><span class="w"> </span><span class="n">db-name</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="n">password</span><span class="p">]</span><span class="w">
                      </span><span class="no">:or</span><span class="w">   </span><span class="p">{</span><span class="no">:port</span><span class="w">     </span><span class="mi">12345</span><span class="w">
@@ -802,12 +802,12 @@ In Clojure 1.9 this is fixed, and a compilation error will be raised.</p>
 </span></code></pre>
 </div>
 
-<h4 id="defaults-in-a-vector-fixed-in-19">Defaults in a vector (fixed in 1.9)</h4>
+<h4 id="defaults-in-a-vector-fixed-in-19">Defaults in a vector (fixed in 1.9+)</h4>
 
 <p>If by mistake you put all defaults in a vector, again, no error from
 the compiler (up to Clojure 1.8) and no value will be bound.</p>
 
-<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; BAD DEFAULTS - Clojure 1.8
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="c1">;; BAD DEFAULTS - Clojure 1.8 (doesn't work on CLJ 1.9+)
 </span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">connect-db</span><span class="w"> </span><span class="p">[</span><span class="n">host</span><span class="w"> </span><span class="c1">; mandatory parameter
 </span><span class="w">                  </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="no">:keys</span><span class="w"> </span><span class="p">[</span><span class="n">port</span><span class="w"> </span><span class="n">db-name</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="n">password</span><span class="p">]</span><span class="w">
                      </span><span class="no">:or</span><span class="w">   </span><span class="p">[</span><span class="n">port</span><span class="w">     </span><span class="mi">12345</span><span class="w">
@@ -937,7 +937,8 @@ that the code becomes clearer and event more readable.</p>
   <li>2017-05-13 - added destructuring of namespaced keys.</li>
   <li>2017-05-23 - added common mistakes / gotchas.</li>
   <li>2018-02-22 - added more gotchas</li>
-  <li>2018-05-15 - updated with Clojure 1.9 notes</li>
+  <li>2018-05-15 - updated to Clojure 1.9</li>
+  <li>2018-12-18 - updated to Clojure 1.10</li>
 </ul>
 
 <p>References:</p>
