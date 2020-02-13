@@ -163,7 +163,144 @@
   <section class="post">
     <p>Here some of my Open Source projects which you might be interested into.</p>
 
+<h3 id="safely">safely</h3>
+
+<p><img src="https://img.shields.io/badge/development-active-brightgreen" alt="active" />
+<img src="https://img.shields.io/badge/API-stable-brightgreen" alt="stable" />
+<img src="https://img.shields.io/badge/production-in--use-brightgreen" alt="production" />
+<img src="https://img.shields.io/badge/should--I--use--it%3F-Definitely-blue" alt="use-it" /></p>
+
+<p><code class="highlighter-rouge">safely</code> is a Clojure Circuit-Breaker and retry library with a
+<em>declarative approach</em>.  The purpose of the library is to simply and
+effectively handle retries declaratively making sure that in a large
+distributed system these retries won’t cause <em>self-similar mass
+behavior</em> causing more harm than benefit. The circuit breaker
+is implemented fully in Clojure and offers good features for
+observability..</p>
+
+<ul>
+  <li><strong>Github</strong>: <a href="https://github.com/BrunoBonacci/safely">https://github.com/BrunoBonacci/safely</a></li>
+</ul>
+
+<hr />
+
+<h3 id="1config">1Config</h3>
+
+<p><img src="https://img.shields.io/badge/development-active-brightgreen" alt="active" />
+<img src="https://img.shields.io/badge/API-stable-brightgreen" alt="stable" />
+<img src="https://img.shields.io/badge/production-in--use-brightgreen" alt="production" />
+<img src="https://img.shields.io/badge/should--I--use--it%3F-Definitely-blue" alt="use-it" /></p>
+
+<p><strong>1Config is A tool and a library to manage application secrets and
+configuration safely and effectively.</strong></p>
+
+<p>Here some of the key-points and advantages:</p>
+
+<ul>
+  <li>Easy way to retrieve and manage configuration for your AWS deployed services</li>
+  <li>Compatible with AWS Lambdas as well</li>
+  <li>AWS KMS envelope encryption for extra security (same as S3-SSE, EBS and RDS)</li>
+  <li>Support for key-rotation</li>
+  <li>Highly available (as available as DynamoDB + KMS)</li>
+  <li>Support for multiple environments in the same AWS account</li>
+  <li>Support for multiple services in the same environment</li>
+  <li>Support for multiple concurrent versions of the same service</li>
+  <li>Zero config approach (or at most 1 config <code class="highlighter-rouge">;-)</code>)</li>
+  <li><em>Anti-tampering checks for configuration entries</em> (entries can’t be manipulated manually)</li>
+  <li>Supports Clojure, Java, Groovy, and other JVM languages (more to come)</li>
+  <li>Command line tool for managing changes to the configuration</li>
+  <li>Graphical User interface for managing changes to the configuration</li>
+  <li>Support for local development (outside AWS)</li>
+  <li>Highly-configurable and secure authorization.</li>
+</ul>
+
+<p>It has a very strong security model and very a simple but powerful
+API.  Because it offers a Clojure and Java client you can read the
+configuration directly from your application without using
+intermediate storage such host filesystem, environment variables etc.
+<em>The best way to pass certificates to your applications.</em></p>
+
+<ul>
+  <li><strong>Github</strong>: <a href="https://github.com/BrunoBonacci/mulog">https://github.com/BrunoBonacci/mulog</a></li>
+</ul>
+
+<hr />
+
+<h3 id="μlog">μ/log</h3>
+
+<p><img src="https://img.shields.io/badge/development-active-brightgreen" alt="active" />
+<img src="https://img.shields.io/badge/API-evolving-green" alt="evolving" />
+<img src="https://img.shields.io/badge/production-in--use-brightgreen" alt="production" />
+<img src="https://img.shields.io/badge/should--I--use--it%3F-check--it--out%21-blue" alt="check-it-out" /></p>
+
+<p><code class="highlighter-rouge">μ/log</code> is a Clojure library for structured event logging.
+Contrarily, most of the existing log library which focus on logging
+human readable messages, <strong><em>μ/log</em></strong> offers APIs to log events and
+data-points. Human readable messages often encode data which it is then
+sent to centralized logging systems and loads of effort is put to
+extract useful information out of the string message. <strong><em>μ/log</em></strong>
+allow to send data directly and in a safe manner, enabling post
+processing and query aggregation in ways that other systems can’t.</p>
+
+<p>On top of <strong><em>μ/log</em></strong>, I’m also building <strong><em>μ/trace</em></strong>, a micro-tracing library
+which allows to extends the basic event-logging capabilities with
+distributed tracing information.</p>
+
+<ul>
+  <li><strong>Github</strong>: <a href="https://github.com/BrunoBonacci/mulog">https://github.com/BrunoBonacci/mulog</a></li>
+</ul>
+
+<hr />
+
+<h3 id="optimus">Optimus</h3>
+
+<p><img src="https://img.shields.io/badge/development-inactive-inactive" alt="inactive" />
+<img src="https://img.shields.io/badge/API-stable-brightgreen" alt="stable" />
+<img src="https://img.shields.io/badge/production-in--use-brightgreen" alt="production" />
+<img src="https://img.shields.io/badge/should--I--use--it%3F-Definitely-blue" alt="use-it" /></p>
+
+<p><code class="highlighter-rouge">Optimus</code> is a key-value store which I co-designed and developed while
+working at Trainline.com. It has customizable backends, it defaults to
+DynamoDB and it offers the ability to load millions of records and
+atomically publish them. This is used to publish Machine Learning
+models, or pre-computed values like recommendations in a way that the
+consumer will either see the new set of values or the old set of
+values, but never some values from two different partial updates. It
+provides also APIs to quickly and atomically rollback to a previous
+published version in case you realize that the new Machine Learning
+model isn’t performing as you expect.</p>
+
+<ul>
+  <li>My extensions <strong>Github</strong>: <a href="https://github.com/BrunoBonacci/optimus">https://github.com/BrunoBonacci/optimus</a></li>
+  <li>Published initially under <strong>Github</strong>: <a href="https://github.com/trainline/optimus">https://github.com/trainline/optimus</a></li>
+</ul>
+
+<hr />
+
+<h3 id="where">where</h3>
+
+<p><img src="https://img.shields.io/badge/development-active-brightgreen" alt="active" />
+<img src="https://img.shields.io/badge/API-stable-brightgreen" alt="stable" />
+<img src="https://img.shields.io/badge/production-in--use-brightgreen" alt="production" />
+<img src="https://img.shields.io/badge/should--I--use--it%3F-Definitely-blue" alt="use-it" /></p>
+
+<p><code class="highlighter-rouge">where</code> is a small Clojure/ClojureScript library to write predicate
+functions which are easier to read and easier to compose.  It supports
+a number of built-in comparators which are <code class="highlighter-rouge">nil</code> safe and they support
+case insensitive checks.</p>
+
+<ul>
+  <li><strong>Github</strong>: <a href="https://github.com/BrunoBonacci/where">https://github.com/BrunoBonacci/where</a></li>
+</ul>
+
+<hr />
+
 <h3 id="samsara">Samsara</h3>
+
+<p><img src="https://img.shields.io/badge/development-inactive-inactive" alt="inactive" />
+<img src="https://img.shields.io/badge/API-stable-inactive" alt="stable" />
+<img src="https://img.shields.io/badge/production-used-brightgreen" alt="production" />
+<img src="https://img.shields.io/badge/should--I--use--it%3F-Hold--on-orange" alt="hold-on" /></p>
 
 <p>Samsara is a Real-Time analytics platform written in Clojure.</p>
 
@@ -192,47 +329,24 @@ learning modules and to create a community behind the project.</p>
 <ul>
   <li><strong>Github</strong>: <a href="https://github.com/samsara/samsara">https://github.com/samsara/samsara</a></li>
   <li><strong>Website</strong>: <a href="http://samsara-analytics.io/">http://samsara-analytics.io/</a></li>
-</ul>
-
-<hr />
-
-<h3 id="safely">Safely</h3>
-
-<p><code class="highlighter-rouge">safely</code> it’s a Clojure Circuit-Breaker and retry library with a
-declarative approach.  The purpose of the library is to simply and
-effectively handle retries declaratively making sure that in a large
-distributed system these retries won’t cause <em>self-similar mass
-behavior</em> and causing more arm than benefit. The circuit breaker
-is implemented fully in Clojure and offers good features for
-observability..</p>
-
-<ul>
-  <li><strong>Github</strong>: <a href="https://github.com/BrunoBonacci/safely">https://github.com/BrunoBonacci/safely</a></li>
-</ul>
-
-<hr />
-
-<h3 id="where">Where</h3>
-
-<p><code class="highlighter-rouge">where</code> it’s a small Clojure/ClojureScript library to write predicate
-functions which are easier to read and easier to compose.  It supports
-a number of built-in comparators which are <code class="highlighter-rouge">nil</code> safe and support case
-insensitive checks.</p>
-
-<ul>
-  <li><strong>Github</strong>: <a href="https://github.com/BrunoBonacci/where">https://github.com/BrunoBonacci/where</a></li>
+  <li><strong>Blog</strong>: <a href="http://blog.brunobonacci.com/2016/06/20/designing-samsara/">Designing Samsara</a></li>
 </ul>
 
 <hr />
 
 <h3 id="clj-sophia">clj-sophia</h3>
 
-<p>An idiomatic Clojure driver for <a href="http://sophia.systems/">Sophia
-DB</a>. Sophia is RAM-Disk hybrid storage
-designed to provide best possible on-disk performance without
-degradation in time.  Sophia is an embedded key/value store which
-implements a LSM storage system. Very fast and fully ACID
-(Serialized Snapshot Isolation - SSI) transactional support..</p>
+<p><img src="https://img.shields.io/badge/development-inactive-inactive" alt="inactive" />
+<img src="https://img.shields.io/badge/API-feature--complete-brightgreen" alt="feature-complete" />
+<img src="https://img.shields.io/badge/production-in--use-brightgreen" alt="production" />
+<img src="https://img.shields.io/badge/should--I--use--it%3F-Definitely-blue" alt="use-it" /></p>
+
+<p>An idiomatic Clojure driver for <a href="http://sophia.systems/">Sophia DB</a>.
+Sophia is RAM-Disk hybrid storage designed to provide best possible
+on-disk performance without degradation in time.  Sophia is an
+embedded key/value store which implements a LSM storage system. Very
+fast and fully ACID (Serialized Snapshot Isolation - SSI)
+transactional support..</p>
 
 <ul>
   <li><strong>Github</strong>: <a href="https://github.com/BrunoBonacci/clj-sophia">https://github.com/BrunoBonacci/clj-sophia</a></li>
@@ -241,6 +355,11 @@ implements a LSM storage system. Very fast and fully ACID
 <hr />
 
 <h3 id="ring-boost">ring-boost</h3>
+
+<p><img src="https://img.shields.io/badge/development-inactive-inactive" alt="inactive" />
+<img src="https://img.shields.io/badge/API-mvp-yellow" alt="mvp" />
+<img src="https://img.shields.io/badge/production-in--use-brightgreen" alt="production" />
+<img src="https://img.shields.io/badge/should--I--use--it%3F-check--it--out%21-blue" alt="check-it-out" /></p>
 
 <p>A library to boost performances of Clojure web applications with
 off-heap serverside caching. Serverside caching is uniquely
@@ -257,9 +376,50 @@ can be completely customized to tailor your needs.</p>
 
 <hr />
 
+<h3 id="trackit">TrackIt!</h3>
+
+<p><img src="https://img.shields.io/badge/development-maintenance--only-yellow" alt="maintenance-only" />
+<img src="https://img.shields.io/badge/API-stable-brightgreen" alt="stable" />
+<img src="https://img.shields.io/badge/production-in--use-brightgreen" alt="production" />
+<img src="https://img.shields.io/badge/should--I--use--it%3F-Check%20%CE%BC%2Flog-blue" alt="use-it" /></p>
+
+<p><code class="highlighter-rouge">TrackIt!</code> allows you to instrument your code and record useful metrics
+and publish those metrics to a number of backend systems for indexing
+and visualization, such as:</p>
+
+<ul>
+  <li>Console</li>
+  <li>Ganglia</li>
+  <li>Graphite</li>
+  <li>Statsd</li>
+  <li>Infuxdb</li>
+  <li>Reimann</li>
+  <li>NewRelic</li>
+  <li>AWS Cloudwatch</li>
+  <li>Prometheus</li>
+  <li>JMX Beans</li>
+</ul>
+
+<p>It is based on the popular <a href="https://metrics.dropwizard.io/">Dropwizard’s Metrics</a> library,
+with a Clojure idiomatic and developer friendly API.</p>
+
+<ul>
+  <li><strong>Github</strong>: <a href="https://github.com/samsara/trackit">https://github.com/samsara/trackit</a></li>
+</ul>
+
+<p>If you thinking to use this, maybe you should check
+<a href="https://github.com/BrunoBonacci/mulog"><strong><code class="highlighter-rouge">μ/log</code></strong></a> out first!</p>
+
+<hr />
+
 <h3 id="dragonfiles">dragonfiles</h3>
 
-<p><code class="highlighter-rouge">dragonfiles</code> it’s a Clojure tools to easily process files.  Most of
+<p><img src="https://img.shields.io/badge/development-inactive-inactive" alt="inactive" />
+<img src="https://img.shields.io/badge/API-mvp-yellow" alt="mvp" />
+<img src="https://img.shields.io/badge/production-not--in--use-inactive" alt="not-in-use" />
+<img src="https://img.shields.io/badge/should--I--use--it%3F-Hold--on-orange" alt="hold-on" /></p>
+
+<p><code class="highlighter-rouge">dragonfiles</code> is a Clojure tools to easily process files.  Most of
 people are familiar with the Linux tool <code class="highlighter-rouge">awk</code>.  Although very powerful
 it lack of expressiveness.  I found myself to have hundreds of
 thousands of file to process and I was in the middle of deciding
@@ -273,7 +433,7 @@ file in input at once or line-by-line.  You can harness the power of
 Clojure together with the rich Java/Clojure libraries ecosystem in a
 command line environment.</p>
 
-<p><em><code class="highlighter-rouge">dragonfiles</code> is still work-in-progress</em> but already usable.</p>
+<p><em><code class="highlighter-rouge">dragonfiles</code> is still work-in-progress</em> but already usable if you really want.</p>
 
 <ul>
   <li><strong>Github</strong>: <a href="https://github.com/BrunoBonacci/dragonfiles">https://github.com/BrunoBonacci/dragonfiles</a></li>
