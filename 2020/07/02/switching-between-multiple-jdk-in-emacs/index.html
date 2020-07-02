@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>Switching between multiple Java JDK versions in Emacs</title>
+  <meta name="description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+  <meta name="author" content="Bruno Bonacci">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Bits and pieces">
+  <meta name="twitter:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Bits and pieces">
+  <meta property="og:description" content="Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.">
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/images/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/images/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/images/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/images/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/images/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/images/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/images/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-194x194.png" sizes="194x194">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/images/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" href="/images/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://blog.brunobonacci.com//2020/07/02/switching-between-multiple-jdk-in-emacs/">
+  <link rel="alternate" type="application/rss+xml" title="Bits and pieces" href="/feed.xml">
+</head>
+
+
+  <body>
+    <span class="mobile btn-mobile-menu">
+  <i class="icon icon-list btn-mobile-menu__icon"></i>
+  <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+</span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+        <a href="/" title="link to home of Bits and pieces">
+          <img src="/images/profile.jpg" class="user-image" alt="My Profile Photo">
+          <h1 class="panel-cover__title panel-title">Bits and pieces</h1>
+        </a>
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description">Between bits and bytes and all other pieces.<br/>A tech blog about Clojure, BigData, and Software Architecture.</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/projects" title="link to Bits and pieces Projects" class="blog-button">Projects</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/#blog" title="link to Bits and pieces blog" class="blog-button">Blog</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/tags" title="link to Bits and pieces tags" class="blog-button">Tags</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                  <li class="navigation__item"><a href="/categories" title="link to Bits and pieces categories" class="blog-button">Categories</a></li>
+              </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+            
+              <!-- Twitter -->
+              <li class="navigation__item">
+                <a href="http://twitter.com/BrunoBonacci" title="@BrunoBonacci on Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+            
+
+            
+
+            
+              <!-- LinkedIn -->
+              <li class="navigation__item">
+                <a href="https://www.linkedin.com/in/brunobonacci" title="brunobonacci on LinkedIn" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">LinkedIn</span>
+                </a>
+              </li>
+            
+
+            
+              <!-- GitHub -->
+              <li class="navigation__item">
+                <a href="https://www.github.com/BrunoBonacci" title="BrunoBonacci on GitHub" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+            
+
+            
+
+            <!-- RSS -->
+            <li class="navigation__item">
+              <a href="/feed.xml" title="Subscribe" target="_blank">
+                <i class="icon icon-rss"></i>
+                <span class="label">RSS</span>
+              </a>
+            </li>
+
+            </ul>
+          </nav>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2 Jul 2020" class="post-meta__date date">2 Jul 2020</time> &#8226; <span class="post-meta__tags">on <a href="/tags/#Clojure">Clojure</a> <a href="/tags/#Emacs">Emacs</a> <a href="/tags/#hacks">hacks</a> <a href="/tags/#Java">Java</a> <a href="/tags/#JDK">JDK</a> </span>
+    </div>
+    <h1 class="post-title">Switching between multiple Java JDK versions in Emacs</h1>
+  </header>
+
+  <section class="post">
+    <p>Like many people who work with JVM languages, I do have many version of
+Java JDK installed on my machine. There are few utilities which help
+managing which version a given project should use and how to switch
+quickly between versions. Some of the most popular are:</p>
+
+<ul>
+  <li><a href="https://github.com/shyiko/jabba">Jabba</a></li>
+  <li><a href="https://www.jenv.be/">jenv</a></li>
+</ul>
+
+<p>Others prefer, a much simpler way to switch between JDKs like what is
+described in <a href="https://metaredux.com/posts/2018/11/05/managing-multiple-jdks-on-macos.html">Managing Multiple JDKs on macOS</a>.</p>
+
+<p>Similarly to the previous article, I have a small function in my
+<code class="highlighter-rouge">~/.profile</code> which allows me to quickly switch between installed versions
+from a terminal prompt.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="c"># Add this to your bash profile (~/.bash_rc, ~/.bash_profile, ~/.profile)</span>
+<span class="c">#</span>
+<span class="c"># Base directory where all the different versions are</span>
+<span class="c"># installed. This is the default directory for MacOS</span>
+<span class="c">#</span>
+<span class="nb">export </span><span class="nv">JDK_BASE</span><span class="o">=</span>/Library/Java/JavaVirtualMachines
+
+<span class="k">function </span>switch-java<span class="o">()</span> <span class="o">{</span>
+
+
+    <span class="nv">jvms</span><span class="o">=(</span> <span class="sb">`</span><span class="se">\l</span>s -1 <span class="nv">$JDK_BASE</span><span class="sb">`</span> <span class="o">)</span>
+    <span class="nv">pref</span><span class="o">=</span><span class="s1">'jdk-'</span>
+
+    <span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"8"</span> <span class="o">]</span> ; <span class="k">then
+        </span><span class="nv">pref</span><span class="o">=</span><span class="s1">'jdk1.'</span>
+    <span class="k">fi
+
+    if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> !<span class="o">=</span> <span class="s2">""</span> <span class="o">]</span> ; <span class="k">then
+        </span><span class="nv">SELECTION</span><span class="o">=</span><span class="k">$(</span><span class="se">\l</span>s -1 <span class="nv">$JDK_BASE</span> | grep <span class="nv">$pref$1</span><span class="k">)</span>
+    <span class="k">fi
+
+    if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$SELECTION</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">""</span> <span class="o">]</span> ; <span class="k">then
+        </span><span class="nb">echo</span> <span class="s2">"Switch to which JVM?"</span>
+        <span class="k">for </span>i <span class="k">in</span> <span class="k">${</span><span class="p">!jvms[@]</span><span class="k">}</span>; <span class="k">do
+            </span><span class="nb">printf</span> <span class="s2">"   %2d - %s</span><span class="se">\n</span><span class="s2">"</span> <span class="nv">$i</span> <span class="k">${</span><span class="nv">jvms</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span><span class="k">}</span>
+        <span class="k">done
+
+        while</span> <span class="o">[[</span> <span class="nv">$SELECTION</span> -ge <span class="k">${#</span><span class="nv">jvms</span><span class="p">[@]</span><span class="k">}</span> <span class="o">]]</span> <span class="o">||</span> <span class="o">[[</span> <span class="nv">$SELECTION</span> -lt 0 <span class="o">]]</span> <span class="o">||</span> <span class="o">[[</span> <span class="nv">$SELECTION</span> <span class="o">==</span> <span class="s1">''</span> <span class="o">]]</span> ; <span class="k">do
+            </span><span class="nb">read</span> -p <span class="s2">"Select a JVM: "</span> SELECTION
+        <span class="k">done
+
+        </span><span class="nv">SELECTION</span><span class="o">=</span><span class="k">${</span><span class="nv">jvms</span><span class="p">[</span><span class="nv">$SELECTION</span><span class="p">]</span><span class="k">}</span>
+    <span class="k">fi
+
+    </span><span class="nb">echo</span> <span class="s1">'-----------------------------------------------------------------'</span>
+    <span class="nb">echo</span> <span class="s2">"Switching to Java: </span><span class="nv">$SELECTION</span><span class="s2">"</span>
+    <span class="nb">echo</span> <span class="s2">"Full path: </span><span class="nv">$JDK_BASE</span><span class="s2">/</span><span class="nv">$SELECTION</span><span class="s2">/Contents/Home"</span>
+    <span class="nb">echo</span> <span class="s2">":java-cmd </span><span class="se">\"</span><span class="nv">$JDK_BASE</span><span class="s2">/</span><span class="nv">$SELECTION</span><span class="s2">/Contents/Home/bin/java</span><span class="se">\"</span><span class="s2">"</span>
+    <span class="nb">echo</span> <span class="s1">'-----------------------------------------------------------------'</span>
+    <span class="nb">export </span><span class="nv">JAVA_HOME</span><span class="o">=</span><span class="nv">$JDK_BASE</span>/<span class="nv">$SELECTION</span>/Contents/Home
+    <span class="nb">export </span><span class="nv">JAVA_CMD</span><span class="o">=</span><span class="nv">$JAVA_HOME</span>/bin/java
+    <span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$JAVA_HOME</span>/bin:<span class="nv">$PATH</span>
+    java -version
+    <span class="nb">echo</span> <span class="s1">'-----------------------------------------------------------------'</span>
+
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>With this script you can select among the installed versions with
+<code class="highlighter-rouge">switch-java -L</code> or jump to the desired version like <code class="highlighter-rouge">switch-java 12</code>.</p>
+
+<p>This short terminal cast shows a how to use it:</p>
+
+<script id="asciicast-344675" src="https://asciinema.org/a/344675.js" async=""></script>
+
+<!-- [![asciicast](https://asciinema.org/a/344675.svg)](https://asciinema.org/a/344675) -->
+
+<p>Now this works extremely well for all the terminal uses, however,
+most of my development is currently done in Clojure using
+<a href="https://github.com/clojure-emacs/cider">Emacs + Cider</a>.</p>
+
+<p>CIDER is a amazing IDE which truly harnesses the power of Clojure REPL
+to enable a great experience with <strong>REPL Driven Development</strong> (thanks
+<a href="https://github.com/bbatsov">@bbatsov</a>).  However, there is no easy
+way to switch java version from inside Emacs when firing the REPL.
+<em>So in true Emacs spirit, I made my own solution</em>.</p>
+
+<p>Add this to your <code class="highlighter-rouge">~/.emacs.d/init.el</code> and re-evaluate your buffer
+(<code class="highlighter-rouge">M-x eval-buffer</code>).</p>
+
+<div class="language-emacs-lisp highlighter-rouge"><pre class="highlight"><code><span class="c1">;;</span>
+<span class="c1">;; switch java</span>
+<span class="c1">;;</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">JAVA_BASE</span> <span class="s">"/Library/Java/JavaVirtualMachines"</span><span class="p">)</span>
+
+<span class="c1">;;</span>
+<span class="c1">;; This function returns the list of installed</span>
+<span class="c1">;;</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">switch-java--versions</span> <span class="p">()</span>
+  <span class="s">"Return the list of installed JDK."</span>
+  <span class="p">(</span><span class="nv">seq-remove</span>
+   <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">a</span><span class="p">)</span> <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nb">equal</span> <span class="nv">a</span> <span class="s">"."</span><span class="p">)</span> <span class="p">(</span><span class="nb">equal</span> <span class="nv">a</span> <span class="s">".."</span><span class="p">)))</span>
+   <span class="p">(</span><span class="nv">directory-files</span> <span class="nv">JAVA_BASE</span><span class="p">)))</span>
+
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">switch-java--save-env</span> <span class="p">()</span>
+  <span class="s">"Store original PATH and JAVA_HOME."</span>
+  <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nb">not</span> <span class="p">(</span><span class="nb">boundp</span> <span class="ss">'SW_JAVA_PATH</span><span class="p">))</span>
+    <span class="p">(</span><span class="k">setq</span> <span class="nv">SW_JAVA_PATH</span> <span class="p">(</span><span class="nv">getenv</span> <span class="s">"PATH"</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nb">not</span> <span class="p">(</span><span class="nb">boundp</span> <span class="ss">'SW_JAVA_HOME</span><span class="p">))</span>
+    <span class="p">(</span><span class="k">setq</span> <span class="nv">SW_JAVA_HOME</span> <span class="p">(</span><span class="nv">getenv</span> <span class="s">"JAVA_HOME"</span><span class="p">))))</span>
+
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">switch-java</span> <span class="p">()</span>
+  <span class="s">"List the installed JDKs and enable to switch the JDK in use."</span>
+  <span class="p">(</span><span class="nv">interactive</span><span class="p">)</span>
+  <span class="c1">;; store original PATH and JAVA_HOME</span>
+  <span class="p">(</span><span class="nv">switch-java--save-env</span><span class="p">)</span>
+
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">ver</span> <span class="p">(</span><span class="nv">completing-read</span>
+              <span class="s">"Which Java: "</span>
+              <span class="p">(</span><span class="nv">seq-map-indexed</span>
+               <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">e</span> <span class="nv">i</span><span class="p">)</span> <span class="p">(</span><span class="nb">list</span> <span class="nv">e</span> <span class="nv">i</span><span class="p">))</span> <span class="p">(</span><span class="nv">switch-java--versions</span><span class="p">))</span>
+              <span class="no">nil</span> <span class="no">t</span> <span class="s">""</span><span class="p">)))</span>
+    <span class="c1">;; switch java version</span>
+    <span class="p">(</span><span class="nv">setenv</span> <span class="s">"JAVA_HOME"</span> <span class="p">(</span><span class="nv">concat</span> <span class="nv">JAVA_BASE</span> <span class="s">"/"</span> <span class="nv">ver</span> <span class="s">"/Contents/Home"</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">setenv</span> <span class="s">"PATH"</span> <span class="p">(</span><span class="nv">concat</span> <span class="p">(</span><span class="nv">concat</span> <span class="p">(</span><span class="nv">getenv</span> <span class="s">"JAVA_HOME"</span><span class="p">)</span> <span class="s">"/bin/java"</span><span class="p">)</span>
+                           <span class="s">":"</span> <span class="nv">SW_JAVA_PATH</span><span class="p">)))</span>
+  <span class="c1">;; show version</span>
+  <span class="p">(</span><span class="nv">switch-java-which-version?</span><span class="p">))</span>
+
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">switch-java-default</span> <span class="p">()</span>
+  <span class="s">"Restore the default Java version."</span>
+  <span class="p">(</span><span class="nv">interactive</span><span class="p">)</span>
+  <span class="c1">;; store original PATH and JAVA_HOME</span>
+  <span class="p">(</span><span class="nv">switch-java--save-env</span><span class="p">)</span>
+
+  <span class="c1">;; switch java version</span>
+  <span class="p">(</span><span class="nv">setenv</span> <span class="s">"JAVA_HOME"</span> <span class="nv">SW_JAVA_HOME</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">setenv</span> <span class="s">"PATH"</span> <span class="nv">SW_JAVA_PATH</span><span class="p">)</span>
+  <span class="c1">;; show version</span>
+  <span class="p">(</span><span class="nv">switch-java-which-version?</span><span class="p">))</span>
+
+
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">switch-java-which-version?</span> <span class="p">()</span>
+  <span class="s">"Display the current version selected Java version."</span>
+  <span class="p">(</span><span class="nv">interactive</span><span class="p">)</span>
+  <span class="c1">;; displays current java version</span>
+  <span class="p">(</span><span class="nv">message</span> <span class="p">(</span><span class="nv">concat</span> <span class="s">"Java HOME: "</span> <span class="p">(</span><span class="nv">getenv</span> <span class="s">"JAVA_HOME"</span><span class="p">))))</span>
+</code></pre>
+</div>
+
+<p>Here a short breakdown on the functions <code class="highlighter-rouge">switch-java-*</code></p>
+<ul>
+  <li><code class="highlighter-rouge">switch-java-which-version?</code> - Displays the current selected
+version in the message area.</li>
+  <li><code class="highlighter-rouge">switch-java-default</code> - It restores the default Java version, the
+one in you system defaults.</li>
+  <li><code class="highlighter-rouge">switch-java</code> - It lists the installed JDKs and prompt for a selection.</li>
+</ul>
+
+<p>To switch version, just press <code class="highlighter-rouge">M-x switch-java</code> and select the desired
+version. Here is a small screencast on how to use it:</p>
+
+<p><img src="/images/switch-java.gif" alt="switch-java" /></p>
+
+<p><em><strong>Disclaimer</strong>: I’m not very proficient in Emacs Lisp and its
+ecosystem, surely, there are better ways (or more elegant ways) to
+achieve the same functionality.</em> If you have any suggestion on how to
+improve I’ll be happy to hear your feedback.</p>
+
+  </section>
+  <section id="disqus_thread"></section><!-- /#disqus_thread -->
+</article>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'bitsandpieces2'; // required: replace example with your forum shortname
+        var disqus_config = function () {
+          this.page.url = 'http://blog.brunobonacci.com/2020/07/02/switching-between-multiple-jdk-in-emacs/';
+          this.page.identifier = '/2020/07/02/switching-between-multiple-jdk-in-emacs';
+          this.page.title = 'Switching between multiple Java JDK versions in Emacs';
+        };
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script'); s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+      </div>
+
+      <footer class="footer">
+  <span class="footer__copyright">&copy; 2013-2016 Bruno Bonacci. All rights reserved.</span>
+</footer>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51571233-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+    </div>
+  </body>
+</html>
