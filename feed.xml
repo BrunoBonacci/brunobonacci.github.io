@@ -3,10 +3,10 @@
   <channel>
     <title>Bits and pieces</title>
     <description>Between bits and bytes and all other pieces.&lt;br/&gt;A tech blog about Clojure, Software Architecture, and Distributed Systems</description>
-    <link>http://blog.brunobonacci.com//</link>
-    <atom:link href="http://blog.brunobonacci.com//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Fri, 11 Dec 2020 17:24:15 +0000</pubDate>
-    <lastBuildDate>Fri, 11 Dec 2020 17:24:15 +0000</lastBuildDate>
+    <link>https://blog.brunobonacci.com//</link>
+    <atom:link href="https://blog.brunobonacci.com//feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Sat, 08 May 2021 13:24:47 +0100</pubDate>
+    <lastBuildDate>Sat, 08 May 2021 13:24:47 +0100</lastBuildDate>
     <generator>Jekyll v3.4.5</generator>
     
       <item>
@@ -182,8 +182,8 @@ achieve the same functionality.&lt;/em&gt; If you have any suggestion on how to
 improve I’ll be happy to hear your feedback.&lt;/p&gt;
 </description>
         <pubDate>Thu, 02 Jul 2020 01:00:00 +0100</pubDate>
-        <link>http://blog.brunobonacci.com//2020/07/02/switching-between-multiple-jdk-in-emacs/</link>
-        <guid isPermaLink="true">http://blog.brunobonacci.com//2020/07/02/switching-between-multiple-jdk-in-emacs/</guid>
+        <link>https://blog.brunobonacci.com//2020/07/02/switching-between-multiple-jdk-in-emacs/</link>
+        <guid isPermaLink="true">https://blog.brunobonacci.com//2020/07/02/switching-between-multiple-jdk-in-emacs/</guid>
         
         <category>Clojure</category>
         
@@ -919,8 +919,8 @@ high available and strictly consistent system.&lt;/p&gt;
 &lt;/div&gt;
 </description>
         <pubDate>Sun, 15 Jul 2018 01:00:00 +0100</pubDate>
-        <link>http://blog.brunobonacci.com//2018/07/15/viewstamped-replication-explained/</link>
-        <guid isPermaLink="true">http://blog.brunobonacci.com//2018/07/15/viewstamped-replication-explained/</guid>
+        <link>https://blog.brunobonacci.com//2018/07/15/viewstamped-replication-explained/</link>
+        <guid isPermaLink="true">https://blog.brunobonacci.com//2018/07/15/viewstamped-replication-explained/</guid>
         
         <category>Papers</category>
         
@@ -1284,8 +1284,8 @@ unaware of this.&lt;/p&gt;
 &lt;/div&gt;
 </description>
         <pubDate>Sun, 08 Oct 2017 01:00:00 +0100</pubDate>
-        <link>http://blog.brunobonacci.com//2017/10/08/lambda-calculus-and-boolean-logic/</link>
-        <guid isPermaLink="true">http://blog.brunobonacci.com//2017/10/08/lambda-calculus-and-boolean-logic/</guid>
+        <link>https://blog.brunobonacci.com//2017/10/08/lambda-calculus-and-boolean-logic/</link>
+        <guid isPermaLink="true">https://blog.brunobonacci.com//2017/10/08/lambda-calculus-and-boolean-logic/</guid>
         
         <category>Lambda Calculus</category>
         
@@ -1468,8 +1468,8 @@ can fully represent the result of the operation.&amp;nbsp;&lt;a href=&quot;#fnre
 &lt;/div&gt;
 </description>
         <pubDate>Thu, 10 Aug 2017 01:00:00 +0100</pubDate>
-        <link>http://blog.brunobonacci.com//2017/08/10/lumo-vs-planck-vs-clojure-vs-pixie/</link>
-        <guid isPermaLink="true">http://blog.brunobonacci.com//2017/08/10/lumo-vs-planck-vs-clojure-vs-pixie/</guid>
+        <link>https://blog.brunobonacci.com//2017/08/10/lumo-vs-planck-vs-clojure-vs-pixie/</link>
+        <guid isPermaLink="true">https://blog.brunobonacci.com//2017/08/10/lumo-vs-planck-vs-clojure-vs-pixie/</guid>
         
         <category>Clojure</category>
         
@@ -2023,8 +2023,8 @@ feedback and the many corrections.&lt;/em&gt;&lt;/p&gt;
 &lt;/div&gt;
 </description>
         <pubDate>Mon, 10 Oct 2016 01:00:00 +0100</pubDate>
-        <link>http://blog.brunobonacci.com//2016/10/10/aws-api-gateway-and-lambda-with-jvm/</link>
-        <guid isPermaLink="true">http://blog.brunobonacci.com//2016/10/10/aws-api-gateway-and-lambda-with-jvm/</guid>
+        <link>https://blog.brunobonacci.com//2016/10/10/aws-api-gateway-and-lambda-with-jvm/</link>
+        <guid isPermaLink="true">https://blog.brunobonacci.com//2016/10/10/aws-api-gateway-and-lambda-with-jvm/</guid>
         
         <category>AWS</category>
         
@@ -3000,8 +3000,8 @@ helped to shed some light on Samsara’s internals. Try the
 the &lt;a href=&quot;http://samsara-analytics.io/&quot;&gt;website&lt;/a&gt;.&lt;/p&gt;
 </description>
         <pubDate>Mon, 20 Jun 2016 01:00:00 +0100</pubDate>
-        <link>http://blog.brunobonacci.com//2016/06/20/designing-samsara/</link>
-        <guid isPermaLink="true">http://blog.brunobonacci.com//2016/06/20/designing-samsara/</guid>
+        <link>https://blog.brunobonacci.com//2016/06/20/designing-samsara/</link>
+        <guid isPermaLink="true">https://blog.brunobonacci.com//2016/06/20/designing-samsara/</guid>
         
         <category>Clojure</category>
         
@@ -5911,8 +5911,8 @@ macro you can read the following blog post:&lt;/p&gt;
 
 </description>
         <pubDate>Wed, 11 May 2016 01:00:00 +0100</pubDate>
-        <link>http://blog.brunobonacci.com//2016/05/11/clojure-basics/</link>
-        <guid isPermaLink="true">http://blog.brunobonacci.com//2016/05/11/clojure-basics/</guid>
+        <link>https://blog.brunobonacci.com//2016/05/11/clojure-basics/</link>
+        <guid isPermaLink="true">https://blog.brunobonacci.com//2016/05/11/clojure-basics/</guid>
         
         <category>Clojure</category>
         
@@ -6138,8 +6138,8 @@ and the binary content of the new image is displayed instead.&lt;/p&gt;
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 18 Mar 2016 20:00:00 +0000</pubDate>
-        <link>http://blog.brunobonacci.com//2016/03/18/emacs-incanter-hack/</link>
-        <guid isPermaLink="true">http://blog.brunobonacci.com//2016/03/18/emacs-incanter-hack/</guid>
+        <link>https://blog.brunobonacci.com//2016/03/18/emacs-incanter-hack/</link>
+        <guid isPermaLink="true">https://blog.brunobonacci.com//2016/03/18/emacs-incanter-hack/</guid>
         
         <category>Clojure</category>
         
@@ -6577,8 +6577,8 @@ check the following links:&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Many thanks to Sathya for his feedbacks&lt;/em&gt;&lt;/p&gt;
 </description>
         <pubDate>Sun, 19 Apr 2015 20:49:00 +0100</pubDate>
-        <link>http://blog.brunobonacci.com//2015/04/19/dead-simple-introduction-to-clojure-macros/</link>
-        <guid isPermaLink="true">http://blog.brunobonacci.com//2015/04/19/dead-simple-introduction-to-clojure-macros/</guid>
+        <link>https://blog.brunobonacci.com//2015/04/19/dead-simple-introduction-to-clojure-macros/</link>
+        <guid isPermaLink="true">https://blog.brunobonacci.com//2015/04/19/dead-simple-introduction-to-clojure-macros/</guid>
         
         <category>Clojure</category>
         
@@ -7414,8 +7414,8 @@ that the code becomes clearer and event more readable.&lt;/p&gt;
 &lt;/div&gt;
 </description>
         <pubDate>Sun, 16 Nov 2014 10:00:00 +0000</pubDate>
-        <link>http://blog.brunobonacci.com//2014/11/16/clojure-complete-guide-to-destructuring/</link>
-        <guid isPermaLink="true">http://blog.brunobonacci.com//2014/11/16/clojure-complete-guide-to-destructuring/</guid>
+        <link>https://blog.brunobonacci.com//2014/11/16/clojure-complete-guide-to-destructuring/</link>
+        <guid isPermaLink="true">https://blog.brunobonacci.com//2014/11/16/clojure-complete-guide-to-destructuring/</guid>
         
         <category>Clojure</category>
         
