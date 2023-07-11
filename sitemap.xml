@@ -3,9 +3,24 @@
   
     
     <url>
+      <loc>https://blog.brunobonacci.com/2023/07/09/mulog-hidden-superrpower/</loc>
+      
+        <lastmod>2023-07-08T19:00:00-05:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
       <loc>https://blog.brunobonacci.com/2020/07/02/switching-between-multiple-jdk-in-emacs/</loc>
       
-        <lastmod>2020-07-02T01:00:00+01:00</lastmod>
+        <lastmod>2020-07-01T19:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -20,7 +35,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2018/07/15/viewstamped-replication-explained/</loc>
       
-        <lastmod>2018-07-15T01:00:00+01:00</lastmod>
+        <lastmod>2018-07-14T19:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -35,7 +50,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2017/10/08/lambda-calculus-and-boolean-logic/</loc>
       
-        <lastmod>2017-10-08T01:00:00+01:00</lastmod>
+        <lastmod>2017-10-07T19:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -50,7 +65,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2017/08/10/lumo-vs-planck-vs-clojure-vs-pixie/</loc>
       
-        <lastmod>2017-08-10T01:00:00+01:00</lastmod>
+        <lastmod>2017-08-09T19:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -65,7 +80,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2016/10/10/aws-api-gateway-and-lambda-with-jvm/</loc>
       
-        <lastmod>2016-10-10T01:00:00+01:00</lastmod>
+        <lastmod>2016-10-09T19:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -80,7 +95,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2016/06/20/designing-samsara/</loc>
       
-        <lastmod>2016-06-20T01:00:00+01:00</lastmod>
+        <lastmod>2016-06-19T19:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -95,7 +110,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2016/05/11/clojure-basics/</loc>
       
-        <lastmod>2016-05-11T01:00:00+01:00</lastmod>
+        <lastmod>2016-05-10T19:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -110,7 +125,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2016/03/18/emacs-incanter-hack/</loc>
       
-        <lastmod>2016-03-18T20:00:00+00:00</lastmod>
+        <lastmod>2016-03-18T15:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -125,7 +140,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2015/04/19/dead-simple-introduction-to-clojure-macros/</loc>
       
-        <lastmod>2015-04-19T20:49:00+01:00</lastmod>
+        <lastmod>2015-04-19T14:49:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -140,7 +155,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2014/11/16/clojure-complete-guide-to-destructuring/</loc>
       
-        <lastmod>2014-11-16T10:00:00+00:00</lastmod>
+        <lastmod>2014-11-16T04:00:00-06:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -155,7 +170,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2014/06/01/cascalog-by-examples-part1/</loc>
       
-        <lastmod>2014-06-01T18:45:25+01:00</lastmod>
+        <lastmod>2014-06-01T12:45:25-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -170,7 +185,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2013/06/21/how-to-calculate-the-reminder-with-bitwise-operations/</loc>
       
-        <lastmod>2013-06-21T21:00:00+01:00</lastmod>
+        <lastmod>2013-06-21T15:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -185,7 +200,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2013/06/21/clojure-pills-arithmetics-and-type-autopromotion/</loc>
       
-        <lastmod>2013-06-21T00:00:00+01:00</lastmod>
+        <lastmod>2013-06-21T00:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -200,7 +215,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2013/03/23/clojure-pills-strings-and-characters/</loc>
       
-        <lastmod>2013-03-23T21:00:00+00:00</lastmod>
+        <lastmod>2013-03-23T16:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -215,7 +230,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2013/03/17/clojure-pills-keywords/</loc>
       
-        <lastmod>2013-03-17T22:00:00+00:00</lastmod>
+        <lastmod>2013-03-17T17:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -230,7 +245,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2013/03/17/clojure-pills-rational-numbers/</loc>
       
-        <lastmod>2013-03-17T21:00:00+00:00</lastmod>
+        <lastmod>2013-03-17T16:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -245,7 +260,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2013/03/17/clojure-pills-decimals-and-floating-point-numbers/</loc>
       
-        <lastmod>2013-03-17T20:00:00+00:00</lastmod>
+        <lastmod>2013-03-17T15:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -260,7 +275,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2013/03/16/clojure-pills-integers-number/</loc>
       
-        <lastmod>2013-03-16T22:00:00+00:00</lastmod>
+        <lastmod>2013-03-16T17:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -275,7 +290,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2013/03/16/clojure-pills-the-syntax/</loc>
       
-        <lastmod>2013-03-16T19:00:00+00:00</lastmod>
+        <lastmod>2013-03-16T14:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -290,7 +305,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2013/03/15/clojure-pills-getting-started/</loc>
       
-        <lastmod>2013-03-15T22:00:00+00:00</lastmod>
+        <lastmod>2013-03-15T17:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -305,7 +320,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2013/03/15/clojure-pills-the-journey-begins/</loc>
       
-        <lastmod>2013-03-15T20:00:00+00:00</lastmod>
+        <lastmod>2013-03-15T15:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -320,7 +335,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2013/02/22/how-to-convert-a-standalone-mongodb-into-a-replica-set/</loc>
       
-        <lastmod>2013-02-22T21:00:00+00:00</lastmod>
+        <lastmod>2013-02-22T15:00:00-06:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -335,7 +350,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2012/06/30/vertx-simple-telnet-server/</loc>
       
-        <lastmod>2012-06-30T22:00:00+01:00</lastmod>
+        <lastmod>2012-06-30T16:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -350,7 +365,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/2012/03/24/yet-another-post-about-ops-devops-noops/</loc>
       
-        <lastmod>2012-03-24T21:00:00+00:00</lastmod>
+        <lastmod>2012-03-24T16:00:00-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -366,7 +381,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/categories/</loc>
       
-        <lastmod>2021-05-08T13:24:47+01:00</lastmod>
+        <lastmod>2023-07-11T12:06:22-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -381,7 +396,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/feed.xml</loc>
       
-        <lastmod>2021-05-08T13:24:47+01:00</lastmod>
+        <lastmod>2023-07-11T12:06:22-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -396,7 +411,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/projects/</loc>
       
-        <lastmod>2021-05-08T13:24:47+01:00</lastmod>
+        <lastmod>2023-07-11T12:06:22-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -411,7 +426,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/</loc>
       
-        <lastmod>2021-05-08T13:24:47+01:00</lastmod>
+        <lastmod>2023-07-11T12:06:22-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -426,7 +441,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/js/main.js</loc>
       
-        <lastmod>2021-05-08T13:24:47+01:00</lastmod>
+        <lastmod>2023-07-11T12:06:22-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -441,7 +456,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/projects/</loc>
       
-        <lastmod>2021-05-08T13:24:47+01:00</lastmod>
+        <lastmod>2023-07-11T12:06:22-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
@@ -458,7 +473,7 @@
     <url>
       <loc>https://blog.brunobonacci.com/tags/</loc>
       
-        <lastmod>2021-05-08T13:24:47+01:00</lastmod>
+        <lastmod>2023-07-11T12:06:22-05:00</lastmod>
       
       
         <changefreq>monthly</changefreq>
