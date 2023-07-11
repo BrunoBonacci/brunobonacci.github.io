@@ -165,6 +165,33 @@
   <section class="post">
     <p>Here some of my Open Source projects which you might be interested into.</p>
 
+<h3 id="μlog">μ/log</h3>
+
+<p><img src="https://img.shields.io/badge/development-active-brightgreen" alt="active" />
+<img src="https://img.shields.io/badge/API-evolving-green" alt="evolving" />
+<img src="https://img.shields.io/badge/production-in--use-brightgreen" alt="production" />
+<img src="https://img.shields.io/badge/should--I--use--it%3F-check--it--out%21-blue" alt="check-it-out" />
+<img src="https://img.shields.io/github/stars/BrunoBonacci/mulog?style=social" alt="stars" /></p>
+
+<p><code class="highlighter-rouge">μ/log</code> is a Clojure library for structured event logging.
+Contrarily, most of the existing log library which focus on logging
+human readable messages, <strong><em>μ/log</em></strong> offers APIs to log events and
+data-points. Human readable messages often encode data which it is then
+sent to centralized logging systems and loads of effort is put to
+extract useful information out of the string message. <strong><em>μ/log</em></strong>
+allow to send data directly and in a safe manner, enabling post
+processing and query aggregation in ways that other systems can’t.</p>
+
+<p>On top of <strong><em>μ/log</em></strong>, I’m also building <strong><em>μ/trace</em></strong>, a micro-tracing library
+which allows to extends the basic event-logging capabilities with
+distributed tracing information.</p>
+
+<ul>
+  <li><strong>Github</strong>: <a href="https://github.com/BrunoBonacci/mulog">https://github.com/BrunoBonacci/mulog</a></li>
+</ul>
+
+<hr />
+
 <h3 id="safely">safely</h3>
 
 <p><img src="https://img.shields.io/badge/development-active-brightgreen" alt="active" />
@@ -229,33 +256,6 @@ general.</em></p>
 
 <ul>
   <li><strong>Github</strong>: <a href="https://github.com/BrunoBonacci/1config">https://github.com/BrunoBonacci/1config</a></li>
-</ul>
-
-<hr />
-
-<h3 id="μlog">μ/log</h3>
-
-<p><img src="https://img.shields.io/badge/development-active-brightgreen" alt="active" />
-<img src="https://img.shields.io/badge/API-evolving-green" alt="evolving" />
-<img src="https://img.shields.io/badge/production-in--use-brightgreen" alt="production" />
-<img src="https://img.shields.io/badge/should--I--use--it%3F-check--it--out%21-blue" alt="check-it-out" />
-<img src="https://img.shields.io/github/stars/BrunoBonacci/mulog?style=social" alt="stars" /></p>
-
-<p><code class="highlighter-rouge">μ/log</code> is a Clojure library for structured event logging.
-Contrarily, most of the existing log library which focus on logging
-human readable messages, <strong><em>μ/log</em></strong> offers APIs to log events and
-data-points. Human readable messages often encode data which it is then
-sent to centralized logging systems and loads of effort is put to
-extract useful information out of the string message. <strong><em>μ/log</em></strong>
-allow to send data directly and in a safe manner, enabling post
-processing and query aggregation in ways that other systems can’t.</p>
-
-<p>On top of <strong><em>μ/log</em></strong>, I’m also building <strong><em>μ/trace</em></strong>, a micro-tracing library
-which allows to extends the basic event-logging capabilities with
-distributed tracing information.</p>
-
-<ul>
-  <li><strong>Github</strong>: <a href="https://github.com/BrunoBonacci/mulog">https://github.com/BrunoBonacci/mulog</a></li>
 </ul>
 
 <hr />
