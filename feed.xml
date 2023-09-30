@@ -5,9 +5,531 @@
     <description>Between bits and bytes and all other pieces.&lt;br/&gt;A tech blog about Clojure, Software Architecture, and Distributed Systems</description>
     <link>https://blog.brunobonacci.com//</link>
     <atom:link href="https://blog.brunobonacci.com//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Tue, 11 Jul 2023 12:06:22 -0500</pubDate>
-    <lastBuildDate>Tue, 11 Jul 2023 12:06:22 -0500</lastBuildDate>
+    <pubDate>Sat, 30 Sep 2023 08:53:06 -0500</pubDate>
+    <lastBuildDate>Sat, 30 Sep 2023 08:53:06 -0500</lastBuildDate>
     <generator>Jekyll v3.4.5</generator>
+    
+      <item>
+        <title>Lazy, Chunked, and Buffered: Understanding Clojure's Lazy Sequences</title>
+        <description>&lt;p&gt;&lt;em&gt;Originally posted at: &lt;a href=&quot;https://redefine.io/blog/buffered-sequences/&quot;&gt;https://redefine.io/blog/buffered-sequences/&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;The Clojure core namespace boasts an impressive array of functions, numbering
+over 600 by my estimation. Even with many years of Clojure development under my
+belt, I still stumble upon hidden treasures. In this post, I’ll delve into how
+the consumption of various lazy sequences influences computation. Lazy sequences
+have been a staple in Clojure since version 1.0, so they’re hardly a
+novelty. There are distinct types of lazy sequences in Clojure: the “truly” lazy
+ones, chunked sequences, and “buffered” sequences. I believe most Clojure
+developers will be familiar with at least the first two types. This article
+primarily shines a spotlight on the “buffered” sequences (or queued sequences)
+and their unique behaviors. Through a series of examples, we’ll navigate the
+nuances of these sequences and observe their behaviors upon consumption.&lt;/p&gt;
+
+&lt;h2 id=&quot;lazy-sequences&quot;&gt;Lazy sequences&lt;/h2&gt;
+
+&lt;p&gt;In its simplest form, a lazy sequence in Clojure can be constructed using
+&lt;a href=&quot;https://clojuredocs.org/clojure.core/lazy-seq&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;lazy-seq&lt;/code&gt;&lt;/a&gt;. &lt;code class=&quot;highlighter-rouge&quot;&gt;lazy-seq&lt;/code&gt; takes a
+body of expressions and it delays the evaluation until it is requested,
+similarly to an &lt;code class=&quot;highlighter-rouge&quot;&gt;iterator&lt;/code&gt; that executes the body only when the &lt;code class=&quot;highlighter-rouge&quot;&gt;.next()&lt;/code&gt; method
+is invoked.  For instance, to create a lazy sequence of all integer numbers we
+can write:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;my-lazy-seq&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;my-lazy-seq&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;lazy-seq&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cons&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+       &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;my-lazy-seq&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;inc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;take&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;my-lazy-seq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; (0 1 2 3 4 5 6 7 8 9)
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;There are many other functions in the Clojure core which
+return lazy sequences as well.  For example we could rewrite the previous
+function using &lt;a href=&quot;https://clojuredocs.org/clojure.core/iterate&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;iterate&lt;/code&gt;&lt;/a&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;my-lazy-seq&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;iterate&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;inc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;take&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;my-lazy-seq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; (0 1 2 3 4 5 6 7 8 9)
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The two functions are equivalent. To illustrate the different behaviours let’s
+introduce two functions: &lt;code class=&quot;highlighter-rouge&quot;&gt;load&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;process&lt;/code&gt;. For the sake of the example let’s
+assume that &lt;code class=&quot;highlighter-rouge&quot;&gt;my-lazy-seq&lt;/code&gt; returns the path of files to be processed, or the ids
+of some database records to be processed, the function &lt;code class=&quot;highlighter-rouge&quot;&gt;load&lt;/code&gt; will simulate the
+retrieval from the db, and the function &lt;code class=&quot;highlighter-rouge&quot;&gt;process&lt;/code&gt; represents a function
+performing computations on the retrieved data.&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Loading: %d \n&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;flush&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Thread/sleep&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Processing: %d \n&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;flush&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Thread/sleep&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;600&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;To process the first 10 items of &lt;code class=&quot;highlighter-rouge&quot;&gt;my-lazy-seq&lt;/code&gt; we could write:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;my-lazy-seq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;take&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;There are a few things to point out from the above lines:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;evaluating this expression won’t cause the execution of neither &lt;code class=&quot;highlighter-rouge&quot;&gt;load&lt;/code&gt; nor
+the &lt;code class=&quot;highlighter-rouge&quot;&gt;precess&lt;/code&gt; function.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;map&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;take&lt;/code&gt; both return lazy sequences, therefore evaluating the
+expression will only create a chain of lazy sequences which upon
+consumption will cause a chain reaction of &lt;code class=&quot;highlighter-rouge&quot;&gt;load&lt;/code&gt;/&lt;code class=&quot;highlighter-rouge&quot;&gt;process&lt;/code&gt; calls.&lt;/li&gt;
+  &lt;li&gt;evaluating the code in a REPL or an IDE will certainly trigger the
+execution of the &lt;code class=&quot;highlighter-rouge&quot;&gt;load&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;process&lt;/code&gt; functions because the REPL will
+attempt to print the result. The default behaviour of the REPL is to print
+the content of a sequence up to the
+&lt;a href=&quot;https://clojuredocs.org/clojure.core/*print-length*&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;*print-length*&lt;/code&gt;&lt;/a&gt;. It
+is good practice to set a limit into to your REPL configuration. For example:
+&lt;code class=&quot;highlighter-rouge&quot;&gt;(set! *print-length* 100)&lt;/code&gt; will tell the REPL to only consume and print
+the first 100 items of a sequence. The default value is &lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt; which tells
+the REPL to consume it all. Evaluating lazy infinite sequences like &lt;code class=&quot;highlighter-rouge&quot;&gt;my-lazy-seq&lt;/code&gt;
+on the REPL without &lt;code class=&quot;highlighter-rouge&quot;&gt;*print-length*&lt;/code&gt; will cause the REPL to hang.&lt;/li&gt;
+  &lt;li&gt;For completeness I will add a &lt;code class=&quot;highlighter-rouge&quot;&gt;doall&lt;/code&gt; at the end of each evaluation to
+force the lazy sequence to be realized regardless of a specific &lt;code class=&quot;highlighter-rouge&quot;&gt;*print-length*&lt;/code&gt;
+configuration.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;my-lazy-seq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;take&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;doall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; Loading: 0
+;; Processing: 0
+;; Loading: 1
+;; Processing: 1
+;; Loading: 2
+;; Processing: 2
+;; Loading: 3
+;; Processing: 3
+;; Loading: 4
+;; Processing: 4
+;; Loading: 5
+;; Processing: 5
+;; Loading: 6
+;; Processing: 6
+;; Loading: 7
+;; Processing: 7
+;; Loading: 8
+;; Processing: 8
+;; Loading: 9
+;; Processing: 9
+;; =&amp;gt; (0 1 2 3 4 5 6 7 8 9)
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;That’s pretty much what we expected. Every item of the lazy sequence is loaded
+first and then processed in a strict succession.&lt;/p&gt;
+
+&lt;p&gt;To better visualize what is happening I’ve instrumented the &lt;code class=&quot;highlighter-rouge&quot;&gt;load&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;process&lt;/code&gt;
+functions with &lt;a href=&quot;https://github.com/BrunoBonacci/mulog#%CE%BCtrace&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;μ/trace&lt;/code&gt;&lt;/a&gt;
+and published the traces into &lt;a href=&quot;https://www.jaegertracing.io/&quot;&gt;Jaeger&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Looking the above execution this is what I get:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/seque/lazy.jpg&quot; alt=&quot;lazy evaluation&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;μ/trace&lt;/code&gt; makes it incredibly easy to visualize the sequence of operations. I
+use it all the time to reinforce my mental model of how some operations are
+executed in larger applications.&lt;/p&gt;
+
+&lt;h2 id=&quot;chunked-sequences&quot;&gt;Chunked sequences&lt;/h2&gt;
+
+&lt;p&gt;Chunked sequences are an optimisation to reduce the allocation.
+A chunked sequence instead of realizing one element at the time,
+it will realize a chunk of them (usually 32). From a consumer
+point of view, it is almost totally transparent. The prime
+example of chunked sequences is the
+&lt;a href=&quot;https://clojuredocs.org/clojure.core/range&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;range&lt;/code&gt;&lt;/a&gt; function.&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; (0 1 2 3 4 5 6 7 8 9)
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;chunked-seq?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; true
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;chunked-seq?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;my-lazy-seq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; false
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The chunking effect can be seen when applying a transformation like in our
+previous example. If we replace &lt;code class=&quot;highlighter-rouge&quot;&gt;my-lazy-seq&lt;/code&gt; with &lt;code class=&quot;highlighter-rouge&quot;&gt;range&lt;/code&gt;, we see something
+interesting.&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;;; clean
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;take&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;doall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; Loading: 0
+;; Loading: 1
+;; Loading: 2
+;; Loading: 3
+;; Loading: 4
+;; Loading: 5
+;; Loading: 6
+;; Loading: 7
+;; Loading: 8
+;; Loading: 9
+;; Loading: 10
+;; Loading: 11
+;; Loading: 12
+;; Loading: 13
+;; Loading: 14
+;; Loading: 15
+;; Loading: 16
+;; Loading: 17
+;; Loading: 18
+;; Loading: 19
+;; Loading: 20
+;; Loading: 21
+;; Loading: 22
+;; Loading: 23
+;; Loading: 24
+;; Loading: 25
+;; Loading: 26
+;; Loading: 27
+;; Loading: 28
+;; Loading: 29
+;; Loading: 30
+;; Loading: 31
+;; Processing: 0
+;; Processing: 1
+;; Processing: 2
+;; Processing: 3
+;; Processing: 4
+;; Processing: 5
+;; Processing: 6
+;; Processing: 7
+;; Processing: 8
+;; Processing: 9
+;; =&amp;gt; (0 1 2 3 4 5 6 7 8 9)
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Notice that despite the fact we only consumed 10 items from the result, 32 items
+were realized from the first sequence and loaded, then &lt;code class=&quot;highlighter-rouge&quot;&gt;(map load)&lt;/code&gt; returns a
+true lazy sequence so only 10 items were &lt;code class=&quot;highlighter-rouge&quot;&gt;processed&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;chunked-seq?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; true
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;chunked-seq?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;inc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; =&amp;gt; false
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;If we look at the execution trace of our previous example we can see that nicely:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/seque/chunked.jpg&quot; alt=&quot;chunked&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As you attempt to realize the first item, the initial chunk of 32 items is
+realized. All these items remain in memory until the chunk is entirely
+consumed. Once the consumer requests the 33rd item, a new chunk of 32 items is
+realized.&lt;/p&gt;
+
+&lt;p&gt;Chunked sequences are beneficial when the cost of realizing each item is
+minimal, offering an optimization in terms of allocations.&lt;/p&gt;
+
+&lt;p&gt;To create a chunked sequence the Clojure core provides a set of functions:
+&lt;a href=&quot;https://clojuredocs.org/clojure.core/chunk-buffer&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;chunk-buffer&lt;/code&gt;&lt;/a&gt;,
+&lt;a href=&quot;https://clojuredocs.org/clojure.core/chunk&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;chunk&lt;/code&gt;&lt;/a&gt;,
+&lt;a href=&quot;https://clojuredocs.org/clojure.core/chunk-append&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;chunk-append&lt;/code&gt;&lt;/a&gt;,
+&lt;a href=&quot;https://clojuredocs.org/clojure.core/chunk-cons&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;chunk-cons&lt;/code&gt;&lt;/a&gt;,
+&lt;a href=&quot;https://clojuredocs.org/clojure.core/chunk-rest&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;chunk-rest&lt;/code&gt;&lt;/a&gt; and
+&lt;a href=&quot;https://clojuredocs.org/clojure.core/chunked-seq_q&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;chunked-seq?&lt;/code&gt;&lt;/a&gt; which we
+have already seen.&lt;/p&gt;
+
+&lt;h2 id=&quot;buffered-sequences&quot;&gt;Buffered sequences&lt;/h2&gt;
+
+&lt;p&gt;Buffered sequences share some similarities with chunked sequences, but they
+exhibit a slightly different behavior. Their main goal is to minimize the wait
+time for consumers by storing a set number of realized items in a buffer (or
+queue). Buffered sequences maintain a fixed-length buffer. A Clojure agent works
+diligently to ensure the buffer is consistently populated with realized
+items. Consequently, when the consumer requires a new item for processing,
+multiple items are readily available.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/seque/buffer.png&quot; alt=&quot;buffer&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On the right, there’s an unrealized lazy sequence. A Clojure agent will try to
+fill the buffer as swiftly as possible. The items in the buffer are always in a
+realized state. The consumer then retrieves items from the buffer in the same
+sequence order (FIFO) for further processing.&lt;/p&gt;
+
+&lt;p&gt;The Clojure core to build such sequences is &lt;a href=&quot;https://clojuredocs.org/clojure.core/seque&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;seque&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Let’s examine how buffered sequences impact computation, using our previous example.&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;my-lazy-seq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;seque&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; buffer of 5
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;take&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;doall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; Loading: 0
+;; Loading: 1
+;; Loading: 2
+;; Processing: 0
+;; Loading: 3
+;; Loading: 4
+;; Processing: 1
+;; Loading: 5
+;; Loading: 6
+;; Loading: 7
+;; Processing: 2
+;; Loading: 8
+;; Loading: 9
+;; Processing: 3
+;; Loading: 10
+;; Processing: 4
+;; Loading: 11
+;; Processing: 5
+;; Loading: 12
+;; Processing: 6
+;; Loading: 13
+;; Loading: 14
+;; Processing: 7
+;; Processing: 8
+;; Loading: 15
+;; Loading: 16
+;; Processing: 9
+;; =&amp;gt; (0 1 2 3 4 5 6 7 8 9)
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;From the output, it’s evident how the agent works. &lt;code class=&quot;highlighter-rouge&quot;&gt;Loading:&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;Processing:&lt;/code&gt;
+statements are interleaved in a seemingly random order. This is attributable to
+the agent operating on a separate thread in the background. By introducing a
+buffered sequence between the &lt;code class=&quot;highlighter-rouge&quot;&gt;load&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;process&lt;/code&gt; we have a sort of
+&lt;strong&gt;“pre-fetcher”&lt;/strong&gt; which attempts to keep &lt;em&gt;at most&lt;/em&gt; 5 items always realized
+and ready to be processed.  As items are consumed from the buffer the agent
+tries to replace them with new items from the unrealized sequence upstream. The
+key difference compared to the chunked sequences is that while the chunked
+sequences do not realize items until the first item of a chunk is requested,
+buffered sequences realize enough items to fill the buffer ahead of the
+consumption.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/seque/seque.jpg&quot; alt=&quot;seque&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;seque&lt;/code&gt; is an excellent choice when it is important to minimize the wait-time on
+consumer side and have items readily available. The important aspect is that it
+allows for a configurable size. By carefully selecting the buffer size we
+are able to control how many items (potentially big) are realized in memory at
+any point in time. &lt;code class=&quot;highlighter-rouge&quot;&gt;seque&lt;/code&gt; is truly a &lt;code class=&quot;highlighter-rouge&quot;&gt;clojure.core&lt;/code&gt; hidden gem!&lt;/p&gt;
+
+&lt;p&gt;One thing to notice is that &lt;code class=&quot;highlighter-rouge&quot;&gt;seque&lt;/code&gt; is semi-lazy as it will try to fill the
+buffer as soon as it called. We can see this clearly if we define a var without
+consuming the sequence.&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;processing-seq&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;my-lazy-seq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;seque&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; buffer of 5
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;take&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Loading&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Loading&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Loading&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Loading&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Loading&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Loading&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Loading&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;'user/processing-seq&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Even though we created a buffer of 5 items we can see that there are 6 items
+realized here. The buffer is backed by a blocking queue. The agent tries to
+continuously push new items to the buffer, so when the buffer is full, there is
+one more item being consumed from the upstream sequence by the agent who is
+blocked on the queue &lt;code class=&quot;highlighter-rouge&quot;&gt;offer&lt;/code&gt; operation. As soon as an item is consumed, the
+&lt;code class=&quot;highlighter-rouge&quot;&gt;offer&lt;/code&gt; will be accepted and the in-flight item will be inserted into the queue.&lt;/p&gt;
+
+&lt;h2 id=&quot;parallel-pre-fetcher&quot;&gt;Parallel pre-fetcher&lt;/h2&gt;
+
+&lt;p&gt;With a small change we can load the items in parallel. That’s useful when
+the upstream operation (&lt;code class=&quot;highlighter-rouge&quot;&gt;load&lt;/code&gt; in this case) is dominated by IO.&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;my-lazy-seq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;future&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; load in parallel
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;seque&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; buffer up to 5 items (+1 in-flight)
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;deref&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; deref the future
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;take&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;doall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; Loading: 2
+;; Loading: 3
+;; Loading: 4
+;; Loading: 6
+;; Loading: 0
+;; Loading: 5
+;; Loading: 1
+;; Loading: 7
+;; Processing: 0
+;; Processing: 1
+;; Loading: 8
+;; Processing: 2
+;; Loading: 9
+;; Processing: 3
+;; Loading: 10
+;; Processing: 4
+;; Loading: 11
+;; Processing: 5
+;; Loading: 12
+;; Processing: 6
+;; Loading: 13
+;; Processing: 7
+;; Loading: 14
+;; Processing: 8
+;; Loading: 15
+;; Processing: 9
+;; Loading: 16
+;; =&amp;gt; (0 1 2 3 4 5 6 7 8 9)
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;With this small change we can fill the buffer faster especially in I/O dominated
+operations.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/seque/parallel.jpg&quot; alt=&quot;parallel pre-fetch&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We can easily isolate this pattern and create a &lt;code class=&quot;highlighter-rouge&quot;&gt;pre-fetch&lt;/code&gt; function:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pre-fetch&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Returns a semi-lazy sequence consisting of the result of applying
+   `f` to items of `coll`. It is semi-lazy as it will attempt to keep
+   always `n` items in a buffer + 1 item in flight.
+   Useful to minimize the waiting time of a consumer.&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coll&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;future&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;seque&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;deref&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;and then use it as:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;my-lazy-seq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;pre-fetch&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;take&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;doall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;what-about-pmap&quot;&gt;What about &lt;code class=&quot;highlighter-rouge&quot;&gt;pmap&lt;/code&gt;?&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://clojuredocs.org/clojure.core/pmap&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;pmap&lt;/code&gt;&lt;/a&gt; has a similar behaviour but
+you can’t control how many items are realized. It depends on the number of CPU
+cores in available in the runtime machine.
+&lt;code class=&quot;highlighter-rouge&quot;&gt;pmap&lt;/code&gt; always uses &lt;a href=&quot;https://github.com/clojure/clojure/blob/clojure-1.10.1/src/clj/clojure/core.clj#L7021C12-L7021C61&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;(+ 2 (.. Runtime getRuntime availableProcessors))&lt;/code&gt;&lt;/a&gt; threads.&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;my-lazy-seq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;pmap&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;take&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;doall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; Loading: 0
+;; Loading: 1
+;; Loading: 2
+;; Loading: 4
+;; Loading: 8
+;; Loading: 3
+;; Loading: 9
+;; Loading: 7
+;; Loading: 6
+;; Loading: 5
+;; Loading: 12
+;; Loading: 11
+;; Loading: 10
+;; Processing: 0
+;; Processing: 1
+;; Loading: 13
+;; Loading: 14
+;; Processing: 2
+;; Processing: 3
+;; Loading: 15
+;; Processing: 4
+;; Loading: 16
+;; Processing: 5
+;; Loading: 17
+;; Processing: 6
+;; Loading: 18
+;; Processing: 7
+;; Loading: 19
+;; Processing: 8
+;; Loading: 20
+;; Processing: 9
+;; Loading: 21
+;; =&amp;gt; (0 1 2 3 4 5 6 7 8 9)
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;My laptop has 10 CPU cores so the &lt;code class=&quot;highlighter-rouge&quot;&gt;load&lt;/code&gt; ran on 12 items.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/seque/pmap.jpg&quot; alt=&quot;pmap&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusions&quot;&gt;Conclusions&lt;/h2&gt;
+
+&lt;p&gt;Throughout this post, we’ve delved into various types of lazy sequences and
+examined their influence on the execution of mapping functions. We explored
+three distinct categories of lazy sequences:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;The “truly” lazy sequences, which realize items individually as they are requested.&lt;/li&gt;
+  &lt;li&gt;The chunked sequences, which process multiple items simultaneously.&lt;/li&gt;
+  &lt;li&gt;The buffered sequences, which consistently maintain a reservoir of realized items, ready for consumption.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The salient distinction between chunked and buffered sequences lies in their
+approach to realization. While chunked sequences await a consumer’s request for
+an item, buffered sequences take a proactive stance, anticipating the need and
+realizing a batch of items from the preceding sequence.&lt;/p&gt;
+
+&lt;p&gt;Each of these types occupies its unique niche and finds relevance in various
+applications. It rests upon us, the developers, to judiciously select the most
+fitting type tailored to the specific challenges we encounter.&lt;/p&gt;
+</description>
+        <pubDate>Thu, 07 Sep 2023 19:00:00 -0500</pubDate>
+        <link>https://blog.brunobonacci.com//2023/09/08/buffered-sequences/</link>
+        <guid isPermaLink="true">https://blog.brunobonacci.com//2023/09/08/buffered-sequences/</guid>
+        
+        <category>Clojure</category>
+        
+        
+        <category>programming</category>
+        
+      </item>
     
       <item>
         <title>µ/log hidden superpower</title>
@@ -18,7 +540,7 @@ AWS policy for Terraform.&lt;/p&gt;
 
 &lt;/blockquote&gt;
 
-&lt;p&gt;&lt;em&gt;Originally posted at: https://redefine.io/blog/mulog-hidden-superpower/&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Originally posted at: &lt;a href=&quot;https://redefine.io/blog/mulog-hidden-superpower/&quot;&gt;https://redefine.io/blog/mulog-hidden-superpower/&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;intro&quot;&gt;Intro&lt;/h3&gt;
 
@@ -6401,437 +6923,6 @@ and the binary content of the new image is displayed instead.&lt;/p&gt;
         <category>development</category>
         
         <category>productivity</category>
-        
-      </item>
-    
-      <item>
-        <title>A &quot;dead simple&quot; introduction to Clojure macros.</title>
-        <description>&lt;p&gt;Macros are one of the topics which scares many new Clojure developers.
-Although I’ve seen many tutorials about the topic, I think that the
-approach used is often too complicated for someone who is new to Clojure.
-So I will try to explore the topic especially for developers who are
-new to Clojure and haven’t yet grasped the macros.&lt;/p&gt;
-
-&lt;p&gt;You can find the code of this post at: &lt;a href=&quot;https://github.com/BrunoBonacci/clojure-simple-macro&quot;&gt;https://github.com/BrunoBonacci/clojure-simple-macro&lt;/a&gt;&lt;/p&gt;
-
-&lt;h1 id=&quot;what-is-a-macro&quot;&gt;What is a macro?&lt;/h1&gt;
-
-&lt;p&gt;The simple answer is: &lt;em&gt;A macro is a piece of code that is executed at
-compile-time (rather than runtime) and it produces code which in turn is
-compiled.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;How this is possible? Many other languages have some sort of “macros”,
-such as C/C++, Groovy and many others. However there is a fundamental
-difference.  Languages such C and C++ have
-&lt;a href=&quot;http://en.wikipedia.org/wiki/Macro_%28computer_science%29&quot;&gt;&lt;em&gt;“Text substitution macros”&lt;/em&gt;&lt;/a&gt;
-while languages such as Groovy have
-&lt;a href=&quot;http://glaforge.appspot.com/article/groovy-ast-transformations-tutorials&quot;&gt;Abstract Syntax Tree (AST)&lt;/a&gt;
-transformations. In other words, in one of the early phases of the
-compilation process, the source code, in is text form, is turned into a tree
-structure which describes the code in terms of its logical parts down to
-every single statement. This tree structure is then made available to
-the user (developer) who can &lt;em&gt;make some modifications&lt;/em&gt; before the
-compiler turns the &lt;code class=&quot;highlighter-rouge&quot;&gt;AST&lt;/code&gt; into compiled bytecode.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/20150419_Abstract_syntax_tree.jpg&quot; alt=&quot;Abstract syntax tree&quot; /&gt;
-&lt;em&gt;Image courtesy of: http://sewiki.iai.uni-bonn.de/_media/research/jtransformer/lmp.jpg&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;LISP languages (such as Clojure) don’t need to transform the text
-representation into an Abstract Syntax Tree because the text itself is
-in AST form already.  Clojure source files are written in terms of
-&lt;a href=&quot;http://en.wikipedia.org/wiki/S-expression&quot;&gt;S-expressions&lt;/a&gt; (or &lt;code class=&quot;highlighter-rouge&quot;&gt;sexpr&lt;/code&gt;)
-which are nothing else than &lt;em&gt;lists of lists&lt;/em&gt; (= trees).  Now the &lt;em&gt;list&lt;/em&gt;
-is one of the fundamental data-structures in Clojure.  Such languages
-which use their own data-structures to represent the source code are called
-&lt;a href=&quot;http://en.wikipedia.org/wiki/Homoiconicity&quot;&gt;&lt;em&gt;homoiconic&lt;/em&gt;&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Tree structure representing the s-expression for &lt;code class=&quot;highlighter-rouge&quot;&gt;(* 2 (+ 3 4))&lt;/code&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/20150419_S-expression_tree.png&quot; alt=&quot;S-expression tree&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;The reason why LISP languages have this &lt;em&gt;funny looking syntax&lt;/em&gt; is due to
-the fact that the code is written directly in their AST form. So
-compared to Groovy (at all), Clojure doesn’t need to have a
-representation of the code for the humans and a different representation
-of the code for the compiler (machine). This apparently disadvantage
-makes macros in Clojure extremely easy to write in comparison to
-Groovy. Because macros are so easy to write, they can become a powerful
-way to process your source code and remove duplication, make your code
-more readable, or automatically inject additional code in your source
-code.&lt;/p&gt;
-
-&lt;h1 id=&quot;how-can-i-write-a-macro&quot;&gt;How can I write a macro?&lt;/h1&gt;
-
-&lt;p&gt;In Clojure there are two ways to write the macros. The first one is to
-read and process the AST which is just a &lt;em&gt;list of lists&lt;/em&gt;.  This is very
-much the Groovy way, with the difference that you already know how to
-manipulate a Clojure’s lists and you don’t need a different API.  The
-second way is very much like a
-&lt;a href=&quot;http://en.wikipedia.org/wiki/Comparison_of_web_template_engines&quot;&gt;&lt;em&gt;templating language&lt;/em&gt;&lt;/a&gt;.
-Among these template languages there some like:
-&lt;a href=&quot;http://en.wikipedia.org/wiki/Apache_Velocity&quot;&gt;Velocity&lt;/a&gt; or
-&lt;a href=&quot;http://mustache.github.io/&quot;&gt;Mustache&lt;/a&gt; which are very popular.&lt;/p&gt;
-
-&lt;p&gt;For example a Velocity template looks like:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Hello &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;user_name&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;,
-Today is the &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;date&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; and we have &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;num_users&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; users currently online.
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Basically it is just plain text, very much like the output you want to
-produce, minus a few placeholders in the places where the content must
-be generated dynamically.  Once rendered this text might just look like:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Hello John,
-Today is the 19th April and we have 1,653 users currently online.
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Like a templating engine, Clojure &lt;code class=&quot;highlighter-rouge&quot;&gt;syntax-quote&lt;/code&gt; works pretty much the
-same way.  &lt;em&gt;You start by writing the target code in the way you want to
-see it&lt;/em&gt; and then put the placeholders.&lt;/p&gt;
-
-&lt;p&gt;For example let’s write a macro which wraps a code execution with a
-&lt;code class=&quot;highlighter-rouge&quot;&gt;try&lt;/code&gt;/&lt;code class=&quot;highlighter-rouge&quot;&gt;catch&lt;/code&gt;, and in case of a exception is raised, a default value is
-used.  For example a division operation such &lt;code class=&quot;highlighter-rouge&quot;&gt;(/ a b)&lt;/code&gt; might generate a
-&lt;code class=&quot;highlighter-rouge&quot;&gt;java.lang.ArithmeticException&lt;/code&gt; when &lt;code class=&quot;highlighter-rouge&quot;&gt;b&lt;/code&gt; is &lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt;.&lt;/p&gt;
-
-&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;operation&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;catch&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Exception&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dafault-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Where &lt;code class=&quot;highlighter-rouge&quot;&gt;operation&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;default-value&lt;/code&gt; may vary from case to case.
-So if this was a Velocity template we would write the code in this way.&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;;; example using Velocity template.
-&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;try
-  &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;operation&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;catch Exception x
-    &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dafault&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;-value&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;In Clojure we can write a template using the
-&lt;a href=&quot;http://clojure.org/reader#syntax-quote&quot;&gt;syntax-quote (the ` backquote character)&lt;/a&gt;
-form.&lt;/p&gt;
-
-&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;;; if we write
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;hello&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;;&amp;gt; hello        [in stdout]
-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; it is executed and produces the output &quot;hello&quot;
-;; however if we write:
-&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;hello&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;;=&amp;gt; (clojure.core/println &quot;hello&quot;)
-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; note the namespace is added automatically
-;; this actually produces a template
-;; with the enclosed forms.
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;So if we want to re-write our template using &lt;code class=&quot;highlighter-rouge&quot;&gt;syntax-quote&lt;/code&gt;
-we will write as follow:&lt;/p&gt;
-
-&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-   &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;operation&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;catch&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Exception&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-     &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dafault-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;The &lt;em&gt;tilde&lt;/em&gt; (&lt;code class=&quot;highlighter-rouge&quot;&gt;~&lt;/code&gt;) works pretty much in the same way of &lt;code class=&quot;highlighter-rouge&quot;&gt;${placeholders}&lt;/code&gt;
-of velocity.  To avoid name conflicts with the local variables you have
-to add a &lt;code class=&quot;highlighter-rouge&quot;&gt;#&lt;/code&gt; at the end of the name, which will generate a unique symbol
-name (see &lt;a href=&quot;https://clojuredocs.org/clojure.core/gensym&quot;&gt;gensym&lt;/a&gt;).  Now
-we are all ready to give a name to this template and use it in our code.&lt;/p&gt;
-
-&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defmacro&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default-to&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default-value&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;operation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-     &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;operation&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;catch&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Exception&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-       &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;This is a fully working template, not much different from the Velocity’s
-style template.  So let’s see the template in its rendered form:&lt;/p&gt;
-
-&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;macroexpand-1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
- &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;default-to&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-
-&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;;=&amp;gt;
-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;catch&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;java.lang.Exception&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x__8493__auto__&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-     &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;As you can see this was the template we designed earlier. Notice that
-the placeholders have been replaced.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://clojuredocs.org/clojure.core/macroexpand&quot;&gt;macroexpand&lt;/a&gt; and
-&lt;a href=&quot;https://clojuredocs.org/clojure.core/macroexpand-1&quot;&gt;macroexpand-1&lt;/a&gt; both
-apply the given template and return the code after the placeholders have
-been replaced. The difference between &lt;code class=&quot;highlighter-rouge&quot;&gt;macroexpand&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;macroexpand-1&lt;/code&gt;
-is that the latter does only one level of expansion, which means that if
-the code, after the template has been expanded, it still contains more
-macros, those won’t be expanded; conversely &lt;code class=&quot;highlighter-rouge&quot;&gt;macroexpand&lt;/code&gt; will
-recursively expand all the templates until there is no more macro code
-to expand.&lt;/p&gt;
-
-&lt;p&gt;Here there are a couple of interesting things to notice.  Firstly the
-&lt;code class=&quot;highlighter-rouge&quot;&gt;x#&lt;/code&gt; which it has been transformed into a unique local variable
-&lt;code class=&quot;highlighter-rouge&quot;&gt;__8493__auto__&lt;/code&gt;. Another interesting thing is that the symbol
-&lt;code class=&quot;highlighter-rouge&quot;&gt;Exception&lt;/code&gt; has been expanded to the fully qualified form (with
-namespace/package).  Using fully qualified symbols will avoid problems
-of name clashing when the macros is used.  A common example can be
-&lt;code class=&quot;highlighter-rouge&quot;&gt;log/debug&lt;/code&gt;.  If while you writing the macro you refer to a &lt;code class=&quot;highlighter-rouge&quot;&gt;log&lt;/code&gt;
-namespace which contains a function named &lt;code class=&quot;highlighter-rouge&quot;&gt;debug&lt;/code&gt;, and when the macro
-user tries to use the macro in a different namespace without having a
-local &lt;code class=&quot;highlighter-rouge&quot;&gt;log/debug&lt;/code&gt; defined, or even worse, having different
-implementation many strange errors could occur. By automatically
-transforming all symbols in their fully qualified form these problems
-are completely avoided.  Last interesting note to observe is that
-&lt;code class=&quot;highlighter-rouge&quot;&gt;operation&lt;/code&gt; was replaced with the actual code &lt;code class=&quot;highlighter-rouge&quot;&gt;(/ 1 4)&lt;/code&gt; and not its
-result. Keep this in mind for later as we’ll see how this can sometime
-be a problem.&lt;/p&gt;
-
-&lt;p&gt;Let’s try to see how our macro works.&lt;/p&gt;
-
-&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;default-to&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;;=&amp;gt; 1/4
-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;default-to&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; Exception
-;;=&amp;gt; 10
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Now let’s improve our macro and ask it to log a message to a logging system in
-case of exceptions.
-We can use &lt;a href=&quot;https://github.com/ptaoussanis/timbre&quot;&gt;timbre&lt;/a&gt; logging library.&lt;/p&gt;
-
-&lt;p&gt;So let’s starting by load the namespace.&lt;/p&gt;
-
-&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;;; add the dependency in your project.clj
-;; [com.taoensso/timbre &quot;3.4.0&quot;]
-;; and restart your REPL
-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;taoensso.timbre&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:as&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;and now let’s update our little macro.&lt;/p&gt;
-
-&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defmacro&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default-to&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default-value&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;operation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-     &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;operation&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;catch&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Exception&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-       &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;log/debug&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;The following error occurred:&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-                  &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;, defaulting to:&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-       &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;load-default-value&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;loading default value from database&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;comment&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loading&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Let’s assume this time that the default value is retrieved using the
-&lt;code class=&quot;highlighter-rouge&quot;&gt;load-default-value&lt;/code&gt; function and use &lt;code class=&quot;highlighter-rouge&quot;&gt;macroexpand-1&lt;/code&gt; to see the
-generated code.&lt;/p&gt;
-
-&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;macroexpand-1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
- &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;default-to&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;load-default-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-
-&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;;=&amp;gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
- &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
- &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;catch&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;java.lang.Exception&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x__9554__auto__&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;taoensso.timbre/debug&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;The following error occurred:&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x__9554__auto__&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-                         &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;, defaulting to:&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;load-default-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;load-default-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-
-
-&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; let's execute the macro
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;default-to&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;load-default-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-
-&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;;[stdout]
-;; loading default value from database
-;; DEBUG - The following error occurred: #&amp;lt;ArithmeticException java.lang.ArithmeticException: Divide by zero&amp;gt; , defaulting to: 3
-;; loading default value from database
-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;;=&amp;gt; 3
-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Again, you can see that the &lt;code class=&quot;highlighter-rouge&quot;&gt;log/debug&lt;/code&gt; has been expanded to the fully
-qualified name. The interesting part is that the &lt;code class=&quot;highlighter-rouge&quot;&gt;default-value&lt;/code&gt; has
-been expanded with the &lt;em&gt;sexpr&lt;/em&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;(load-default-value)&lt;/code&gt; and not with its
-result.  This is important as, in case of exception, the
-&lt;code class=&quot;highlighter-rouge&quot;&gt;(load-default-value)&lt;/code&gt; &lt;strong&gt;will be called twice&lt;/strong&gt; because it appear twice
-in the macro. To verify this behaviour you may check the &lt;em&gt;stdout&lt;/em&gt; and
-see the message: &lt;em&gt;“loading default value from database”&lt;/em&gt; appearing
-twice. Since the &lt;code class=&quot;highlighter-rouge&quot;&gt;(load-default-value)&lt;/code&gt; produces side effect, it might
-be an undesirable behaviour. So let see how we can fix it.&lt;/p&gt;
-
-&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defmacro&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default-to&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default-value&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;operation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-     &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;operation&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;catch&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Exception&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-       &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-         &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;log/debug&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;The following error occurred:&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-                    &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;, defaulting to:&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-         &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-
-
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;macroexpand-1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
- &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;default-to&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;load-default-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-
-&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;;=&amp;gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
- &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
- &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;catch&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;java.lang.Exception&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x__6188__auto__&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;clojure.core/let&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default__6189__auto__&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;load-default-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;taoensso.timbre/debug&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;The following error occurred:&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x__6188__auto__&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-                          &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;, defaulting to:&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default__6189__auto__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-   &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default__6189__auto__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;We used a &lt;code class=&quot;highlighter-rouge&quot;&gt;let&lt;/code&gt; form to create a local var for &lt;code class=&quot;highlighter-rouge&quot;&gt;default-value&lt;/code&gt; called
-&lt;code class=&quot;highlighter-rouge&quot;&gt;default#&lt;/code&gt; (remember that the &lt;code class=&quot;highlighter-rouge&quot;&gt;#&lt;/code&gt; sign a the end of the symbol generates
-unique symbol name) and assign the value of the &lt;code class=&quot;highlighter-rouge&quot;&gt;~default-value&lt;/code&gt;
-expansion, then we can use the local var &lt;code class=&quot;highlighter-rouge&quot;&gt;default#&lt;/code&gt; which will contains
-only the result of the operation, in every place we needed the
-&lt;code class=&quot;highlighter-rouge&quot;&gt;default-value&lt;/code&gt;.  Because we perform only one expansion of
-&lt;code class=&quot;highlighter-rouge&quot;&gt;~default-value&lt;/code&gt;, the &lt;code class=&quot;highlighter-rouge&quot;&gt;(load-default-value)&lt;/code&gt; code will be executed only
-once.&lt;/p&gt;
-
-&lt;p&gt;Last improvement we can make to this simple function is to account for a
-code block as operation. If instead of specifying only one operation
-we want to be able to specify multiple forms, we need to change the
-macro signature and accommodate the new params.&lt;/p&gt;
-
-&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defmacro&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default-to&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default-value&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;operations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-     &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;operations&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;catch&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Exception&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-       &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-         &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;log/debug&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;The following error occurred:&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-                    &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;, defaulting to:&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-         &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;macroexpand-1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
- &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;default-to&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;load-default-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;This is a multi sexpr operation&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Infact it will be captured by &amp;amp;operation as a list&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-
-&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;;=&amp;gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
- &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;This is a multi sexpr operation&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
- &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Infact it will be captured by &amp;amp;operation as a list&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
- &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
- &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;catch&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;java.lang.Exception&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x__6494__auto__&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;clojure.core/let&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default__6495__auto__&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;load-default-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;taoensso.timbre/debug&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;The following error occurred:&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x__6494__auto__&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-                          &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;, defaulting to:&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default__6495__auto__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-   &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default__6495__auto__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;By changing the macro signature from &lt;code class=&quot;highlighter-rouge&quot;&gt;[default-value operation]&lt;/code&gt; into its variadic form &lt;code class=&quot;highlighter-rouge&quot;&gt;[default-value &amp;amp; operations]&lt;/code&gt;
-we give the possibility to accept a variable number of parameters (variadic functions/macros)
-which will be represented by a sequence of elements. To explode the sequence we use &lt;code class=&quot;highlighter-rouge&quot;&gt;~@operations&lt;/code&gt;.
-The form &lt;code class=&quot;highlighter-rouge&quot;&gt;~@&lt;/code&gt; called &lt;a href=&quot;https://clojuredocs.org/clojure.core/unquote-splicing&quot;&gt;unquote-splicing&lt;/a&gt;
-expands a list into its individual elements.&lt;/p&gt;
-
-&lt;p&gt;Let’s see a bit more about &lt;code class=&quot;highlighter-rouge&quot;&gt;unquote-splicing&lt;/code&gt;:&lt;/p&gt;
-
-&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;;; range return a sequence of numbers
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;;=&amp;gt; (0 1 2 3 4 5 6 7 8 9)
-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; if we use the normal unquote
-;; number will appear wrapped in a sequence
-&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; wrong, need (apply max ...)
-;;=&amp;gt; (clojure.core/max (0 1 2 3 4 5 6 7 8 9))
-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; notice here that the number are NOT wrapped
-;; into the sequence but they appear directly
-&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~@&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;;=&amp;gt; (clojure.core/max 0 1 2 3 4 5 6 7 8 9)
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;This concludes this basic introduction to Clojure’s macros.  By now you
-should have all the necessary tools to write basic macros.&lt;/p&gt;
-
-&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
-
-&lt;p&gt;Creating Clojure macros is a powerful way to write concise and beautiful code,
-or turn your declarative code into functional code.
-There are few takeaways from this blog post:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;When you can write function, not macros.  &lt;em&gt;Macros are not composable
-and are not usable as high-order functions&lt;/em&gt;, so if you can achieve the
-same result with a function, write a function instead.&lt;/li&gt;
-  &lt;li&gt;When writing macros as templates use always backquote (or backtick
-` character) to create code templates&lt;/li&gt;
-  &lt;li&gt;Denote your placeholders with the tilde (&lt;code class=&quot;highlighter-rouge&quot;&gt;~&lt;/code&gt;)&lt;/li&gt;
-  &lt;li&gt;If a placeholder appear more than once in your template wrap it with
-&lt;code class=&quot;highlighter-rouge&quot;&gt;let&lt;/code&gt; binding and create a local var instead.&lt;/li&gt;
-  &lt;li&gt;For every var inside the template create a generated symbol by
-appending the hash sign (&lt;code class=&quot;highlighter-rouge&quot;&gt;#&lt;/code&gt;) at the end of the symbol’s name.&lt;/li&gt;
-  &lt;li&gt;Expand lists with the &lt;code class=&quot;highlighter-rouge&quot;&gt;unquote-splicing&lt;/code&gt; (&lt;code class=&quot;highlighter-rouge&quot;&gt;~@&lt;/code&gt;) when necessary&lt;/li&gt;
-  &lt;li&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;macroexpand-1&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;macroexpand&lt;/code&gt; to see the generated code.&lt;/li&gt;
-  &lt;li&gt;Unless your macro is for internal use (same namespace), &lt;em&gt;test your
-macros in a different namespace&lt;/em&gt; to catch visibility issues.&lt;/li&gt;
-  &lt;li&gt;And remember &lt;em&gt;a macro is always executed a compile time not a
-runtime&lt;/em&gt;, and the output of a macro should be code.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;If you want to get a deeper understanding of the Clojure’s macros
-check the following links:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://blog.8thlight.com/colin-jones/2012/05/22/quoting-without-confusion.html&quot;&gt;Quoting without confusion&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://www.braveclojure.com/writing-macros/&quot;&gt;http://www.braveclojure.com/writing-macros/&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://aphyr.com/posts/305-clojure-from-the-ground-up-macros&quot;&gt;Kyle Kingsbury’s “Clojure from the ground up: macros”&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;John Aspden’s introduction in three parts:
-&lt;a href=&quot;http://www.learningclojure.com/2010/09/clojure-macro-tutorial-part-i-getting.html&quot;&gt;part-1&lt;/a&gt;
-&lt;a href=&quot;http://www.learningclojure.com/2010/09/clojure-macro-tutorial-part-ii-compiler.html&quot;&gt;part-2&lt;/a&gt;
-&lt;a href=&quot;http://www.learningclojure.com/2010/09/clojure-macro-tutorial-part-ii-syntax.html&quot;&gt;part-3&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;You can find the code of this post at: &lt;a href=&quot;https://github.com/BrunoBonacci/clojure-simple-macro&quot;&gt;https://github.com/BrunoBonacci/clojure-simple-macro&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Many thanks to Sathya for his feedbacks&lt;/em&gt;&lt;/p&gt;
-</description>
-        <pubDate>Sun, 19 Apr 2015 14:49:00 -0500</pubDate>
-        <link>https://blog.brunobonacci.com//2015/04/19/dead-simple-introduction-to-clojure-macros/</link>
-        <guid isPermaLink="true">https://blog.brunobonacci.com//2015/04/19/dead-simple-introduction-to-clojure-macros/</guid>
-        
-        <category>Clojure</category>
-        
-        <category>macro</category>
-        
-        <category>development</category>
-        
-        
-        <category>development</category>
         
       </item>
     
