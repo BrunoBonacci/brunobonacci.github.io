@@ -1,0 +1,1930 @@
+<!doctype html>
+<html
+  lang="en"
+  dir="ltr"
+  class="scroll-smooth"
+  data-default-appearance="dark"
+  data-auto-appearance="false"><head>
+  <meta charset="utf-8">
+  
+    <meta http-equiv="content-language" content="en">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color">
+
+  
+  
+    <title>Microservices with API Gateway, AWS Lambda and JVM languages &middot; The Daily REPL</title>
+    <meta name="title" content="Microservices with API Gateway, AWS Lambda and JVM languages &middot; The Daily REPL">
+  
+
+  
+  
+    <meta name="description" content="A tech blog about Clojure, Software Architecture, and Distributed Systems">
+  
+  
+    <meta name="keywords" content="AWS,API-Gateway,Lambda,">
+  
+  
+  
+  <link rel="canonical" href="https://blog.brunobonacci.com/2016/10/10/microservices-with-api-gateway-aws-lambda-and-jvm-languages/">
+  
+
+  
+  
+    <meta name="author" content="Bruno Bonacci">
+  
+  
+    
+      
+        
+          <link href="https://www.linkedin.com/in/brunobonacci/" rel="me">
+        
+      
+    
+      
+        
+          <link href="https://github.com/BrunoBonacci" rel="me">
+        
+      
+    
+      
+        
+          <link href="https://x.com/BrunoBonacci" rel="me">
+        
+      
+    
+  
+
+  
+  <meta property="og:url" content="https://blog.brunobonacci.com/2016/10/10/microservices-with-api-gateway-aws-lambda-and-jvm-languages/">
+  <meta property="og:site_name" content="The Daily REPL">
+  <meta property="og:title" content="Microservices with API Gateway, AWS Lambda and JVM languages">
+  <meta property="og:description" content="A tech blog about Clojure, Software Architecture, and Distributed Systems">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2016-10-10T00:00:00+00:00">
+    <meta property="article:modified_time" content="2016-10-10T00:00:00+00:00">
+    <meta property="article:tag" content="Aws">
+    <meta property="article:tag" content="API-Gateway">
+    <meta property="article:tag" content="Lambda">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Microservices with API Gateway, AWS Lambda and JVM languages">
+  <meta name="twitter:description" content="A tech blog about Clojure, Software Architecture, and Distributed Systems">
+
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+  
+    
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+    
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/css/main.bundle.min.4469cacae30d496926850c1d6b6fe0a4ac575f26b85d63b379e7679901a12e508883d10988f6e16de782cea142a25c0f73cff326b784bc85e793a22423edbd49.css"
+    integrity="sha512-RGnKyuMNSWkmhQwda2/gpKxXXya4XWOzeednmQGhLlCIg9EJiPbhbeeCzqFColwPc8/zJreEvIXnk6IkI&#43;29SQ==">
+
+  
+  
+  <script
+    type="text/javascript"
+    src="/js/appearance.min.6f41174b3a05b680820fe08cadbfa5fb7a7ca347b76a0955cdc68b9d8aca1ce24f0547e138cea33bcc7904d551a90afcb1cc7f2d9fe8557075d501419046c08c.js"
+    integrity="sha512-b0EXSzoFtoCCD&#43;CMrb&#43;l&#43;3p8o0e3aglVzcaLnYrKHOJPBUfhOM6jO8x5BNVRqQr8scx/LZ/oVXB11QFBkEbAjA=="></script>
+  
+  
+    
+    <script src="/js/a11y.min.7eeed9f7a6fe7c8aa3b999966484369eb1b5380455116fc15c2b407140f3c2e3b174fc00201797dba34e4d4013213736ae375c9bcf2d7ad1fadb224355d8d54d.js" integrity="sha512-fu7Z96b&#43;fIqjuZmWZIQ2nrG1OARVEW/BXCtAcUDzwuOxdPwAIBeX26NOTUATITc2rjdcm88tetH62yJDVdjVTQ=="></script>
+  
+  
+  
+  
+    
+    <script
+      type="text/javascript"
+      src="/js/zen-mode.min.9814dee9614d32aeb56239d118edfe20acd6231424f9b19c2dd48835038414130a5e946c0d1c9087d60e60e31840c9babfd217e3d4b95643dc8d651a71ccdf4a.js"
+      integrity="sha512-mBTe6WFNMq61YjnRGO3&#43;IKzWIxQk&#43;bGcLdSINQOEFBMKXpRsDRyQh9YOYOMYQMm6v9IX49S5VkPcjWUacczfSg=="></script>
+  
+  
+    
+    <script src="/lib/zoom/zoom.min.umd.a527109b68c082a70f3697716dd72a9d5aa8b545cf800cecbbc7399f2ca6f6e0ce3e431f2062b48bbfa47c9ea42822714060bef309be073f49b9c0e30d318d7b.js" integrity="sha512-pScQm2jAgqcPNpdxbdcqnVqotUXPgAzsu8c5nyym9uDOPkMfIGK0i7&#43;kfJ6kKCJxQGC&#43;8wm&#43;Bz9JucDjDTGNew=="></script>
+  
+
+  
+  
+  
+    
+  
+  
+    
+  
+  
+    
+  
+  
+  
+  
+  
+  
+    
+    <script
+      defer
+      type="text/javascript"
+      id="script-bundle"
+      src="/js/main.bundle.min.6b483bdc9246a18b35259ce2a40e363ade34a01edf2f3a31094f0a396844e75f863d18735a89b85ee8301f2dfdb9e471bdf47c44483d4b8f0d6eb93701873824.js"
+      integrity="sha512-a0g73JJGoYs1JZzipA42Ot40oB7fLzoxCU8KOWhE51&#43;GPRhzWom4XugwHy39ueRxvfR8REg9S48Nbrk3AYc4JA=="
+      data-copy="Copy"
+      data-copied="Copied"></script>
+  
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+  
+
+  
+  <script type="application/ld+json">
+  [{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "articleSection": "Posts",
+    "name": "Microservices with API Gateway, AWS Lambda and JVM languages",
+    "headline": "Microservices with API Gateway, AWS Lambda and JVM languages",
+    
+    "inLanguage": "en",
+    "url" : "https://blog.brunobonacci.com/2016/10/10/microservices-with-api-gateway-aws-lambda-and-jvm-languages/",
+    "author" : {
+      "@type": "Person",
+      "name": "Bruno Bonacci"
+    },
+    "copyrightYear": "2016",
+    "dateCreated": "2016-10-10T00:00:00\u002b00:00",
+    "datePublished": "2016-10-10T00:00:00\u002b00:00",
+    
+    "dateModified": "2016-10-10T00:00:00\u002b00:00",
+    
+    "keywords": ["AWS","API-Gateway","Lambda"],
+    
+    "mainEntityOfPage": "true",
+    "wordCount": "3108"
+  }]
+  </script>
+
+
+
+  
+  
+    
+
+
+
+
+  
+
+  
+  
+
+  
+  
+
+  
+  
+</head>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <body class="flex flex-col h-screen m-auto leading-7 max-w-7xl px-6 sm:px-14 md:px-24 lg:px-32 text-lg bg-neutral text-neutral-900 dark:bg-neutral-800 dark:text-neutral bf-scrollbar">
+    <div id="the-top" class="absolute flex self-center">
+      <a
+        class="px-3 py-1 text-sm -translate-y-8 rounded-b-lg bg-primary-200 focus:translate-y-0 dark:bg-neutral-600"
+        href="#main-content">
+        <span class="font-bold text-primary-600 pe-2 dark:text-primary-400">&darr;</span>
+        Skip to main content
+      </a>
+    </div>
+    
+    
+      <div class="main-menu flex items-center w-full gap-2 p-1 pl-0">
+  
+  
+    <a href="/" class="text-base font-medium truncate min-w-0 shrink">
+      The Daily REPL
+    </a>
+  
+  <div class="flex items-center ms-auto">
+    <div class="hidden md:flex">
+      <nav class="flex items-center gap-x-5 h-12">
+  
+    
+      
+  
+    <a
+      href="/about/"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="About me"
+      title="About me">
+      
+      
+        <span class="text-base font-medium break-normal">
+          About me
+        </span>
+      
+    </a>
+  
+
+    
+      
+  
+    <a
+      href="/projects/"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="Projects"
+      title="Projects">
+      
+      
+        <span class="text-base font-medium break-normal">
+          Projects
+        </span>
+      
+    </a>
+  
+
+    
+      
+  
+    <a
+      href="/posts/"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="Blog"
+      title="Posts">
+      
+      
+        <span class="text-base font-medium break-normal">
+          Blog
+        </span>
+      
+    </a>
+  
+
+    
+      
+  
+    <a
+      href="/categories/"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="Categories"
+      title="Categories">
+      
+      
+        <span class="text-base font-medium break-normal">
+          Categories
+        </span>
+      
+    </a>
+  
+
+    
+      
+  
+    <a
+      href="/tags/"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="Tags"
+      title="Tags">
+      
+      
+        <span class="text-base font-medium break-normal">
+          Tags
+        </span>
+      
+    </a>
+  
+
+    
+  
+
+  
+
+  
+    <div class="flex items-center">
+  <button
+    id="desktop-a11y-toggle"
+    aria-label="Open accessibility panel"
+    aria-expanded="false"
+    type="button"
+    class="bf-icon-color-hover"
+    role="button"
+    aria-pressed="false">
+    <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm161.5-86.1c-12.2-5.2-26.3 .4-31.5 12.6s.4 26.3 12.6 31.5l11.9 5.1c17.3 7.4 35.2 12.9 53.6 16.3l0 50.1c0 4.3-.7 8.6-2.1 12.6l-28.7 86.1c-4.2 12.6 2.6 26.2 15.2 30.4s26.2-2.6 30.4-15.2l24.4-73.2c1.3-3.8 4.8-6.4 8.8-6.4s7.6 2.6 8.8 6.4l24.4 73.2c4.2 12.6 17.8 19.4 30.4 15.2s19.4-17.8 15.2-30.4l-28.7-86.1c-1.4-4.1-2.1-8.3-2.1-12.6l0-50.1c18.4-3.5 36.3-8.9 53.6-16.3l11.9-5.1c12.2-5.2 17.8-19.3 12.6-31.5s-19.3-17.8-31.5-12.6L338.7 175c-26.1 11.2-54.2 17-82.7 17s-56.5-5.8-82.7-17l-11.9-5.1zM256 160a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"/></svg>
+</span>
+  </button>
+
+  <div id="desktop-a11y-overlay" class="fixed inset-0 hidden" style="z-index:9999;"></div>
+
+  <div
+    id="desktop-a11y-panel"
+    role="dialog"
+    aria-labelledby="desktop-a11y-panel-title"
+    class="a11y-panel-enter fixed hidden p-6 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 rounded-lg shadow-xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700"
+    style="min-width: 20rem; z-index:9999;">
+    <div class="flex items-center justify-between mb-6">
+      <h3
+        id="desktop-a11y-panel-title"
+        class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+        Accessibility settings
+      </h3>
+      <button
+        id="desktop-a11y-close"
+        class="text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200"
+        aria-label="Close a11y panel">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="space-y-5">
+      
+      
+      
+      
+        
+      
+      
+        <div class="flex items-center justify-between">
+          <label for="desktop-disable-blur" class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            Disable blur
+          </label>
+          <div class="ios-toggle">
+            <input type="checkbox" id="desktop-disable-blur">
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <label for="desktop-underline-links" class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            Show link underline
+          </label>
+          <div class="ios-toggle">
+            <input type="checkbox" id="desktop-underline-links">
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <label for="desktop-zen-mode" class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            Enable zen mode
+          </label>
+          <div class="ios-toggle">
+            <input type="checkbox" id="desktop-zen-mode">
+          </div>
+        </div>
+
+
+      <div class="flex items-center justify-between">
+        <label
+          for="desktop-font-size-select"
+          class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+          Font size
+        </label>
+        <select
+          id="desktop-font-size-select"
+          class="border rounded-lg px-3 py-1.5 pr-8 text-neutral-900 text-sm dark:bg-neutral-700 dark:text-neutral-200 focus:ring-primary-500 focus:border-primary-500">
+          
+          
+            <option value="default">default</option>
+          
+            <option value="12px">12px</option>
+          
+            <option value="14px">14px</option>
+          
+            <option value="16px">16px</option>
+          
+            <option value="18px">18px</option>
+          
+            <option value="20px">20px</option>
+          
+            <option value="22px">22px</option>
+          
+            <option value="24px">24px</option>
+          
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+  
+    <button
+      id="search-button"
+      aria-label="Search"
+      class="text-base bf-icon-color-hover"
+      title="Search (/)">
+      <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+    </button>
+  
+
+  
+    <div class="flex items-center">
+      <button
+        id="appearance-switcher"
+        aria-label="Dark mode switcher"
+        type="button"
+        class="text-base bf-icon-color-hover">
+        <div class="flex items-center justify-center dark:hidden">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+</span>
+        </div>
+        <div class="items-center justify-center hidden dark:flex">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+</span>
+        </div>
+      </button>
+    </div>
+  
+</nav>
+
+
+
+    </div>
+    <div class="flex md:hidden">
+      <div class="flex items-center h-14 gap-4">
+  
+    <button
+      id="search-button-mobile"
+      aria-label="Search"
+      class="flex items-center justify-center bf-icon-color-hover"
+      title="Search (/)">
+      <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+    </button>
+  
+
+  
+    <button
+      id="appearance-switcher-mobile"
+      type="button"
+      aria-label="Dark mode switcher"
+      class="flex items-center justify-center text-neutral-900 hover:text-primary-600 dark:text-neutral-200 dark:hover:text-primary-400">
+      <div class="dark:hidden">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+</span>
+      </div>
+      <div class="hidden dark:block">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+</span>
+      </div>
+    </button>
+  
+
+  
+    <input type="checkbox" id="mobile-menu-toggle" autocomplete="off" class="hidden peer">
+    <label for="mobile-menu-toggle" class="flex items-center justify-center cursor-pointer bf-icon-color-hover">
+      <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M0 96C0 78.33 14.33 64 32 64H416C433.7 64 448 78.33 448 96C448 113.7 433.7 128 416 128H32C14.33 128 0 113.7 0 96zM0 256C0 238.3 14.33 224 32 224H416C433.7 224 448 238.3 448 256C448 273.7 433.7 288 416 288H32C14.33 288 0 273.7 0 256zM416 448H32C14.33 448 0 433.7 0 416C0 398.3 14.33 384 32 384H416C433.7 384 448 398.3 448 416C448 433.7 433.7 448 416 448z"/></svg>
+</span>
+    </label>
+
+    <div
+      role="dialog"
+      aria-modal="true"
+      style="scrollbar-gutter: stable;"
+      class="fixed inset-0 z-50 invisible overflow-y-auto px-6 py-20 opacity-0 transition-[opacity,visibility] duration-300 peer-checked:visible peer-checked:opacity-100 bg-neutral-50/97 dark:bg-neutral-900/99
+      bf-scrollbar">
+      <label
+        for="mobile-menu-toggle"
+        class="fixed end-8 top-5 flex items-center justify-center z-50 h-12 w-12 cursor-pointer select-none rounded-full bf-icon-color-hover border bf-border-color bf-border-color-hover bg-neutral-50 dark:bg-neutral-900">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+</span>
+      </label>
+      <nav class="mx-auto max-w-md space-y-6">
+        
+  
+    
+    <div class="px-2">
+      <a
+        href="/about/"
+        aria-label="About me"
+        
+        class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+        
+        <span title="About me" class="text-2xl font-bold tracking-tight">
+          About me
+        </span>
+        
+      </a>
+
+      
+    </div>
+  
+    
+    <div class="px-2">
+      <a
+        href="/projects/"
+        aria-label="Projects"
+        
+        class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+        
+        <span title="Projects" class="text-2xl font-bold tracking-tight">
+          Projects
+        </span>
+        
+      </a>
+
+      
+    </div>
+  
+    
+    <div class="px-2">
+      <a
+        href="/posts/"
+        aria-label="Blog"
+        
+        class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+        
+        <span title="Posts" class="text-2xl font-bold tracking-tight">
+          Blog
+        </span>
+        
+      </a>
+
+      
+    </div>
+  
+    
+    <div class="px-2">
+      <a
+        href="/categories/"
+        aria-label="Categories"
+        
+        class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+        
+        <span title="Categories" class="text-2xl font-bold tracking-tight">
+          Categories
+        </span>
+        
+      </a>
+
+      
+    </div>
+  
+    
+    <div class="px-2">
+      <a
+        href="/tags/"
+        aria-label="Tags"
+        
+        class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+        
+        <span title="Tags" class="text-2xl font-bold tracking-tight">
+          Tags
+        </span>
+        
+      </a>
+
+      
+    </div>
+  
+
+        
+  
+
+        
+  
+    <div
+      class="flex flex-wrap items-center [&_span]:text-2xl [&_.translation_button_.icon]:text-4xl! [&_.translation_button_span]:text-base! [&_.translation_.menuhide_span]:text-sm! gap-x-6 ps-2 mt-8 pt-8 border-t bf-border-color">
+      
+
+
+      
+        <div class="flex items-center">
+  <button
+    id="mobile-menu-a11y-toggle"
+    aria-label="Open accessibility panel"
+    aria-expanded="false"
+    type="button"
+    class="bf-icon-color-hover"
+    role="button"
+    aria-pressed="false">
+    <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm161.5-86.1c-12.2-5.2-26.3 .4-31.5 12.6s.4 26.3 12.6 31.5l11.9 5.1c17.3 7.4 35.2 12.9 53.6 16.3l0 50.1c0 4.3-.7 8.6-2.1 12.6l-28.7 86.1c-4.2 12.6 2.6 26.2 15.2 30.4s26.2-2.6 30.4-15.2l24.4-73.2c1.3-3.8 4.8-6.4 8.8-6.4s7.6 2.6 8.8 6.4l24.4 73.2c4.2 12.6 17.8 19.4 30.4 15.2s19.4-17.8 15.2-30.4l-28.7-86.1c-1.4-4.1-2.1-8.3-2.1-12.6l0-50.1c18.4-3.5 36.3-8.9 53.6-16.3l11.9-5.1c12.2-5.2 17.8-19.3 12.6-31.5s-19.3-17.8-31.5-12.6L338.7 175c-26.1 11.2-54.2 17-82.7 17s-56.5-5.8-82.7-17l-11.9-5.1zM256 160a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"/></svg>
+</span>
+  </button>
+
+  <div id="mobile-menu-a11y-overlay" class="fixed inset-0 hidden" style="z-index:9999;"></div>
+
+  <div
+    id="mobile-menu-a11y-panel"
+    role="dialog"
+    aria-labelledby="mobile-menu-a11y-panel-title"
+    class="a11y-panel-enter fixed hidden p-6 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 rounded-lg shadow-xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700"
+    style="min-width: 20rem; z-index:9999;">
+    <div class="flex items-center justify-between mb-6">
+      <h3
+        id="mobile-menu-a11y-panel-title"
+        class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+        Accessibility settings
+      </h3>
+      <button
+        id="mobile-menu-a11y-close"
+        class="text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200"
+        aria-label="Close a11y panel">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="space-y-5">
+      
+      
+      
+      
+        
+      
+      
+        <div class="flex items-center justify-between">
+          <label for="mobile-menu-disable-blur" class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            Disable blur
+          </label>
+          <div class="ios-toggle">
+            <input type="checkbox" id="mobile-menu-disable-blur">
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <label for="mobile-menu-underline-links" class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            Show link underline
+          </label>
+          <div class="ios-toggle">
+            <input type="checkbox" id="mobile-menu-underline-links">
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <label for="mobile-menu-zen-mode" class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            Enable zen mode
+          </label>
+          <div class="ios-toggle">
+            <input type="checkbox" id="mobile-menu-zen-mode">
+          </div>
+        </div>
+
+
+      <div class="flex items-center justify-between">
+        <label
+          for="mobile-menu-font-size-select"
+          class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+          Font size
+        </label>
+        <select
+          id="mobile-menu-font-size-select"
+          class="border rounded-lg px-3 py-1.5 pr-8 text-neutral-900 text-sm dark:bg-neutral-700 dark:text-neutral-200 focus:ring-primary-500 focus:border-primary-500">
+          
+          
+            <option value="default">default</option>
+          
+            <option value="12px">12px</option>
+          
+            <option value="14px">14px</option>
+          
+            <option value="16px">16px</option>
+          
+            <option value="18px">18px</option>
+          
+            <option value="20px">20px</option>
+          
+            <option value="22px">22px</option>
+          
+            <option value="24px">24px</option>
+          
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+  
+
+      </nav>
+    </div>
+  
+</div>
+
+
+
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+    
+    <div class="relative flex flex-col grow">
+      <main id="main-content" class="grow">
+        
+  
+  <article>
+    
+    
+
+    
+    <header id="single_header" class="mt-5 max-w-prose">
+      
+      <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+        Microservices with API Gateway, AWS Lambda and JVM languages
+      </h1>
+      <div class="mt-1 mb-6 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
+        
+
+
+
+
+
+  
+  
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2016-10-10T00:00:00&#43;00:00">2016-10-10</time><span class="px-2 text-primary-500">&middot;</span><span>3108 words</span><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">15 mins</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+      
+        
+          
+            
+              <a class="relative mt-[0.5rem] me-2" href="/categories/development/">
+                <span class="flex cursor-pointer">
+  <span
+    class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+    Development
+  </span>
+</span>
+
+              </a>
+            
+          
+        
+      
+        
+      
+        
+          
+            
+              <a class="relative mt-[0.5rem] me-2" href="/tags/aws/">
+                <span class="flex cursor-pointer">
+  <span
+    class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+    Aws
+  </span>
+</span>
+
+              </a>
+            
+              <a class="relative mt-[0.5rem] me-2" href="/tags/api-gateway/">
+                <span class="flex cursor-pointer">
+  <span
+    class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+    API-Gateway
+  </span>
+</span>
+
+              </a>
+            
+              <a class="relative mt-[0.5rem] me-2" href="/tags/lambda/">
+                <span class="flex cursor-pointer">
+  <span
+    class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+    Lambda
+  </span>
+</span>
+
+              </a>
+            
+          
+        
+      
+    </div>
+  
+
+  
+  
+
+
+
+      </div>
+      
+        
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+    
+    
+<div class="flex author">
+  
+    
+    
+      
+    
+    
+      
+      
+      
+        
+        
+        
+      
+      <img
+        class="!mt-0 !mb-0 h-24 w-24 rounded-full me-4"
+        width="96"
+        height="96"
+        alt="Bruno Bonacci"
+        src="/images/bruno-bonacci_hu_62749e6fecade90c.jpg"
+        data-zoom-src="/images/bruno-bonacci_hu_ce04e3c59e6e0c7a.jpg">
+    
+  
+  <div class="place-self-center">
+    
+      <div class="text-[0.6rem] uppercase leading-3 text-neutral-500 dark:text-neutral-400">
+        Author
+      </div>
+      <div class="font-semibold leading-6 text-neutral-800 dark:text-neutral-300">
+        Bruno Bonacci
+      </div>
+    
+    
+      <div class="text-sm text-neutral-700 dark:text-neutral-400">Tech. Architect, Ex Apple, Distributed System Expert, High-Volume Systems, Low latency.</div>
+    
+    <div class="text-2xl sm:text-lg">
+  <div class="flex flex-wrap text-neutral-400 dark:text-neutral-500 space-x-2">
+    
+      
+        
+        <a
+          class=" hover:text-primary-700 dark:hover:text-primary-400"
+          href="https://www.linkedin.com/in/brunobonacci/"
+          
+          target="_blank"
+          aria-label="Linkedin"
+          title="Linkedin"
+          rel="me noopener noreferrer"
+          ><span class="inline-block align-text-bottom"><span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+</span></span></a
+        >
+      
+    
+      
+        
+        <a
+          class=" hover:text-primary-700 dark:hover:text-primary-400"
+          href="https://github.com/BrunoBonacci"
+          
+          target="_blank"
+          aria-label="Github"
+          title="Github"
+          rel="me noopener noreferrer"
+          ><span class="inline-block align-text-bottom"><span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+</span></span></a
+        >
+      
+    
+      
+        
+        <a
+          class=" hover:text-primary-700 dark:hover:text-primary-400"
+          href="https://x.com/BrunoBonacci"
+          
+          target="_blank"
+          aria-label="X-Twitter"
+          title="X-Twitter"
+          rel="me noopener noreferrer"
+          ><span class="inline-block align-text-bottom"><span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg></span></span></a
+        >
+      
+    
+  </div>
+
+</div>
+  </div>
+</div>
+
+  
+
+  
+
+  
+    <div class="mb-5"></div>
+  
+
+      
+    </header>
+
+    
+    <section class="flex flex-col max-w-full mt-0 prose dark:prose-invert lg:flex-row">
+      
+      
+      
+      
+      
+
+
+      <div class="min-w-0 min-h-0 max-w-fit">
+        
+
+        <div class="article-content max-w-prose mb-20">
+          <p><strong>Originally posted at: <a href="https://engineering.thetrainline.com/2016/10/10/microservices-with-api-gateway-aws-lambda-and-jvm-languages/"  target="_blank" rel="noreferrer">https://engineering.thetrainline.com/</a></strong></p>
+<p>At Trainline we use AWS Lambda <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> in conjunction with API Gateway
+<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> for some of our microservices. Different teams use different
+languages, but in the Data Engineering team we use Clojure <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> -
+which is a JVM based functional programming language.  Here we share
+some of the experiences we&rsquo;ve had developing and deploying REST based
+APIs using JVM based Lambdas.</p>
+<p>Although we normally use Clojure, in this blog post we will present a
+Java based example (for the benefit of a wider audience). However, we
+expect that the same results would apply to all JVM based languages
+(Clojure, Scala, Groovy, etc.)</p>
+<p>This post is split into two parts. The first part describes our
+experience building REST services with API Gateway + Lambda, while the
+second part dives deeper into the usage of JVM languages for Lambda
+development.</p>
+<p>We will explore the implication of using AWS Gateway and AWS Lambda
+for microservice development, and we will present our measurement
+of the added latency.</p>
+<p>In our Lambda example we go beyond the simple single-thread request
+processing pattern and we leverage the full power of a naturally
+multi-threaded environment such as the JVM. Although this might not
+be the <em>standard</em> way to develop AWS Lambda we believe it is important
+to gain a deeper understanding of JVM based Lambda implementation.</p>
+<p>We will show with empirical evidence that the JVM is subject to a
+<strong>freeze/thaw</strong> cycle in which all threads are temporarily frozen
+while the Lambda is not processing a user request. As for the previous
+part we will also explore implication of this behaviour.</p>
+<p>The technology choice has to take into account many different factors
+such as: speed of which you can deliver the solution, security,
+performance, scalability, maintainability, operations, costs and the
+team skill-set.  Balancing all these factors is a essential part of
+modern software development. Although, there is a number of things to
+keep in mind when deploying microservices with API Gateway + JVM based
+Lambdas, our overall experience with these solution is very positive.</p>
+
+<h2 class="relative group">Part 1: Microservices with API Gateway + AWS Lambda.
+    <div id="part-1-microservices-with-api-gateway--aws-lambda" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#part-1-microservices-with-api-gateway--aws-lambda" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>AWS API Gateway is a great product, which provides a good deal of
+control and flexibility. For this reason we plan to use it in front of
+all microservices to leverage more <em>serverless architecture</em>
+<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>. However there are a number of issues to take into account before
+applying this strategy.</p>
+<ul>
+<li>First and most importantly, API Gateway doesn&rsquo;t run within a
+VPC <sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>, so every endpoint is exposed
+to the public Internet. There are a number of ways to secure
+endpoints, including custom authorizers and client certificates
+<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup>, however it is something that needs to be kept in mind while
+designing APIs.</li>
+<li>The second point to consider is <strong>latency</strong>. Because API Gateway
+exposes public APIs, it makes use of the AWS CDN CloudFront
+<sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup>. Every request goes out through the customer&rsquo;s VPC Internet
+Gateway, to some CloudFront endpoint, before making its way back
+to the calling service. Since we were unable to find published
+resources which quantify these latencies, we decided to measure
+them ourselves.</li>
+</ul>
+<p>In this post when talking about <em>latency</em> we are referring to the
+request/response duration which includes network transfer and request
+processing time, unless otherwise specified.</p>
+
+<h3 class="relative group">The scenario.
+    <div id="the-scenario" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-scenario" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>The two questions we were keen to answer were:</p>
+<ul>
+<li><strong>What is the API Gateway latency distribution?</strong></li>
+<li><strong>What is the API Gateway + Lambda latency distribution?</strong></li>
+</ul>
+<p>In other words, we wanted to understand how much latency is
+added per request if we use these two technologies for our
+services.</p>
+<p>To answer the first question we created the following environment:</p>
+<ul>
+<li>1 x m4.xlarge EC2 instance with a load test tool.</li>
+<li>1 x m4.xlarge EC2 instance running NGINX, serving a single static JSON file.</li>
+<li>Both instances were in the same region, same availability zone,
+same VPC, and same subnet.</li>
+</ul>
+<p>The load test tool we used was Gatling <sup id="fnref:8"><a href="#fn:8" class="footnote-ref" role="doc-noteref">8</a></sup>. It is an Open Source fully
+asynchronous load generator. (When measuring latencies it is very
+important to use asynchronous load generators to avoid a common
+latency measurement mistake known as &ldquo;<strong>Coordinated omission</strong>&rdquo; <sup id="fnref:9"><a href="#fn:9" class="footnote-ref" role="doc-noteref">9</a></sup>).</p>
+<p>Gatling simulates ramping up from 1 request per second to 100 request
+per second, measuring the latencies at every step. We already knew
+that API Gateway scales automatically to several thousands requests
+per second, so the objective of this test was not to see how far we
+could push it. Instead we wanted to measure the typical latency we can
+expect for the type of services we are targeting with this technology
+(which are low to medium traffic microservices).</p>
+
+<h4 class="relative group">Measuring latency via direct connection
+    <div id="measuring-latency-via-direct-connection" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#measuring-latency-via-direct-connection" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<p>Firstly, we measured latencies when the load test tool directly calls
+the APIs within the same VPC and AZ. This emulates the
+case when two services in the same VPC and AZ communicate
+directly. Here we can see the results:</p>
+<ul>
+<li>Direct connection latencies over time (no API Gateway):</li>
+</ul>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="direct-latency"
+    width="903"
+    height="365"
+    src="/images/aws-lambda/direct-latency1_hu_d29b2628ebe9627f.png"
+    srcset="/images/aws-lambda/direct-latency1_hu_d29b2628ebe9627f.png 800w, /images/aws-lambda/direct-latency1.png 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/aws-lambda/direct-latency1.png"></figure>
+<ul>
+<li>Direct connection latencies over throughput (no API Gateway):</li>
+</ul>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="direct-latency"
+    width="903"
+    height="364"
+    src="/images/aws-lambda/direct-latency2_hu_e1f222bcc0fea2c8.png"
+    srcset="/images/aws-lambda/direct-latency2_hu_e1f222bcc0fea2c8.png 800w, /images/aws-lambda/direct-latency2.png 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/aws-lambda/direct-latency2.png"></figure>
+<ul>
+<li>Direct connection latency quantiles (no API Gateway):</li>
+</ul>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="direct-summary"
+    width="302"
+    height="376"
+    src="/images/aws-lambda/direct-summary.png"
+    srcset="/images/aws-lambda/direct-summary.png 800w, /images/aws-lambda/direct-summary.png 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/aws-lambda/direct-summary.png"></figure>
+<p>As expected the latencies of a direct connection between two services
+in the same VPC / subnet are very low, and most importantly very
+stable. The median latency is sub-millisecond, with a very
+stable and low 99th percentile.</p>
+
+<h4 class="relative group">Measuring latency via API Gateway connection
+    <div id="measuring-latency-via-api-gateway-connection" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#measuring-latency-via-api-gateway-connection" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<p>The second measurement we performed is when the load test tool accesses the
+service via API Gateway. This reveals how much
+latency overhead is added by using API Gateway.</p>
+<ul>
+<li>Proxied connection latencies over time (via API Gateway):</li>
+</ul>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="api-gateway-latency"
+    width="903"
+    height="362"
+    src="/images/aws-lambda/api-gateway-latency1_hu_91624fde130dafe1.png"
+    srcset="/images/aws-lambda/api-gateway-latency1_hu_91624fde130dafe1.png 800w, /images/aws-lambda/api-gateway-latency1.png 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/aws-lambda/api-gateway-latency1.png"></figure>
+<ul>
+<li>Proxied connection latencies over throughput (via API Gateway):</li>
+</ul>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="api-gateway-latency"
+    width="903"
+    height="361"
+    src="/images/aws-lambda/api-gateway-latency2_hu_29f2f5a36db6fd04.png"
+    srcset="/images/aws-lambda/api-gateway-latency2_hu_29f2f5a36db6fd04.png 800w, /images/aws-lambda/api-gateway-latency2.png 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/aws-lambda/api-gateway-latency2.png"></figure>
+<ul>
+<li>Proxied connection latency quantiles (via API Gateway):</li>
+</ul>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="api-gateway-summary"
+    width="300"
+    height="375"
+    src="/images/aws-lambda/api-gateway-summary.png"
+    srcset="/images/aws-lambda/api-gateway-summary.png 800w, /images/aws-lambda/api-gateway-summary.png 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/aws-lambda/api-gateway-summary.png"></figure>
+<p>Here we can clearly see that the latency is more unstable. The added
+latency for every request is between 12ms and 42ms, the jitter is the
+in order of 10ms, and the maximum time for a single request was
+1516ms. This worst case of 1.5s added on top of
+the typical response time is high, but luckily it doesn&rsquo;t happen very
+often.</p>
+
+<h4 class="relative group">Measuring latency via API Gateway + Lambda
+    <div id="measuring-latency-via-api-gateway--lambda" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#measuring-latency-via-api-gateway--lambda" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<p>Finally we wanted to see how much latency is added when implementing
+microservices as AWS Lambda functions with API Gateway on top. The
+test Lambda itself is trivial - it just doubles a number (code shown
+later). The typical execution time of the doubling code (including the
+request and response marshalling) is trivial; in the order of
+150-200μs.  Therefore all the latency reported in the following charts
+may be fairly attributed to the API Gateway and Lambda machinery.</p>
+<ul>
+<li>API Gateway + Lambda latency over time:</li>
+</ul>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="api-gateway-lambda-latency"
+    width="904"
+    height="366"
+    src="/images/aws-lambda/api-gateway-lambda-latency1_hu_96d5a10f7e395570.png"
+    srcset="/images/aws-lambda/api-gateway-lambda-latency1_hu_96d5a10f7e395570.png 800w, /images/aws-lambda/api-gateway-lambda-latency1.png 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/aws-lambda/api-gateway-lambda-latency1.png"></figure>
+<ul>
+<li>API Gateway + Lambda latency over throughput:</li>
+</ul>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="api-gateway-lambda-latency"
+    width="902"
+    height="366"
+    src="/images/aws-lambda/api-gateway-lambda-latency2_hu_18616b99c12902a9.png"
+    srcset="/images/aws-lambda/api-gateway-lambda-latency2_hu_18616b99c12902a9.png 800w, /images/aws-lambda/api-gateway-lambda-latency2.png 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/aws-lambda/api-gateway-lambda-latency2.png"></figure>
+<ul>
+<li>API Gateway + Lambda latency quantiles:</li>
+</ul>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="api-gateway-lambda-summary"
+    width="300"
+    height="375"
+    src="/images/aws-lambda/api-gateway-lambda-summary.png"
+    srcset="/images/aws-lambda/api-gateway-lambda-summary.png 800w, /images/aws-lambda/api-gateway-lambda-summary.png 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/aws-lambda/api-gateway-lambda-summary.png"></figure>
+<p>As shown here, the latencies are much higher when API Gateway and
+Lambda are used. Microservices implemented using API Gateway + Lambda
+incur a latency &rsquo;tax&rsquo; of <strong>37-109ms per request</strong>. The wide range of
+latency and the high spikes are probably attributable to Lambda
+container creation. An interesting observation is that the latencies
+seems to be more jittery at lower throughput levels (15-35 requests
+per second).  On its own, 37-109ms per request is not too
+bad. However, if you consider a typical microservice architecture
+where one frontline service makes a number of requests to other
+services before returning the final response, you can see how these
+latencies would become the dominant part of a user request, and
+(probably) an unacceptable overhead.</p>
+
+<h2 class="relative group">Part 2: AWS Lambdas, Java threads and the JVM freeze/thaw.
+    <div id="part-2-aws-lambdas-java-threads-and-the-jvm-freezethaw" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#part-2-aws-lambdas-java-threads-and-the-jvm-freezethaw" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>So far we have seen some of the things to keep in mind when
+considering the use of API Gateway and Lambda for microservices. Now
+we will explore in more detail our findings around using AWS Lambda
+with JVM based languages.  While developing a Lambda service we
+stumbled upon an issue which lead us to gain a deeper understanding of
+AWS Lambda itself.</p>
+
+<h3 class="relative group">The scenario.
+    <div id="the-scenario-1" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-scenario-1" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>Monitoring production APIs is a standard requirement these days. AWS
+Lambda has a few metrics available by default in CloudWatch
+<sup id="fnref:10"><a href="#fn:10" class="footnote-ref" role="doc-noteref">10</a></sup>. However, if you require more detailed metrics you have to fall
+back on more traditional approaches and tools. At Trainline we use New
+Relic for most of our production monitoring, and therefore we opted to
+use it for monitoring Lambdas. Amongst other things, this gives us a
+single place to see most of our service metrics. One thing to keep in
+mind is that the behaviour described in this article is <em>NOT</em> peculiar
+to New Relic itself, and it will be common to any tool where metrics
+are published asynchronously. <em>In fact, is not even specific to
+monitoring tools at all, it is just how we came about to find this
+specific Lambda&rsquo;s behaviour. Any background operation or communication
+to a database or external service would suffer for the same issues we
+are describing in this post</em>.</p>
+<p>We make use of the New Relic Insights API <sup id="fnref:11"><a href="#fn:11" class="footnote-ref" role="doc-noteref">11</a></sup>, which
+boils down to a HTTP POST with a JSON payload containing the events
+and facets we wish to track.</p>
+<p>A common approach for event based monitoring like this is to buffer a
+number of events in memory and then use a background thread to publish
+the data to the tool (in our case New Relic). (In this discussion we
+will refer to a <em>&ldquo;background thread&rdquo;</em> as a thread which is not
+processing client requests). The approach has several advantages:</p>
+<ul>
+<li><strong>it doesn&rsquo;t impact the request thread</strong>. Events are passed to a
+dedicated thread so that the main request thread is not impacted.</li>
+<li><strong>buffering</strong>. It buffers a configurable number of events in
+memory before making the &ldquo;expensive&rdquo; (100ms-120ms) request to the
+API.</li>
+<li><strong>decoupling</strong>. The processing of the Lambda requests and the
+metrics collection concerns are well separated, and they have well
+defined failure handling modes. For example if the POST to
+New Relic API fails for any reason it won&rsquo;t impact the request
+thread, and handling it could be as easy as retrying the
+request some time later.</li>
+</ul>
+<p>The following image depict the scenario where the <code>λ-thread</code> and the
+<code>BufferingAgent</code> belong to the same JVM process which is running the
+AWS Lambda. The <code>BufferingAgent</code> runs in a <em>background thread</em>.</p>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="background-thread"
+    width="641"
+    height="682"
+    src="/images/aws-lambda/background-thread.png"
+    srcset="/images/aws-lambda/background-thread.png 800w, /images/aws-lambda/background-thread.png 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/aws-lambda/background-thread.png"></figure>
+
+<h2 class="relative group">The problem.
+    <div id="the-problem" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-problem" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p><strong>We found that the approach described above doesn&rsquo;t work on AWS
+Lambda.</strong> The following section details our findings and explains why
+it doesn&rsquo;t work.</p>
+<p>In the main AWS documentation <sup id="fnref:12"><a href="#fn:12" class="footnote-ref" role="doc-noteref">12</a></sup> there isn&rsquo;t much detail about the Lambda
+lifecycle. Another blog post <sup id="fnref:13"><a href="#fn:13" class="footnote-ref" role="doc-noteref">13</a></sup> tries to explain how containers are
+allocated and reused. However none of the resources we&rsquo;ve found
+detail exactly what happens to the container / JVM once the execution of the
+request terminates.</p>
+<p>What we expected is that background threads would keep working - as in a
+standalone JVM - and therefore we could push the metrics to New Relic.
+What really happens is that we can&rsquo;t get any data into New Relic and
+from time-to-time we get a <code>SocketException</code> with a
+<code>OperationNotPermittedException</code>.</p>
+<p>Once we ruled out any programming error in our code, we noticed that
+the same code was working correctly when the HTTP POST to New Relic was
+done in the Lambda request thread (synchronously), rather than in the
+background thread. So we started investigating how threads get
+scheduled in an AWS Lambda. The question we tried to answer was: <em>&ldquo;What
+happens to the JVM when the a Lambda request completes?&rdquo;</em></p>
+
+<h3 class="relative group">What happens to the JVM when the a lambda request completes?
+    <div id="what-happens-to-the-jvm-when-the-a-lambda-request-completes" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#what-happens-to-the-jvm-when-the-a-lambda-request-completes" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>In some of the AWS documentation and blog posts <sup id="fnref1:13"><a href="#fn:13" class="footnote-ref" role="doc-noteref">13</a></sup> we found reference to a
+<em>container freeze/thaw</em> process, but there was not enough detail to understand
+what is actually happening.</p>
+<p>In order to find out how threads are scheduled in Lambda based JVMs we
+did the following experiment. We wrote a simple AWS Lambda function
+which, the first time it gets initialised, starts a background thread
+which logs a message. It then goes to sleep for <code>1 second</code>, and then
+loops. The Lambda itself expects a value, and it returns the value
+doubled.</p>
+<p>Here is the sample code for the <code>handleRequest</code> for our <code>FreezeThawLambda</code> class:</p>
+<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="nf">handleRequest</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">Context</span><span class="w"> </span><span class="n">context</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&#34;request value:&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="na">getValue</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Value</span><span class="p">(</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="na">getValue</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">2</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span></span></span></code></pre></div></div>
+<p>And this is what the request/response POJO looks like:</p>
+<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Value</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">0L</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setValue</span><span class="p">(</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">aValue</span><span class="w"> </span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">aValue</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">getValue</span><span class="p">(){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">value</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">Value</span><span class="p">(){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">Value</span><span class="p">(</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">aValue</span><span class="w"> </span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">aValue</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div></div>
+<p>When the AWS Lambda machinery instantiates our Lambda we start a
+background thread with this code.</p>
+<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">FreezeThawLambda</span><span class="p">(){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&#34;FreezeThawLambda created.&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">startBackgroundThread</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">startBackgroundThread</span><span class="p">(){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&#34;Starting background thread.&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">Thread</span><span class="p">(){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">run</span><span class="p">(){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">0</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">while</span><span class="p">(</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="kt">long</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">nanoTime</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">FreezeThawLambda</span><span class="p">.</span><span class="na">sleep</span><span class="p">(</span><span class="n">1000</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="kt">long</span><span class="w"> </span><span class="n">stop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">nanoTime</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">log</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="w"> </span><span class="s">&#34;background thread alive, iteration: &#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&#34; slept for: &#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">duration</span><span class="p">(</span><span class="n">start</span><span class="p">,</span><span class="w"> </span><span class="n">stop</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}.</span><span class="na">start</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span></span></span></code></pre></div></div>
+<p>The full code used for this test can be found on our Github repository <sup id="fnref:14"><a href="#fn:14" class="footnote-ref" role="doc-noteref">14</a></sup>.</p>
+<p>If this code was running on a <em>&ldquo;normal&rdquo;</em> JVM the output would look
+like the following:</p>
+<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">2016-09-06 12:04:32 &lt;&gt; INFO  FreezeThawLambda:12 - FreezeThawLambda created.
+</span></span><span class="line"><span class="cl">2016-09-06 12:04:32 &lt;&gt; INFO  FreezeThawLambda:26 - Starting background thread.
+</span></span><span class="line"><span class="cl">2016-09-06 12:04:33 &lt;&gt; INFO  FreezeThawLambda:34 - background thread alive, iteration: 1 slept for: 1002
+</span></span><span class="line"><span class="cl">2016-09-06 12:04:34 &lt;&gt; INFO  FreezeThawLambda:34 - background thread alive, iteration: 2 slept for: 1004
+</span></span><span class="line"><span class="cl">2016-09-06 12:04:35 &lt;&gt; INFO  FreezeThawLambda:34 - background thread alive, iteration: 3 slept for: 1000
+</span></span><span class="line"><span class="cl">2016-09-06 12:04:36 &lt;&gt; INFO  FreezeThawLambda:34 - background thread alive, iteration: 4 slept for: 1003
+</span></span><span class="line"><span class="cl">2016-09-06 12:04:37 &lt;&gt; INFO  FreezeThawLambda:34 - background thread alive, iteration: 5 slept for: 1001
+</span></span><span class="line"><span class="cl">2016-09-06 12:04:38 &lt;&gt; INFO  FreezeThawLambda:34 - background thread alive, iteration: 6 slept for: 1003</span></span></code></pre></div></div>
+<p>As you can see, the background thread gets scheduled pretty
+regularly at <code>1 second</code> intervals.</p>
+<p>Once deployed to AWS lambda and run for a few test requests, the output
+found in CloudWatch looks like the following:</p>
+<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">2016-09-06 11:09:45 &lt;&gt; INFO FreezeThawLambda:12 - FreezeThawLambda created.
+</span></span><span class="line"><span class="cl">2016-09-06 11:09:45 &lt;&gt; INFO FreezeThawLambda:26 - Starting background thread.
+</span></span><span class="line"><span class="cl">2016-09-06 11:09:45 &lt;&gt; INFO FreezeThawLambda:19 - request value:20
+</span></span><span class="line"><span class="cl">2016-09-06 11:09:47 &lt;&gt; INFO FreezeThawLambda:34 - background thread alive, iteration: 1 slept for: 2058
+</span></span><span class="line"><span class="cl">2016-09-06 11:09:47 &lt;&gt; INFO FreezeThawLambda:19 - request value:20
+</span></span><span class="line"><span class="cl">2016-09-06 11:09:48 &lt;&gt; INFO FreezeThawLambda:34 - background thread alive, iteration: 2 slept for: 1523
+</span></span><span class="line"><span class="cl">2016-09-06 11:09:48 &lt;&gt; INFO FreezeThawLambda:19 - request value:20
+</span></span><span class="line"><span class="cl">2016-09-06 11:09:49 &lt;&gt; INFO FreezeThawLambda:19 - request value:20
+</span></span><span class="line"><span class="cl">2016-09-06 11:10:01 &lt;&gt; INFO FreezeThawLambda:34 - background thread alive, iteration: 3 slept for: 12166
+</span></span><span class="line"><span class="cl">2016-09-06 11:10:01 &lt;&gt; INFO FreezeThawLambda:19 - request value:20
+</span></span><span class="line"><span class="cl">2016-09-06 11:10:06 &lt;&gt; INFO FreezeThawLambda:34 - background thread alive, iteration: 4 slept for: 5951
+</span></span><span class="line"><span class="cl">2016-09-06 11:10:06 &lt;&gt; INFO FreezeThawLambda:19 - request value:20
+</span></span><span class="line"><span class="cl">2016-09-06 11:10:25 &lt;&gt; INFO FreezeThawLambda:34 - background thread alive, iteration: 5 slept for: 18364
+</span></span><span class="line"><span class="cl">2016-09-06 11:10:25 &lt;&gt; INFO FreezeThawLambda:19 - request value:20
+</span></span><span class="line"><span class="cl">2016-09-06 11:10:26 &lt;&gt; INFO FreezeThawLambda:34 - background thread alive, iteration: 6 slept for: 1552
+</span></span><span class="line"><span class="cl">2016-09-06 11:10:26 &lt;&gt; INFO FreezeThawLambda:19 - request value:20</span></span></code></pre></div></div>
+<p>The first thing to notice is that no output was sent to CloudWatch
+<em>unless a request was in-flight</em>. The first request would have
+instantiate the container, and after that the background thread should
+have been running and producing one log entry every second. However,
+as you can see from the logs above, the background log lines are <em>not</em>
+being emitted once per second. Instead they appear at variable intervals with
+irregular sleep times. The second thing to notice is that the
+background log lines are interleaved with the acutal request log
+lines. What we found is that the background thread is only emitting
+lines <em>while a request is being processed</em>.</p>
+<p>What we think is happening - and what our experimental evidence
+seems to suggest - is that after the Lambda request thread completes the
+AWS Lambda machinery it <code>freezes</code> the JVM, and later <code>thaws</code> it when a new
+request is incoming.</p>
+<p>If we had to speculate about how this is happening, we would imagine
+that the AWS Lambda scheduler uses <strong>Linux cgroups</strong> <sup id="fnref:15"><a href="#fn:15" class="footnote-ref" role="doc-noteref">15</a></sup> and <strong>Linux
+Kernel namespaces</strong> <sup id="fnref:16"><a href="#fn:16" class="footnote-ref" role="doc-noteref">16</a></sup> to isolate lambda executions.  Once the
+processing of a Lambda request is completed the <strong>CPU shares</strong> for the
+given container get set to zero. <strong>CPU shares</strong> define the amount of
+CPU each container is allocated to use. They are denominated as 1024
+shares for each CPU core.  So for example 512 CPU shares equates to
+half of one CPU core, while 1024 is a full CPU core, etc. We would
+imagine that setting it to zero would tell the scheduler to never
+allocate time to a given process, effectively causing the JVM to
+<strong>freeze</strong>. Upon a new Lambda request, the CPU shares are restored to
+their original value, causing the JVM process to <strong>thaw</strong> to a normal
+running state. Of course, this is just speculation - as AWS don&rsquo;t make
+the Lambda internals public domain.</p>
+<p>Although it isn&rsquo;t relevant how AWS implemented their Lambda
+infrastructure, we think it is important to have a deeper understanding
+of the Lambda lifecycle so that JVM developers who want to use
+this service know what behaviour they can expect.</p>
+<p>We can easily understand the commercial reasons behind the freeze/thaw
+process, so that AWS Lambda users are billed for the <em>&ldquo;effective&rdquo;</em>
+time they use CPU resources, but as JVM developers we need to consider
+some of the consequences:</p>
+<ul>
+<li><em>No progress can be made outside the request timespan by any
+thread.</em> Therefore, forget about asynchronously pushing metrics to
+monitoring systems, and pre-fetching or refreshing internal
+caches.</li>
+<li>The JVM Garbage Collector won&rsquo;t be able run minor collection in
+background - unless there is a running request. Similarly, the JVM Young
+Generation GC which is known to <strong>stop-the-world</strong> <sup id="fnref:17"><a href="#fn:17" class="footnote-ref" role="doc-noteref">17</a></sup> will only happen
+when a request is being processed. In turn, it will add more
+latency to the request processing.</li>
+</ul>
+<p><em>(update1)</em></p>
+<p>Obviously the freeze/thaw process doesn&rsquo;t kick-in on every request,
+this would impact the latency too much. Instead, like the following
+measurement seems to suggest, the freeze/thaw process acts on the
+request&rsquo;s queue length, maybe with the addition of a grace period.</p>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="api-gateway-lambda-latency"
+    width="902"
+    height="366"
+    src="/images/aws-lambda/api-gateway-lambda-latency2_hu_18616b99c12902a9.png"
+    srcset="/images/aws-lambda/api-gateway-lambda-latency2_hu_18616b99c12902a9.png 800w, /images/aws-lambda/api-gateway-lambda-latency2.png 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/aws-lambda/api-gateway-lambda-latency2.png"></figure>
+<p>As the above chart shows, at lower throughput levels the latency is
+more jittery, over <strong>20-25 req/s</strong> it becomes more stable. This seems
+to suggest that when the request queue is empty, which it will be most
+of the time at lower throughput levels, then the container is frozen
+after the request processing is completed. Upon arrival of new
+requests the container is thawed back to its original state and the
+request is handled. At higher throughput levels the queue will be
+always containing new requests to process so that there is no need
+to freeze the container.</p>
+<p>Bruno Bonacci <br/>
+<a href="https://twitter.com/brunobonacci"  target="_blank" rel="noreferrer">@BrunoBonacci</a> <br/>
+Data Engineering team @ Trainline.com</p>
+<p><em>Many thanks to John Telford and Frederik Brysse for the early
+feedback and the many corrections.</em></p>
+
+<h2 class="relative group"><a name="References"/>References
+    <div id="references" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#references" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+
+<h2 class="relative group">Updates:
+    <div id="updates" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#updates" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<ul>
+<li><strong>2017-02-04 - update1 on freeze/thaw strategy</strong></li>
+</ul>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><a href="" >https://aws.amazon.com/lambda/details/</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="" >https://aws.amazon.com/api-gateway/</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="" >https://clojure.org/</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p><a href="" >https://d0.awsstatic.com/whitepapers/AWS_Serverless_Multi-Tier_Architectures.pdf</a>&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5">
+<p><a href="" >https://aws.amazon.com/vpc/</a>&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:6">
+<p><a href="" >https://aws.amazon.com/api-gateway/faqs/</a>&#160;<a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:7">
+<p><a href="" >https://forums.aws.amazon.com/message.jspa?messageID=647833</a>&#160;<a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:8">
+<p><a href="" >https://gatling.io/</a>&#160;<a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:9">
+<p><a href="" >https://www.infoq.com/presentations/latency-pitfalls</a>&#160;<a href="#fnref:9" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:10">
+<p><a href="" >https://docs.aws.amazon.com/lambda/latest/dg/monitoring-functions-metrics.html</a>&#160;<a href="#fnref:10" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:11">
+<p><a href="" >https://docs.newrelic.com/docs/insights/new-relic-insights/adding-querying-data/insert-custom-events-insights-api</a>&#160;<a href="#fnref:11" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:12">
+<p><a href="" >https://docs.aws.amazon.com/lambda/latest/dg/lambda-introduction.html</a>&#160;<a href="#fnref:12" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:13">
+<p><a href="" >https://aws.amazon.com/blogs/compute/container-reuse-in-lambda/</a>&#160;<a href="#fnref:13" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref1:13" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:14">
+<p><a href="" >https://github.com/trainline/lambda-freeze-thaw</a>&#160;<a href="#fnref:14" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:15">
+<p><a href="" >https://en.wikipedia.org/wiki/Cgroups</a>&#160;<a href="#fnref:15" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:16">
+<p><a href="" >https://en.wikipedia.org/wiki/Linux_namespaces</a>&#160;<a href="#fnref:16" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:17">
+<p><a href="" >https://stackoverflow.com/questions/18582827/garbage-collector-for-young-generation</a> <em>(Gil Tene&rsquo;s comment)</em>&#160;<a href="#fnref:17" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+          
+          
+          
+        </div>
+        
+        
+
+        
+
+        
+
+      </div>
+    </section>
+
+    
+    <footer class="pt-8 max-w-prose print:hidden">
+      
+  
+    
+    
+    
+    <div class="pt-8">
+      <hr class="border-dotted border-neutral-300 dark:border-neutral-600">
+      <div class="flex justify-between pt-3">
+        <span class="flex flex-col">
+          
+            <a
+              class="flex text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+              href="/2016/06/20/designing-samsara/">
+              <span class="leading-6">
+                <span class="inline-block rtl:rotate-180">&larr;</span>&ensp;Designing Samsara
+              </span>
+            </a>
+            
+              <span class="ms-6 mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                <time datetime="2016-06-20T00:00:00&#43;00:00">2016-06-20</time>
+              </span>
+            
+          
+        </span>
+        <span class="flex flex-col items-end">
+          
+            <a
+              class="flex text-right text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+              href="/2017/08/10/lumo-vs-planck-vs-clojure-vs-pixie./">
+              <span class="leading-6">
+                lumo vs planck vs clojure vs pixie.&ensp;<span class="inline-block rtl:rotate-180">&rarr;</span>
+              </span>
+            </a>
+            
+              <span class="me-6 mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                <time datetime="2017-08-10T00:00:00&#43;00:00">2017-08-10</time>
+              </span>
+            
+          
+        </span>
+      </div>
+    </div>
+  
+
+
+      
+    </footer>
+  </article>
+
+        
+
+
+  
+
+
+
+
+
+
+<div
+  id="scroll-to-top"
+  class="fixed bottom-6 end-6 z-50 transform translate-y-4 opacity-0 duration-200">
+  <a
+    href="#the-top"
+    class="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-neutral/50 text-xl text-neutral-700 hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral dark:hover:text-primary-400"
+    aria-label="Scroll to top"
+    title="Scroll to top">
+    &uarr;
+  </a>
+</div>
+
+      </main><footer id="site-footer" class="py-10 print:hidden">
+  
+  
+    
+  
+  <div class="flex items-center justify-between">
+    
+    
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">
+          (©) Bruno Bonacci, all rights reserved.
+      </p>
+    
+
+    
+    
+      <p class="text-xs text-neutral-500 dark:text-neutral-400">
+        
+        
+        Powered by <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://gohugo.io/" target="_blank" rel="noopener noreferrer">Hugo</a> &amp; <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://blowfish.page/" target="_blank" rel="noopener noreferrer">Blowfish</a>
+      </p>
+    
+  </div>
+  
+    <script>
+      mediumZoom(document.querySelectorAll("img:not(.nozoom)"), {
+        margin: 24,
+        background: "rgba(0,0,0,0.5)",
+        scrollOffset: 0,
+      });
+    </script>
+  
+  
+  
+</footer>
+<div
+  id="search-wrapper"
+  class="invisible fixed inset-0 flex h-screen w-screen cursor-default flex-col bg-neutral-500/50 p-4 backdrop-blur-sm dark:bg-neutral-900/50 sm:p-6 md:p-[10vh] lg:p-[12vh] z-500"
+  data-url="https://blog.brunobonacci.com/">
+  <div
+    id="search-modal"
+    class="flex flex-col w-full max-w-3xl min-h-0 mx-auto border rounded-md shadow-lg top-20 border-neutral-200 bg-neutral dark:border-neutral-700 dark:bg-neutral-800">
+    <header class="relative z-10 flex items-center justify-between flex-none px-2">
+      <form class="flex items-center flex-auto min-w-0">
+        <div class="flex items-center justify-center w-8 h-8 text-neutral-400">
+          <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+        </div>
+        <input
+          type="search"
+          id="search-query"
+          class="flex flex-auto h-12 mx-1 bg-transparent appearance-none focus:outline-dotted focus:outline-2 focus:outline-transparent"
+          placeholder="Search"
+          tabindex="0">
+      </form>
+      <button
+        id="close-search-button"
+        class="flex items-center justify-center w-8 h-8 text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+        title="Close (Esc)">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+</span>
+      </button>
+    </header>
+    <section class="flex-auto px-2 overflow-auto">
+      <ul id="search-results">
+        
+      </ul>
+    </section>
+  </div>
+</div>
+
+    </div>
+  </body>
+  
+</html>

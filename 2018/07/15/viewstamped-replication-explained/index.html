@@ -1,0 +1,2114 @@
+<!doctype html>
+<html
+  lang="en"
+  dir="ltr"
+  class="scroll-smooth"
+  data-default-appearance="dark"
+  data-auto-appearance="false"><head>
+  <meta charset="utf-8">
+  
+    <meta http-equiv="content-language" content="en">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color">
+
+  
+  
+    <title>Viewstamped Replication explained &middot; The Daily REPL</title>
+    <meta name="title" content="Viewstamped Replication explained &middot; The Daily REPL">
+  
+
+  
+  
+    <meta name="description" content="A tech blog about Clojure, Software Architecture, and Distributed Systems">
+  
+  
+    <meta name="keywords" content="Papers,">
+  
+  
+  
+  <link rel="canonical" href="https://blog.brunobonacci.com/2018/07/15/viewstamped-replication-explained/">
+  
+
+  
+  
+    <meta name="author" content="Bruno Bonacci">
+  
+  
+    
+      
+        
+          <link href="https://www.linkedin.com/in/brunobonacci/" rel="me">
+        
+      
+    
+      
+        
+          <link href="https://github.com/BrunoBonacci" rel="me">
+        
+      
+    
+      
+        
+          <link href="https://x.com/BrunoBonacci" rel="me">
+        
+      
+    
+  
+
+  
+  <meta property="og:url" content="https://blog.brunobonacci.com/2018/07/15/viewstamped-replication-explained/">
+  <meta property="og:site_name" content="The Daily REPL">
+  <meta property="og:title" content="Viewstamped Replication explained">
+  <meta property="og:description" content="A tech blog about Clojure, Software Architecture, and Distributed Systems">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2018-07-15T00:00:00+00:00">
+    <meta property="article:modified_time" content="2018-07-15T00:00:00+00:00">
+    <meta property="article:tag" content="Papers">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Viewstamped Replication explained">
+  <meta name="twitter:description" content="A tech blog about Clojure, Software Architecture, and Distributed Systems">
+
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+  
+    
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+    
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/css/main.bundle.min.4469cacae30d496926850c1d6b6fe0a4ac575f26b85d63b379e7679901a12e508883d10988f6e16de782cea142a25c0f73cff326b784bc85e793a22423edbd49.css"
+    integrity="sha512-RGnKyuMNSWkmhQwda2/gpKxXXya4XWOzeednmQGhLlCIg9EJiPbhbeeCzqFColwPc8/zJreEvIXnk6IkI&#43;29SQ==">
+
+  
+  
+  <script
+    type="text/javascript"
+    src="/js/appearance.min.6f41174b3a05b680820fe08cadbfa5fb7a7ca347b76a0955cdc68b9d8aca1ce24f0547e138cea33bcc7904d551a90afcb1cc7f2d9fe8557075d501419046c08c.js"
+    integrity="sha512-b0EXSzoFtoCCD&#43;CMrb&#43;l&#43;3p8o0e3aglVzcaLnYrKHOJPBUfhOM6jO8x5BNVRqQr8scx/LZ/oVXB11QFBkEbAjA=="></script>
+  
+  
+    
+    <script src="/js/a11y.min.7eeed9f7a6fe7c8aa3b999966484369eb1b5380455116fc15c2b407140f3c2e3b174fc00201797dba34e4d4013213736ae375c9bcf2d7ad1fadb224355d8d54d.js" integrity="sha512-fu7Z96b&#43;fIqjuZmWZIQ2nrG1OARVEW/BXCtAcUDzwuOxdPwAIBeX26NOTUATITc2rjdcm88tetH62yJDVdjVTQ=="></script>
+  
+  
+  
+  
+    
+    <script
+      type="text/javascript"
+      src="/js/zen-mode.min.9814dee9614d32aeb56239d118edfe20acd6231424f9b19c2dd48835038414130a5e946c0d1c9087d60e60e31840c9babfd217e3d4b95643dc8d651a71ccdf4a.js"
+      integrity="sha512-mBTe6WFNMq61YjnRGO3&#43;IKzWIxQk&#43;bGcLdSINQOEFBMKXpRsDRyQh9YOYOMYQMm6v9IX49S5VkPcjWUacczfSg=="></script>
+  
+  
+    
+    <script src="/lib/zoom/zoom.min.umd.a527109b68c082a70f3697716dd72a9d5aa8b545cf800cecbbc7399f2ca6f6e0ce3e431f2062b48bbfa47c9ea42822714060bef309be073f49b9c0e30d318d7b.js" integrity="sha512-pScQm2jAgqcPNpdxbdcqnVqotUXPgAzsu8c5nyym9uDOPkMfIGK0i7&#43;kfJ6kKCJxQGC&#43;8wm&#43;Bz9JucDjDTGNew=="></script>
+  
+
+  
+  
+  
+    
+  
+  
+    
+  
+  
+    
+  
+  
+  
+  
+  
+  
+    
+    <script
+      defer
+      type="text/javascript"
+      id="script-bundle"
+      src="/js/main.bundle.min.6b483bdc9246a18b35259ce2a40e363ade34a01edf2f3a31094f0a396844e75f863d18735a89b85ee8301f2dfdb9e471bdf47c44483d4b8f0d6eb93701873824.js"
+      integrity="sha512-a0g73JJGoYs1JZzipA42Ot40oB7fLzoxCU8KOWhE51&#43;GPRhzWom4XugwHy39ueRxvfR8REg9S48Nbrk3AYc4JA=="
+      data-copy="Copy"
+      data-copied="Copied"></script>
+  
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/lib/lite-youtube-embed/lite-yt-embed.9316c068f6459dd9838069f812a91772f6eba68957a6c0517bc827936c6a3883384a6303d4ee49ff129d20773b1566d8b1d0693b9b67697e1af6fdf81e0380ca.css"
+    integrity="sha512-kxbAaPZFndmDgGn4EqkXcvbrpolXpsBRe8gnk2xqOIM4SmMD1O5J/xKdIHc7FWbYsdBpO5tnaX4a9v34HgOAyg==">
+  
+  
+  <script
+    type="text/javascript"
+    src="/lib/lite-youtube-embed/lite-yt-embed.7cded41daf98143e07df8cc0dc018ccf6e59d20063687609740707b153da7a52a93fb7e030a92507d60c27ebf490778693a4ea8947ac69ce4b213a89eb55af7d.js"
+    integrity="sha512-fN7UHa&#43;YFD4H34zA3AGMz25Z0gBjaHYJdAcHsVPaelKpP7fgMKklB9YMJ&#43;v0kHeGk6TqiUesac5LITqJ61WvfQ=="></script>
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+  
+
+  
+  <script type="application/ld+json">
+  [{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "articleSection": "Posts",
+    "name": "Viewstamped Replication explained",
+    "headline": "Viewstamped Replication explained",
+    
+    "inLanguage": "en",
+    "url" : "https://blog.brunobonacci.com/2018/07/15/viewstamped-replication-explained/",
+    "author" : {
+      "@type": "Person",
+      "name": "Bruno Bonacci"
+    },
+    "copyrightYear": "2018",
+    "dateCreated": "2018-07-15T00:00:00\u002b00:00",
+    "datePublished": "2018-07-15T00:00:00\u002b00:00",
+    
+    "dateModified": "2018-07-15T00:00:00\u002b00:00",
+    
+    "keywords": ["Papers"],
+    
+    "mainEntityOfPage": "true",
+    "wordCount": "5774"
+  }]
+  </script>
+
+
+
+  
+  
+    
+
+
+
+
+  
+
+  
+  
+
+  
+  
+
+  
+  
+</head>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <body class="flex flex-col h-screen m-auto leading-7 max-w-7xl px-6 sm:px-14 md:px-24 lg:px-32 text-lg bg-neutral text-neutral-900 dark:bg-neutral-800 dark:text-neutral bf-scrollbar">
+    <div id="the-top" class="absolute flex self-center">
+      <a
+        class="px-3 py-1 text-sm -translate-y-8 rounded-b-lg bg-primary-200 focus:translate-y-0 dark:bg-neutral-600"
+        href="#main-content">
+        <span class="font-bold text-primary-600 pe-2 dark:text-primary-400">&darr;</span>
+        Skip to main content
+      </a>
+    </div>
+    
+    
+      <div class="main-menu flex items-center w-full gap-2 p-1 pl-0">
+  
+  
+    <a href="/" class="text-base font-medium truncate min-w-0 shrink">
+      The Daily REPL
+    </a>
+  
+  <div class="flex items-center ms-auto">
+    <div class="hidden md:flex">
+      <nav class="flex items-center gap-x-5 h-12">
+  
+    
+      
+  
+    <a
+      href="/about/"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="About me"
+      title="About me">
+      
+      
+        <span class="text-base font-medium break-normal">
+          About me
+        </span>
+      
+    </a>
+  
+
+    
+      
+  
+    <a
+      href="/projects/"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="Projects"
+      title="Projects">
+      
+      
+        <span class="text-base font-medium break-normal">
+          Projects
+        </span>
+      
+    </a>
+  
+
+    
+      
+  
+    <a
+      href="/posts/"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="Blog"
+      title="Posts">
+      
+      
+        <span class="text-base font-medium break-normal">
+          Blog
+        </span>
+      
+    </a>
+  
+
+    
+      
+  
+    <a
+      href="/categories/"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="Categories"
+      title="Categories">
+      
+      
+        <span class="text-base font-medium break-normal">
+          Categories
+        </span>
+      
+    </a>
+  
+
+    
+      
+  
+    <a
+      href="/tags/"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="Tags"
+      title="Tags">
+      
+      
+        <span class="text-base font-medium break-normal">
+          Tags
+        </span>
+      
+    </a>
+  
+
+    
+  
+
+  
+
+  
+    <div class="flex items-center">
+  <button
+    id="desktop-a11y-toggle"
+    aria-label="Open accessibility panel"
+    aria-expanded="false"
+    type="button"
+    class="bf-icon-color-hover"
+    role="button"
+    aria-pressed="false">
+    <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm161.5-86.1c-12.2-5.2-26.3 .4-31.5 12.6s.4 26.3 12.6 31.5l11.9 5.1c17.3 7.4 35.2 12.9 53.6 16.3l0 50.1c0 4.3-.7 8.6-2.1 12.6l-28.7 86.1c-4.2 12.6 2.6 26.2 15.2 30.4s26.2-2.6 30.4-15.2l24.4-73.2c1.3-3.8 4.8-6.4 8.8-6.4s7.6 2.6 8.8 6.4l24.4 73.2c4.2 12.6 17.8 19.4 30.4 15.2s19.4-17.8 15.2-30.4l-28.7-86.1c-1.4-4.1-2.1-8.3-2.1-12.6l0-50.1c18.4-3.5 36.3-8.9 53.6-16.3l11.9-5.1c12.2-5.2 17.8-19.3 12.6-31.5s-19.3-17.8-31.5-12.6L338.7 175c-26.1 11.2-54.2 17-82.7 17s-56.5-5.8-82.7-17l-11.9-5.1zM256 160a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"/></svg>
+</span>
+  </button>
+
+  <div id="desktop-a11y-overlay" class="fixed inset-0 hidden" style="z-index:9999;"></div>
+
+  <div
+    id="desktop-a11y-panel"
+    role="dialog"
+    aria-labelledby="desktop-a11y-panel-title"
+    class="a11y-panel-enter fixed hidden p-6 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 rounded-lg shadow-xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700"
+    style="min-width: 20rem; z-index:9999;">
+    <div class="flex items-center justify-between mb-6">
+      <h3
+        id="desktop-a11y-panel-title"
+        class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+        Accessibility settings
+      </h3>
+      <button
+        id="desktop-a11y-close"
+        class="text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200"
+        aria-label="Close a11y panel">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="space-y-5">
+      
+      
+      
+      
+        
+      
+      
+        <div class="flex items-center justify-between">
+          <label for="desktop-disable-blur" class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            Disable blur
+          </label>
+          <div class="ios-toggle">
+            <input type="checkbox" id="desktop-disable-blur">
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <label for="desktop-underline-links" class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            Show link underline
+          </label>
+          <div class="ios-toggle">
+            <input type="checkbox" id="desktop-underline-links">
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <label for="desktop-zen-mode" class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            Enable zen mode
+          </label>
+          <div class="ios-toggle">
+            <input type="checkbox" id="desktop-zen-mode">
+          </div>
+        </div>
+
+
+      <div class="flex items-center justify-between">
+        <label
+          for="desktop-font-size-select"
+          class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+          Font size
+        </label>
+        <select
+          id="desktop-font-size-select"
+          class="border rounded-lg px-3 py-1.5 pr-8 text-neutral-900 text-sm dark:bg-neutral-700 dark:text-neutral-200 focus:ring-primary-500 focus:border-primary-500">
+          
+          
+            <option value="default">default</option>
+          
+            <option value="12px">12px</option>
+          
+            <option value="14px">14px</option>
+          
+            <option value="16px">16px</option>
+          
+            <option value="18px">18px</option>
+          
+            <option value="20px">20px</option>
+          
+            <option value="22px">22px</option>
+          
+            <option value="24px">24px</option>
+          
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+  
+    <button
+      id="search-button"
+      aria-label="Search"
+      class="text-base bf-icon-color-hover"
+      title="Search (/)">
+      <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+    </button>
+  
+
+  
+    <div class="flex items-center">
+      <button
+        id="appearance-switcher"
+        aria-label="Dark mode switcher"
+        type="button"
+        class="text-base bf-icon-color-hover">
+        <div class="flex items-center justify-center dark:hidden">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+</span>
+        </div>
+        <div class="items-center justify-center hidden dark:flex">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+</span>
+        </div>
+      </button>
+    </div>
+  
+</nav>
+
+
+
+    </div>
+    <div class="flex md:hidden">
+      <div class="flex items-center h-14 gap-4">
+  
+    <button
+      id="search-button-mobile"
+      aria-label="Search"
+      class="flex items-center justify-center bf-icon-color-hover"
+      title="Search (/)">
+      <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+    </button>
+  
+
+  
+    <button
+      id="appearance-switcher-mobile"
+      type="button"
+      aria-label="Dark mode switcher"
+      class="flex items-center justify-center text-neutral-900 hover:text-primary-600 dark:text-neutral-200 dark:hover:text-primary-400">
+      <div class="dark:hidden">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+</span>
+      </div>
+      <div class="hidden dark:block">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+</span>
+      </div>
+    </button>
+  
+
+  
+    <input type="checkbox" id="mobile-menu-toggle" autocomplete="off" class="hidden peer">
+    <label for="mobile-menu-toggle" class="flex items-center justify-center cursor-pointer bf-icon-color-hover">
+      <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M0 96C0 78.33 14.33 64 32 64H416C433.7 64 448 78.33 448 96C448 113.7 433.7 128 416 128H32C14.33 128 0 113.7 0 96zM0 256C0 238.3 14.33 224 32 224H416C433.7 224 448 238.3 448 256C448 273.7 433.7 288 416 288H32C14.33 288 0 273.7 0 256zM416 448H32C14.33 448 0 433.7 0 416C0 398.3 14.33 384 32 384H416C433.7 384 448 398.3 448 416C448 433.7 433.7 448 416 448z"/></svg>
+</span>
+    </label>
+
+    <div
+      role="dialog"
+      aria-modal="true"
+      style="scrollbar-gutter: stable;"
+      class="fixed inset-0 z-50 invisible overflow-y-auto px-6 py-20 opacity-0 transition-[opacity,visibility] duration-300 peer-checked:visible peer-checked:opacity-100 bg-neutral-50/97 dark:bg-neutral-900/99
+      bf-scrollbar">
+      <label
+        for="mobile-menu-toggle"
+        class="fixed end-8 top-5 flex items-center justify-center z-50 h-12 w-12 cursor-pointer select-none rounded-full bf-icon-color-hover border bf-border-color bf-border-color-hover bg-neutral-50 dark:bg-neutral-900">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+</span>
+      </label>
+      <nav class="mx-auto max-w-md space-y-6">
+        
+  
+    
+    <div class="px-2">
+      <a
+        href="/about/"
+        aria-label="About me"
+        
+        class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+        
+        <span title="About me" class="text-2xl font-bold tracking-tight">
+          About me
+        </span>
+        
+      </a>
+
+      
+    </div>
+  
+    
+    <div class="px-2">
+      <a
+        href="/projects/"
+        aria-label="Projects"
+        
+        class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+        
+        <span title="Projects" class="text-2xl font-bold tracking-tight">
+          Projects
+        </span>
+        
+      </a>
+
+      
+    </div>
+  
+    
+    <div class="px-2">
+      <a
+        href="/posts/"
+        aria-label="Blog"
+        
+        class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+        
+        <span title="Posts" class="text-2xl font-bold tracking-tight">
+          Blog
+        </span>
+        
+      </a>
+
+      
+    </div>
+  
+    
+    <div class="px-2">
+      <a
+        href="/categories/"
+        aria-label="Categories"
+        
+        class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+        
+        <span title="Categories" class="text-2xl font-bold tracking-tight">
+          Categories
+        </span>
+        
+      </a>
+
+      
+    </div>
+  
+    
+    <div class="px-2">
+      <a
+        href="/tags/"
+        aria-label="Tags"
+        
+        class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+        
+        <span title="Tags" class="text-2xl font-bold tracking-tight">
+          Tags
+        </span>
+        
+      </a>
+
+      
+    </div>
+  
+
+        
+  
+
+        
+  
+    <div
+      class="flex flex-wrap items-center [&_span]:text-2xl [&_.translation_button_.icon]:text-4xl! [&_.translation_button_span]:text-base! [&_.translation_.menuhide_span]:text-sm! gap-x-6 ps-2 mt-8 pt-8 border-t bf-border-color">
+      
+
+
+      
+        <div class="flex items-center">
+  <button
+    id="mobile-menu-a11y-toggle"
+    aria-label="Open accessibility panel"
+    aria-expanded="false"
+    type="button"
+    class="bf-icon-color-hover"
+    role="button"
+    aria-pressed="false">
+    <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm161.5-86.1c-12.2-5.2-26.3 .4-31.5 12.6s.4 26.3 12.6 31.5l11.9 5.1c17.3 7.4 35.2 12.9 53.6 16.3l0 50.1c0 4.3-.7 8.6-2.1 12.6l-28.7 86.1c-4.2 12.6 2.6 26.2 15.2 30.4s26.2-2.6 30.4-15.2l24.4-73.2c1.3-3.8 4.8-6.4 8.8-6.4s7.6 2.6 8.8 6.4l24.4 73.2c4.2 12.6 17.8 19.4 30.4 15.2s19.4-17.8 15.2-30.4l-28.7-86.1c-1.4-4.1-2.1-8.3-2.1-12.6l0-50.1c18.4-3.5 36.3-8.9 53.6-16.3l11.9-5.1c12.2-5.2 17.8-19.3 12.6-31.5s-19.3-17.8-31.5-12.6L338.7 175c-26.1 11.2-54.2 17-82.7 17s-56.5-5.8-82.7-17l-11.9-5.1zM256 160a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"/></svg>
+</span>
+  </button>
+
+  <div id="mobile-menu-a11y-overlay" class="fixed inset-0 hidden" style="z-index:9999;"></div>
+
+  <div
+    id="mobile-menu-a11y-panel"
+    role="dialog"
+    aria-labelledby="mobile-menu-a11y-panel-title"
+    class="a11y-panel-enter fixed hidden p-6 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 rounded-lg shadow-xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700"
+    style="min-width: 20rem; z-index:9999;">
+    <div class="flex items-center justify-between mb-6">
+      <h3
+        id="mobile-menu-a11y-panel-title"
+        class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+        Accessibility settings
+      </h3>
+      <button
+        id="mobile-menu-a11y-close"
+        class="text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200"
+        aria-label="Close a11y panel">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="space-y-5">
+      
+      
+      
+      
+        
+      
+      
+        <div class="flex items-center justify-between">
+          <label for="mobile-menu-disable-blur" class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            Disable blur
+          </label>
+          <div class="ios-toggle">
+            <input type="checkbox" id="mobile-menu-disable-blur">
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <label for="mobile-menu-underline-links" class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            Show link underline
+          </label>
+          <div class="ios-toggle">
+            <input type="checkbox" id="mobile-menu-underline-links">
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <label for="mobile-menu-zen-mode" class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            Enable zen mode
+          </label>
+          <div class="ios-toggle">
+            <input type="checkbox" id="mobile-menu-zen-mode">
+          </div>
+        </div>
+
+
+      <div class="flex items-center justify-between">
+        <label
+          for="mobile-menu-font-size-select"
+          class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+          Font size
+        </label>
+        <select
+          id="mobile-menu-font-size-select"
+          class="border rounded-lg px-3 py-1.5 pr-8 text-neutral-900 text-sm dark:bg-neutral-700 dark:text-neutral-200 focus:ring-primary-500 focus:border-primary-500">
+          
+          
+            <option value="default">default</option>
+          
+            <option value="12px">12px</option>
+          
+            <option value="14px">14px</option>
+          
+            <option value="16px">16px</option>
+          
+            <option value="18px">18px</option>
+          
+            <option value="20px">20px</option>
+          
+            <option value="22px">22px</option>
+          
+            <option value="24px">24px</option>
+          
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+  
+
+      </nav>
+    </div>
+  
+</div>
+
+
+
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+    
+    <div class="relative flex flex-col grow">
+      <main id="main-content" class="grow">
+        
+  
+  <article>
+    
+    
+
+    
+    <header id="single_header" class="mt-5 max-w-prose">
+      
+      <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+        Viewstamped Replication explained
+      </h1>
+      <div class="mt-1 mb-6 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
+        
+
+
+
+
+
+  
+  
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2018-07-15T00:00:00&#43;00:00">2018-07-15</time><span class="px-2 text-primary-500">&middot;</span><span>5774 words</span><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">28 mins</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+      
+        
+          
+            
+              <a class="relative mt-[0.5rem] me-2" href="/categories/distributed-systems/">
+                <span class="flex cursor-pointer">
+  <span
+    class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+    Distributed Systems
+  </span>
+</span>
+
+              </a>
+            
+              <a class="relative mt-[0.5rem] me-2" href="/categories/consensus-algorithm/">
+                <span class="flex cursor-pointer">
+  <span
+    class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+    Consensus Algorithm
+  </span>
+</span>
+
+              </a>
+            
+          
+        
+      
+        
+      
+        
+          
+            
+              <a class="relative mt-[0.5rem] me-2" href="/tags/papers/">
+                <span class="flex cursor-pointer">
+  <span
+    class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+    Papers
+  </span>
+</span>
+
+              </a>
+            
+          
+        
+      
+    </div>
+  
+
+  
+  
+
+
+
+      </div>
+      
+        
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+    
+    
+<div class="flex author">
+  
+    
+    
+      
+    
+    
+      
+      
+      
+        
+        
+        
+      
+      <img
+        class="!mt-0 !mb-0 h-24 w-24 rounded-full me-4"
+        width="96"
+        height="96"
+        alt="Bruno Bonacci"
+        src="/images/bruno-bonacci_hu_62749e6fecade90c.jpg"
+        data-zoom-src="/images/bruno-bonacci_hu_ce04e3c59e6e0c7a.jpg">
+    
+  
+  <div class="place-self-center">
+    
+      <div class="text-[0.6rem] uppercase leading-3 text-neutral-500 dark:text-neutral-400">
+        Author
+      </div>
+      <div class="font-semibold leading-6 text-neutral-800 dark:text-neutral-300">
+        Bruno Bonacci
+      </div>
+    
+    
+      <div class="text-sm text-neutral-700 dark:text-neutral-400">Tech. Architect, Ex Apple, Distributed System Expert, High-Volume Systems, Low latency.</div>
+    
+    <div class="text-2xl sm:text-lg">
+  <div class="flex flex-wrap text-neutral-400 dark:text-neutral-500 space-x-2">
+    
+      
+        
+        <a
+          class=" hover:text-primary-700 dark:hover:text-primary-400"
+          href="https://www.linkedin.com/in/brunobonacci/"
+          
+          target="_blank"
+          aria-label="Linkedin"
+          title="Linkedin"
+          rel="me noopener noreferrer"
+          ><span class="inline-block align-text-bottom"><span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+</span></span></a
+        >
+      
+    
+      
+        
+        <a
+          class=" hover:text-primary-700 dark:hover:text-primary-400"
+          href="https://github.com/BrunoBonacci"
+          
+          target="_blank"
+          aria-label="Github"
+          title="Github"
+          rel="me noopener noreferrer"
+          ><span class="inline-block align-text-bottom"><span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+</span></span></a
+        >
+      
+    
+      
+        
+        <a
+          class=" hover:text-primary-700 dark:hover:text-primary-400"
+          href="https://x.com/BrunoBonacci"
+          
+          target="_blank"
+          aria-label="X-Twitter"
+          title="X-Twitter"
+          rel="me noopener noreferrer"
+          ><span class="inline-block align-text-bottom"><span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg></span></span></a
+        >
+      
+    
+  </div>
+
+</div>
+  </div>
+</div>
+
+  
+
+  
+
+  
+    <div class="mb-5"></div>
+  
+
+      
+    </header>
+
+    
+    <section class="flex flex-col max-w-full mt-0 prose dark:prose-invert lg:flex-row">
+      
+      
+      
+      
+      
+
+
+      <div class="min-w-0 min-h-0 max-w-fit">
+        
+
+        <div class="article-content max-w-prose mb-20">
+          <p>Viewstamped Replication is one of the earliest consensus algorithms
+for distributed systems. It is designed around the log replication
+concept of state machines and it can be efficiently implemented for
+modern systems. The revisited version of the paper offers a number of
+improvements to the algorithm from the original paper which both:
+simplifies it and makes it more suitable for high volume
+systems. The original paper was published in 1988 which is ten years
+before the Paxos algorithm <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> was published.</p>
+<p>I will explain how the protocol works in detail covering as well a
+number of optimizations which are described in the papers. The
+&ldquo;revisited&rdquo; version offers a simplified version of the protocol with
+improvements which were made by the authors in later works and published
+after the original paper. Therefore most of the content here will be
+driven from the more 2012 paper.</p>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="viewstamped replication"
+    width="1920"
+    height="1080"
+    src="/images/vr-paper/viewstamped-papers_hu_2551ef227415d6a2.png"
+    srcset="/images/vr-paper/viewstamped-papers_hu_2551ef227415d6a2.png 800w, /images/vr-paper/viewstamped-papers_hu_39539e2a55d95ee3.png 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/vr-paper/viewstamped-papers.png"></figure>
+<ul>
+<li>Paper links:
+<ul>
+<li><em>Viewstamped Replication: A New Primary Copy method to Support Highly-Available Distributed Systems, B. Oki, B. Liskov, (1988)</em> <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> <br/>
+<a href="https://pmg.csail.mit.edu/papers/vr.pdf"  target="_blank" rel="noreferrer">https://pmg.csail.mit.edu/papers/vr.pdf</a></li>
+<li><em>Viewstamped Replication Revisited, B. Liskov, J.Cowling (2012)</em> <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> <br/>
+<a href="https://pmg.csail.mit.edu/papers/vr-revisited.pdf"  target="_blank" rel="noreferrer">https://pmg.csail.mit.edu/papers/vr-revisited.pdf</a></li>
+<li><em>Viewstamped Replication presentation at PapersWeLove London</em> <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></li>
+</ul>
+</li>
+</ul>
+<p>What the presentation here:
+<lite-youtube videoid="1EzNa-zAYS8" playlabel="1EzNa-zAYS8" params=""></lite-youtube>
+</p>
+
+<h2 class="relative group">What is &ldquo;Viewstamped Replication&rdquo;?
+    <div id="what-is-viewstamped-replication" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#what-is-viewstamped-replication" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>It is a replication protocol. It aims to guarantee a consistent view
+over replicated data.  And it is a “consensus algorithm”. To provide
+a consistent view over replicated data, replicas must agree on the
+replicated state.</p>
+<p>It is designed to be a pluggable protocol which works on the
+communication layer between the clients and the servers and
+between the servers themselves.  The idea is that you can take a
+non-distributed system and using this replication protocol you can turn a
+single node system into a high-available, fault-tolerant distributed
+system.</p>
+<p><strong>To achieve fault-tolerance, the system must introduce redundancy in
+time and space</strong>. <em>Redundancy in time</em> is to combat the unreliability
+of the network. Messages can be dropped, reordered or arbitrarily
+delayed, therefore protocol must account for it and allow requests to
+be replayed if necessary without causing duplication in the system.
+<em>Redundancy in space</em> is generally achieved via adding redundant
+copies in different machines with different fault-domain isolation.
+the aim is to be able to stay in operation in face of a node failure,
+whether is a system crash or a hardware failure, the system must be
+able to continue normal operation within certain limits.</p>
+<p>Together, the <em>redundancy in time and space</em> provide the ability to
+tolerate and recover from temporary network partitions, systems
+crashes, hardware failure and a wide range of network related issues.</p>
+<p>However, the system can only tolerate a number of failures depending on
+the cluster (or <strong>ensemble</strong> size). In particular to tolerate 𝑓
+failures it requires an ensemble of <code>2𝑓 + 1</code> replicas. The type of
+failures that the protocol can tolerate are <strong>non-Byzantine failures</strong> <sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>
+which means that all the nodes in the ensemble will be either in a
+working state, or in a failed state or simply isolated. However, every
+node in the system will not deviate from the protocol and it will not
+lie about its state. Therefore, if the system must be able to tolerate
+one node to be unresponsive, then the minimum ensemble size is 3
+nodes. If the system must be able to tolerate 2 concurrent failures,
+then the minimum size of the cluster required is 5 nodes, and so
+on. <code>𝑓 + 1</code> nodes is called <strong>quorum</strong>. It is not possible to create a
+quorum with less than 3 nodes, therefore the minimum ensemble size is
+3.</p>
+
+<h2 class="relative group">Replicated State Machines
+    <div id="replicated-state-machines" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#replicated-state-machines" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>Viewstamped Replication is based on the <em>State Machine Replication</em> concept <sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup>.
+A State Machine has an <em>initial state</em> and an <em>operation log</em>. The idea is
+that if you apply the ordered set of operation in the operation log to the
+initial state you will end up always with the same final state, <em>given that
+all the operations in the operation log are <strong>deterministic</strong></em>.</p>
+<p>Therefore, if we replicate the initial state and the operation log into
+other machines and repeat the same operations the final state on all the
+machines will be the same.</p>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Replicated State Machines"
+    width="1920"
+    height="1080"
+    src="/images/vr-paper/vr-replicated-stm_hu_d3b8e99350f075e9.gif"
+    srcset="/images/vr-paper/vr-replicated-stm_hu_d3b8e99350f075e9.gif 800w, /images/vr-paper/vr-replicated-stm_hu_4321215d7fe67918.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/vr-paper/vr-replicated-stm.gif"></figure>
+<p>It is crucial that the <em>order of operations is preserved</em> as
+operations are not required to be commutative. Additionally <em>all
+sources of indeterminism must be eliminated</em> before the operation is
+added to the operation log.  For example, if you have an operation which
+generate a unique random id, the primary replica will need to generate
+the random id and then add an operation in the log which already
+contains the generated number such that when the replicas apply the
+operation won&rsquo;t need to generate the random unique id themselves which
+will cause the replica state to diverge.</p>
+<p>The objective of Viewstamped Replication is to ensure that there is a
+strictly consistent view on the operation log. In other words, is
+ensures that all replicas agree on which operations are in the log
+and their exact order.</p>
+
+<h2 class="relative group">Anatomy of a Replica
+    <div id="anatomy-of-a-replica" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#anatomy-of-a-replica" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>The ensemble or cluster is made of replica nodes. Each replica is
+composed of the following parts.</p>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="anatomy of a replica"
+    width="1920"
+    height="1080"
+    src="/images/vr-paper/anatomy_hu_6afe4b528a8f393f.png"
+    srcset="/images/vr-paper/anatomy_hu_6afe4b528a8f393f.png 800w, /images/vr-paper/anatomy_hu_dafc5af5958d5ba7.png 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/vr-paper/anatomy.png"></figure>
+<p>The operation log (<code>op-log</code>) is a (mostly) append-only sequence of
+operations.  Operations are applied against the current state which
+could be external to the replica itself. Operations must be
+<em>deterministic</em> which means that every application of the same
+operation with the same arguments must produce the same
+result. Additionally, if the operations produce side effect or write
+to an external system you have to ensure the operation is applied only
+once by the use of transactional support or by making operation
+<em>idempotent</em> so that multiple application of the same operation won&rsquo;t
+produce duplication in the target system.  Each operation in the
+operation-log has a positional identifier which is a monotonically
+increasing number.</p>
+<p>The last inserted operation number is the high water mark for the operation
+log and it is recorded as the <code>op-num</code> which is a monotonically
+increasing number as well. It identifies which operation has been
+already received and it is used in parts of the protocol.</p>
+<p>Operations in the <code>op-log</code> are appended first, then shared with other
+replicas and once there is a confirmation that enough replicas have
+received the operation then it is actually executed. We will see how
+this process works in more details later. The <code>commit-num</code> represents
+the number of the last operation which was executed in the replica. It
+also implies that all the previous operations have been executed as
+well. <code>commit-num</code> is a monotonically increasing number.</p>
+<p>The <em>view-number</em> (<code>view-num</code>) is a monotonically increasing number
+which changes every time there is a change of primary replica in
+the ensemble.</p>
+<p>Each replica must also know who the current primary replica is.
+This is stored in the <code>primary</code> field.</p>
+<p>The <code>status</code> field shows the current replica operation mode.
+As we will see later, the <code>status</code> can assume different values
+depending on whether the replica is ready to process client requests,
+or it is getting ready and doing internal preparation.</p>
+<p>Every replica node will also have a list of all the replica
+nodes in the ensemble with their IP addresses and their
+unique identifiers. Some parts of the protocol require
+the replicas to communicate with other replicas therefore
+they must know how to contact the other nodes.</p>
+<p>The <code>client-table</code> is used to keep track of client&rsquo;s requests.
+Clients are identified by a unique id, and each client can only make
+one request at the time. Since communication is assumed to be
+unreliable, clients can re-issue the last request without the risk of
+duplication in the system. Every client request has a monotonically
+increasing number which identifies the request of a particular
+client. Each time the primary receives a client requests it add the
+request to the client table. If the client re-sends the same requests
+because didn&rsquo;t receive the response the primary can verify that the
+request was already processed and send the cached response.</p>
+<p><em>For brevity, the pictures which will follow will omit some details</em>.</p>
+
+<h2 class="relative group">The Protocol
+    <div id="the-protocol" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-protocol" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>Next, we are going to analyse the protocol in details.  The protocol is
+presented in the paper in its simplest form first.  Then the paper
+goes on describing a number of optimisations which do not change the
+basic structure of the protocol but make it efficient and practical to
+implement for real-world application.  Efficiency is a major concern
+throughout both papers as the authors were building real-world systems.</p>
+
+<h3 class="relative group">Client requests handling
+    <div id="client-requests-handling" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#client-requests-handling" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>In this section, we are going to see how a client request is processed
+and the data replicated. We are going to see, in details, how the protocol
+ensures that at least a quorum of replicas acknowledges the request
+before executing the request.</p>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="client request processing"
+    width="1920"
+    height="1080"
+    src="/images/vr-paper/client1_hu_dcd0f1827b0b15c3.gif"
+    srcset="/images/vr-paper/client1_hu_dcd0f1827b0b15c3.gif 800w, /images/vr-paper/client1_hu_b0cfb2b8029f1bec.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/vr-paper/client1.gif"></figure>
+<p>Clients have a unique identifier (<code>client-id</code>), and they communicate
+only with the primary. If a client contacts a replica which is not the
+primary, the replica drops the requests and returns an error message
+to the client advising it to connect to the primary.  Each client can
+only send one request at the time, and each request has a request
+number (<code>request#</code>) which is a monotonically increasing number.  The
+client prepares <code>&lt;REQUEST&gt;</code> message which contains the <code>client-id</code>,
+the request <code>request#</code> and the operation (<code>op</code>) to perform.</p>
+<p>The primary only processes the requests if its <code>status</code> is <code>normal</code>,
+otherwise, it drops the request and sends an error message to the client
+advising to try later.  When the primary receives the request from the
+client, it checks whether the request is already present in the client
+table.  If the request&rsquo;s number is greater of the one in the client
+table then it is a new request, otherwise, it means that the client
+might not have received last response and it is re-sending the
+previous request. In this case, the request is dropped and the primary
+re-send last response present in the client table.</p>
+<p>If it is a new request, then the primary increases the operation
+number (<code>op-num</code>), it appends the requested operation to its operation
+log (<code>op-log</code>) and it updates the <code>client-table</code> with the new request.</p>
+<p>Then it needs to notify all the replicas about the new request, so it
+creates a <code>&lt;PREPARE&gt;</code> message which contains: the current view number
+(<code>view-num</code>), the operation&rsquo;s <code>op-num</code>, the last commit number
+(<code>commit-num</code>), and the <code>message</code> which is the client request itself,
+and it sends the message to all the replicas.</p>
+<p>When a replica receives a <code>&lt;PREPARE&gt;</code> request, it first checks whether
+the view number is the same <code>view-num</code>, if its view number is
+different than the message <code>view-num</code> it means that a new primary was
+nominated and, depending on who is behind, it needs to get up to date.
+If its view-number is smaller than the message <code>view-num</code>, then it
+means that this particular node is behind, so it needs to change its
+<code>status</code> to <code>recovery</code> and initiate a state transfer from the new
+primary (we will see the primary change process called <strong>view change</strong>
+later).  If its view-number is greater than the message <code>view-num</code>,
+then it means that the other replica needs to get up-to-date, so it
+drops the message.  Finally, if the <code>view-num</code> is the same, then it
+looks at the <code>op-num</code> in the message. The <code>op-num</code> needs to be
+<em>strictly consecutive</em>.  If there are gaps it means that this replica
+missed one or more <code>&lt;PREPARE&gt;</code> messages, so it drops the message and
+it initiates a recovery with a state transfer.  If the <code>op-num</code> is
+<em>strictly consecutive</em> then it increments its <code>op-num</code>, appends the
+operation to the <code>op-log</code> and updates the client table.</p>
+<p>Now the replica sends an acknowledgment to the primary that the
+operation, and all previous operations, were successfully prepared. It
+creates a <code>&lt;PREPARE-OK&gt;</code> message with its <code>view-num</code>, the <code>op-num</code> and
+its identity.  Sending a <code>&lt;PREPARE-OK&gt;</code> for a given <code>op-num</code> means
+that all the previous operations in the log have been prepared as well
+(no gaps).</p>
+<p>The primary waits for <code>𝑓 + 1</code> including itself <code>&lt;PREPARE-OK&gt;</code>
+messages, at which point it knows that a <strong>quorum</strong> of nodes knows
+about the operation to perform therefore it is considered safe to
+proceed as it is guaranteed that the operation will survive the loss
+of <code>𝑓</code> nodes. When it receives enough <code>&lt;PREPARE-OK&gt;</code> then it performs
+the operation, possibly with side effect, it increases its commit
+number <code>commit-num</code>, and update the client table with the operation
+result. Again, advancing the <code>commit-num</code> must be done in strict order,
+and it also means that <strong>all previous operations have been committed</strong>
+as well.</p>
+<p>Finally, it prepares a <code>&lt;REPLY&gt;</code> message with the current <code>view-num</code>
+the client request number <code>request#</code> and the operation result
+(<code>response</code>) and it sends it to the client.</p>
+<p>At this point, the primary is the only node that has performed the
+operation (and advanced its <code>commit-num</code>) while the replicas have only
+prepared the operation but not applied. Before they can safely apply
+they need confirmation from the primary that it is safe to do so.</p>
+<p>This can happen in two ways.</p>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="client request processing"
+    width="1920"
+    height="1080"
+    src="/images/vr-paper/client2_hu_2316b3f9e3b6d0ca.gif"
+    srcset="/images/vr-paper/client2_hu_2316b3f9e3b6d0ca.gif 800w, /images/vr-paper/client2_hu_67f901ff65da81c3.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/vr-paper/client2.gif"></figure>
+<p>Let&rsquo;s assume that the same client or a new client comes along and
+makes a new request.  The client will create a <code>&lt;REQUEST&gt;</code> message and
+send it to the primary as well.  The primary will process the request
+as usual, check the client table, increase the <code>op-num</code> and append to
+the <code>op-log</code>, then it creates a <code>&lt;PREPARE&gt;</code> message with the
+<code>view-num</code>, the <code>op-num</code>, the client&rsquo;s <code>message</code> <em>but it also includes
+its <code>commit-num</code> which now shows that the primary advanced its
+position</em>.</p>
+<p>When the replicas receives the <code>&lt;PREPARE&gt;</code> it follows the normal
+process; It checks the <code>view-num</code>, checks the <code>op-num</code>, increment its
+operation number append to the <code>op-log</code> and update the client table,
+then it sends a <code>&lt;PREPARE-OK&gt;</code> to the primary for the operation it
+received.</p>
+<p>However, the <code>&lt;PREPARE&gt;</code> message from the primary also contained the
+<code>commit-num</code> which showed that the primary has now executed the
+operation against its state and it is notifying the replicas that it
+is safe to do so as well. So the replicas will perform all requests in
+their <code>op-log</code> between the last <code>commit-num</code> and the <code>commit-num</code> in
+the <code>&lt;PREPARE&gt;</code> message <strong>strictly following the order of operations</strong>
+and advance its <code>commit-num</code> as well. At this point both, primary and
+replicas have performed the <em>committed</em> operations in their state.</p>
+<p>So we seen how the primary uses the <code>&lt;PREPARE&gt;</code> message to inform
+replicas about new operations as well as operations which are now safe
+to perform.  But what if there is not a new request coming in? what if
+the system is experiencing a low request rate, maybe because it is the
+middle of the night and all users are asleep? If the primary doesn&rsquo;t
+receive a new client request within a certain time then it will create
+a <code>&lt;COMMIT&gt;</code> message to inform replicas about which operations can now
+be performed.</p>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="client request processing"
+    width="1920"
+    height="1080"
+    src="/images/vr-paper/client3_hu_cb030cbf5b740bb2.gif"
+    srcset="/images/vr-paper/client3_hu_cb030cbf5b740bb2.gif 800w, /images/vr-paper/client3_hu_78da2109ab1ea6a4.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/vr-paper/client3.gif"></figure>
+<p>The <code>&lt;COMMIT&gt;</code> message will only contain the current view number
+(<code>view-num</code>) and the last committed operation (<code>commit-num</code>).  When a
+replica receives a <code>&lt;COMMIT&gt;</code> it will execute all operation in their
+<code>op-log</code> between the last <code>commit-num</code> and the <code>commit-num</code> in the
+<code>&lt;COMMIT&gt;</code> message <strong>strictly following the order of operations</strong> and
+advance its <code>commit-num</code> as well.</p>
+<p>The <code>&lt;PREPARE&gt;</code> message together with the <code>&lt;COMMIT&gt;</code> message act as a
+sort of heartbeat for the primary. Replicas use this to identify when
+a primary might be dead and elect a new primary. This process is
+called <strong>view change</strong> and it is what we are going to discuss next.</p>
+
+<h3 class="relative group">View change protocol
+    <div id="view-change-protocol" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#view-change-protocol" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>The <em>view change protocol</em> is used when one of the replicas
+detects that the current primary is unavailable and it proceeds
+to inform the rest of the ensemble. If a quorum of nodes agrees
+then the ensemble will transition to a new primary.
+This part of the protocol ensures that the new primary has all the
+latest information to act as the new leader.</p>
+
+<h4 class="relative group">Leader &ldquo;selection&rdquo;
+    <div id="leader-selection" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#leader-selection" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<p>In my view, one of the most interesting parts of the ViewStamped
+Replication protocol is the way the new primary node is
+selected. Other consensus protocols (such as Paxos and Raft) have
+a rather sophisticated way to elect a new primary (or leader) with
+candidates having to step up, ask for votes, ballots, turns
+etc. ViewStamped Replication takes a completely different approach. It
+uses a <strong>deterministic function</strong> over a fixed property of the replica
+nodes, something like a unique identifier or IP address.</p>
+<p>For example, if the replica nodes IP addresses don&rsquo;t change you could
+use the <code>sort</code> function which given a list of nodes IPs will return a
+deterministic sequence of nodes.  The ViewStamped Replication
+algorithm simply uses the sorted list of IPs to determine who is the
+next primary node, and <em>in round-robin fashion</em> all nodes will, in
+turn, become the new primary when the previous one is unavailable.  I
+find this strategy very simple and effective. There is no vote to
+cast, candidates stepping up, election turns, ballots, just a
+predefined sequence of who&rsquo;s turn is.</p>
+<p>For example, if you have a three nodes cluster with the following IP addresses</p>
+<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">10.5.3.12           10.5.1.20  (1)
+</span></span><span class="line"><span class="cl">10.5.1.20  ~sort~&gt;  10.5.2.28  (2)
+</span></span><span class="line"><span class="cl">10.5.2.28           10.5.3.12  (3)</span></span></code></pre></div></div>
+<p>The node <code>10.5.1.20</code> will be the first primary, and
+everybody knows that it will be the first. When that node dies or is
+partitioned away from the rest of the cluster, the next node to become
+the primary will be the <code>10.5.2.28</code> followed by <code>10.5.3.12</code> and then
+starting from the beginning again.</p>
+<p>The protocol ensures that if the node who is set to be the next
+primary, somehow, has fallen behind and it is not the most up-to-date,
+it will be able to gather the latest information from the other nodes
+and get ready for the job. We will see this in more details in this
+section.</p>
+
+<h4 class="relative group">The view change
+    <div id="the-view-change" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-view-change" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<p>Let&rsquo;s start with a working cluster. Replicas <code>R1</code> to <code>R5</code> are all up
+and running, <code>R1</code> is the first primary node, followed by <code>R2</code> and so
+on. Since ensembles are formed by <code>2𝑓 + 1</code> nodes, this cluster can
+survive and continue processing requests in the face of two failed
+nodes.</p>
+<p><code>R1</code> is currently accepting client&rsquo;s requests and those are handled as
+seen earlier. Therefore for each client request, a <code>&lt;PREPARE&gt;</code> message
+is sent to all replicas and they reply with a
+<code>&lt;PREPARE-OK&gt;</code>. <code>&lt;COMMIT&gt;</code> messages are also used to signal which
+operations are committed by the primary.</p>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="view change"
+    width="1920"
+    height="1080"
+    src="/images/vr-paper/view-change_hu_4d556d9be64768f4.gif"
+    srcset="/images/vr-paper/view-change_hu_4d556d9be64768f4.gif 800w, /images/vr-paper/view-change_hu_db53921676267d3a.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/vr-paper/view-change.gif"></figure>
+<p>Let&rsquo;s assume that the primary <code>R1</code> crashes or is isolated from the
+rest of the cluster.  No more <code>&lt;PREPARE&gt;</code> or <code>&lt;COMMIT&gt;</code> messages will
+be received by the rest of the cluster. As said previously these messages act as a heartbeat for the primary health.</p>
+<p>At some point, in one of the nodes (<code>R4</code> for example) a timeout will
+expire, and it will detect that it didn&rsquo;t hear from the primary since
+a predefined amount of time.  At this point the replica will change
+its <code>status</code> to <code>view-change</code>, increase its view number (<code>view-num</code>)
+and create a <code>&lt;START-VIEW-CHANGE&gt;</code> message with the new <code>view-num</code> and
+its identity. It will then send this message to all the replicas.</p>
+<p>When the other replicas receive a <code>&lt;START-VIEW-CHANGE&gt;</code> message with a
+<code>view-num</code> bigger than the one they have, they set their <code>status</code> to
+<code>view-change</code> and set the <code>view-num</code> to the view number in the message
+and reply with <code>&lt;START-VIEW-CHANGE&gt;</code> to all replicas.</p>
+<p>When a replica receives <code>𝑓 + 1</code> (including itself)
+<code>&lt;START-VIEW-CHANGE&gt;</code> message with its <code>view-num</code> then it means that
+the majority of the nodes agrees on the view change so it sends a
+<code>&lt;DO-VIEW-CHANGE&gt;</code> to the new primary (selected as described above).
+The <code>&lt;DO-VIEW-CHANGE&gt;</code> message contains the new <code>view-num</code> the last
+view number in which the state was normal <code>old-view-number</code>, its
+<code>op-num</code> and its operation log (<code>op-log</code>) and its commit number
+(<code>commit-num</code>).</p>
+<p>When the new primary, in this case, node <code>R2</code>, it receives <code>𝑓 + 1</code>
+(including itself) <code>&lt;DO-VIEW-CHANGE&gt;</code> with the same <code>view-num</code> it
+compares the messages against its own information and pick the most
+up-to-date. It will set the <code>view-num</code> the new <code>view-num</code>, it will
+take the operation log (<code>op-log</code>) from the replicas with the highest
+<code>old-view-number</code>. If many replicas have the same <code>old-view-number</code> it
+will pick the one with the largest <code>op-log</code>, it will take the <code>op-num</code>
+from the chosen <code>op-log</code> and the highest <code>commit-num</code> and execute all
+committed operations in the operation log between its old <code>commit-num</code>
+value and the new <code>commit-num</code> value.  At this point, the new primary
+is ready to accept requests from the client so it sets its <code>status</code> to
+<code>normal</code>.  Finally, it sends a <code>&lt;START-VIEW&gt;</code> message to all replicas
+with the new <code>view-num</code>, the most up to date <code>op-log</code>, the
+corresponding <code>op-num</code> and the highest <code>commit-num</code>.</p>
+<p>When the other replicas receive the <code>&lt;START-VIEW&gt;</code> message they
+replace their own local information with the data in the
+<code>&lt;START-VIEW&gt;</code> message, specifically they take: the <code>op-log</code>, the
+<code>op-num</code> and the <code>view-num</code>.  They change their <code>status</code> to <code>normal</code>
+and they execute all the operation from their old <code>commit-num</code> to the
+new <code>commit-num</code> and they send a <code>&lt;PREPARE-OK&gt;</code> for all operation in
+the <code>op-log</code> which haven&rsquo;t been committed yet.</p>
+<p>Some time later the failed node (<code>R1</code>) might come back alive either
+because the partition is now terminated or because the crashed nodes
+it has been restarted. At this point, the <code>R1</code> might still think it is
+the primary and be waiting for requests from clients. However, since
+the ensemble transitioned to a new primary in the meantime, it is
+likely that clients will be sending requests to the new primary and it
+is likely that the new primary is sending <code>&lt;PREPARE&gt;</code>/<code>&lt;COMMIT&gt;</code>
+messages to all the replicas, including the one which previously
+failed. At this point, the failed replica will notice that
+<code>&lt;PREPARE&gt;</code>/<code>&lt;COMMIT&gt;</code> messages have a <code>view-num</code> greater than
+its <code>view-num</code> and it will understand that the cluster transitioned to
+a new primary and that it needs to get up to date.</p>
+<p>In this case, it will set its <code>status</code> to <code>recovery</code> and issue a
+<code>&lt;GET-STATE&gt;</code> request to any of the other replicas. The <code>&lt;GET-STATE&gt;</code>
+will contains its current values of the <code>view-num</code>, <code>op-num</code> and
+<code>commit-num</code> together with its identity. The <code>&lt;GET-STATE&gt;</code> message is
+the same message used by the replicas to get up to date when the fall
+behind.  The replica who receives the <code>&lt;GET-STATE&gt;</code> message will only
+respond if its <code>status</code> is <code>normal</code>.</p>
+<p>If the <code>view-num</code> in the <code>&lt;GET-STATE&gt;</code> message is the same as its
+<code>view-num</code> it means that the requesting node just fell behind, so it
+will prepare a <code>&lt;NEW-STATE&gt;</code> message with its <code>view-num</code>, its
+<code>commit-num</code> and its <code>op-num</code> and the portion of the <code>op-log</code> between
+the <code>op-num</code> in the <code>&lt;GET-STATE&gt;</code> and its <code>op-num</code>.</p>
+<p>If the <code>view-num</code> in the <code>&lt;GET-STATE&gt;</code> message is different, then it
+means that the node was in a partition during a view change.  In this
+case it will prepare a <code>&lt;NEW-STATE&gt;</code> message with new <code>view-num</code>, its
+<code>commit-num</code> and its <code>op-num</code> and the portion of the <code>op-log</code> between
+the <code>commit-num</code> in the <code>&lt;GET-STATE&gt;</code> this time and its <code>op-num</code>, this
+is because some operations in the minority group might not have
+survived the view-change.</p>
+<p>This is concludes the discussion about the ViewStamped Replication
+protocol.  We seen how requests are handled in the normal case, and we
+have seen how the ensemble safely transition to a new primary in case
+it detects a failure or partition in the previous one. We also seen
+how the protocol design accounts for unreliable network and allows for
+any message to be dropped, delayed or reordered and still work
+correctly.</p>
+
+<h2 class="relative group">Protocol optimisations
+    <div id="protocol-optimisations" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#protocol-optimisations" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>Some of the limitations described earlier were imposed to allow to
+focus the discussion over the protocol correctness and clarity.  In
+this section we&rsquo;ll see how some of the optimisations proposed by the
+authors make this protocol not only realistic to implement for a real
+world system, but also efficient and practical.</p>
+
+<h3 class="relative group">Persistent state
+    <div id="persistent-state" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#persistent-state" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>While the protocol as described above doesn&rsquo;t require the internal
+replica state to be persisted to work properly you can store the state
+in a durable storage to speed up crash recovery. In fact in a large
+system the operation log (<code>op-log</code>) could become, over time, quite
+large. It would be unreasonable and ineffective to keep the entire
+operation log only in memory. Upon a crash, or when a replica is
+restarted it will require to get a copy of the <code>op-log</code> from another
+replica (via <code>&lt;GET-STATE&gt;</code>) and if the replica has to transfer
+terabytes of data the operation could take a long time.</p>
+<p>Storing the internal replica state into a durable storage can speed up
+the recovery in the event the process is crashed or restarted.  In
+fact in this case, new replica process will only need to fetch the
+tail of the operation log since its last committed operation
+(<code>commit-num</code>).</p>
+<p>Since the persistent state is not required to run the protocol
+correctly, then the implementer can make design decisions based on the
+efficient use of the storage. For example it could decide to <code>fsyinc</code>
+only when there are enough changes to fill a buffer, as supposed to
+<em>fsync-ing</em> on every request which it would be slow and inefficient.
+Additionally the durability of the state could be managed completely
+asynchronously from the protocol execution.</p>
+
+<h3 class="relative group">Witnesses
+    <div id="witnesses" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#witnesses" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>Running the protocol has a cost. As we seen the primary has to wait
+for a <em>quorum</em> of nodes to respond on every <code>&lt;PREPARE&gt;</code> request before
+executing the client request. In a large cluster, as the number of
+nodes increases, it also increases the number of nodes that the
+primary has to wait for a response and it increases the likelihood the
+at one being slower and having to wait for longer. In such cases we
+can divide the ensemble into <em>active replicas</em> and <em>witness replicas</em>.</p>
+<p>Active replicas account for <code>𝑓 + 1</code> nodes which run the full protocol
+and keep the state. The <em>primary</em> is <em>always</em> an active replica. The
+remainder of the nodes are called <em>witnesses</em> and only participate to
+the view changes and recovery.</p>
+
+<h3 class="relative group">Batching
+    <div id="batching" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#batching" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>In a high volume system there will be a huge number of <code>&lt;PREPARE&gt;</code>
+messages flying around. To reduce the latency cost of running the
+protocol the <em>primary replica</em> could batch a number of operation
+before sending a <code>&lt;PREPARE&gt;</code> messages to the other replicas.  In this
+case the <code>&lt;PREPARE&gt;</code> messages will include <em>all the operations</em> in the
+batch and the <code>&lt;PREPARE-OK&gt;</code> message will confirm that <em>all
+operations</em> in the batch have been prepared.  Several batching
+strategies can be applied for example the <em>primary</em> could wait for at
+most <em>20 milliseconds</em> or when 50 operations have been batched or
+whichever comes first, and then send the batch in a single <code>&lt;PREPARE&gt;</code>
+message.</p>
+<p>The same strategy could be applied on the client side for batching
+client&rsquo;s requests, given that the client table is adjusted to
+accommodate a batch of requests.</p>
+
+<h3 class="relative group">Fast read-only requests on Primary
+    <div id="fast-read-only-requests-on-primary" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#fast-read-only-requests-on-primary" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>In the general definition of the protocol, read-only requests, which
+do not alter the state are served via the normal request processing.
+However since read requests do not need to survive a partition, they
+could be served <em>unilaterally</em> by the <em>primary</em> without contacting the
+other replicas.</p>
+<p>The advantage of this optimisation is that read requests could benefit
+of shorter latency as there is no additional cost of running the
+protocol. However, in some case it is possible for the <em>primary</em>
+to serve <em>stale responses</em>. Let&rsquo;s consider the following case:</p>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Stale responses"
+    width="1920"
+    height="1080"
+    src="/images/vr-paper/read-on-primary_hu_12b9c95fe35dab7a.gif"
+    srcset="/images/vr-paper/read-on-primary_hu_12b9c95fe35dab7a.gif 800w, /images/vr-paper/read-on-primary_hu_7646efc74e63c7c9.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/vr-paper/read-on-primary.gif"></figure>
+<p>An ensemble with three replica nodes (<code>R1</code>, <code>R2</code>, <code>R3</code>) and <code>R2</code> is
+the current <em>primary</em>.  A bunch of clients are connected to the
+primary and issuing requests. Requests manipulate a set of named
+registers. The current value of the register <code>a</code> is <code>1</code>.  At a certain
+point a partition occur which isolates the primary (<code>R2</code>) from the
+rest of the ensemble and from most of the clients. Once the <em>view
+change protocol</em> kicks in replica <code>R3</code> will be elected as a new
+primary, and clients will reconnect to the new primary.</p>
+<p>At this point one of the clients could request a change of the
+registry <code>a = 2</code> and the change would succeed because a <em>quorum</em> of
+replica nodes is available (<code>R1</code> and <code>R3</code>).</p>
+<p>In the meanwhile the old primary (<code>R2</code>) is unaware of the change to
+the register <code>a</code> because the partition is still isolating
+communications.  Therefore is not even aware that a new primary
+replica has been selected and it is no more the current primary.</p>
+<p>An unfortunate client which is in the same side of the partition as
+the old primary (<code>R2</code>) might still be able to talk to the old primary.
+In this case if the client is requesting the current value of register
+<code>a</code>, it will get a stale value.</p>
+<p>To avoid this problem and make read-only requests possible to be
+served unilaterally by the primary we can make the use of <strong>leases</strong>.
+<em>A primary can only serve read-only requests without running the
+protocol and consulting with the other replicas if and only if, its
+lease is not expired.</em> When the lease expires, the primary must run
+the protocol and get the grant for a new lease which will ensure the
+view hasn&rsquo;t changed in the meantime.  In case of a partition, the
+ensemble will have to wait for the lease to expire before triggering a
+view-change and select a new primary.</p>
+
+<h3 class="relative group">Read-only requests on other replicas
+    <div id="read-only-requests-on-other-replicas" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#read-only-requests-on-other-replicas" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>In high request volume systems, where the number of read requests are
+much higher than the write requests, and if clients systems can accept
+stale reads (eventually consistent reads), then read-only requests can
+be made directly to the follower replicas. It is a effective way to
+reduce the load on the Primary and scale out the reads across all
+replicas. The primary is always handling the writes.</p>
+<p>In this situations it might be useful to track causality of client
+requests, for example a client makes a write followed by a read of the
+same value (read your own writes).  Causality can be achieved by
+tracking the operation number <code>op-num</code> for a client write request and
+propagating back this information to the client. Clients interested in
+causal ordering can issue a read request to a follower replica stating
+the <code>op-num</code>. In this case the replica knows that it must respond to
+that request only after it advanced its <code>commit-num</code> past the
+request&rsquo;s <code>op-num</code>.</p>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Stale responses"
+    width="1920"
+    height="1080"
+    src="/images/vr-paper/read-on-follower_hu_6e129e368ab70e4.gif"
+    srcset="/images/vr-paper/read-on-follower_hu_6e129e368ab70e4.gif 800w, /images/vr-paper/read-on-follower_hu_80e49b56c8224295.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/vr-paper/read-on-follower.gif"></figure>
+<p>For example the client is connecting to the primary and ask for a
+write operation such as a registry increment (<code>write a = a + 1</code>), the
+primary will process the request as usual, but along with the response
+it will communicate the operation number (<code>op-num</code>) for this request.
+The client records the <code>op-num</code> and it uses to make subsequent
+requests to the follower replicas for a read-only request. The replica,
+if it hasn&rsquo;t processed the operation in the client request <code>op-num</code> it
+will have to wait until it the primary communicate that it is safe to
+do so and then reply.</p>
+
+<h3 class="relative group">Ensemble reconfiguration
+    <div id="ensemble-reconfiguration" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#ensemble-reconfiguration" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>As seen so far, each node needs to be known to the others for the
+protocol to work correctly.  However, modern systems, especially in a
+cloud environment, tend to change frequently their ensemble
+configuration. Maybe as a response to the increasing or decreasing of
+load (elastically scalable systems), or just as a consequence of
+operational necessities (hardware replacement, network reconfiguration
+etc).</p>
+<p>To face this increasingly common requirement the authors proposed a
+protocol extension to allow a reconfiguration of the ensemble. With
+this extension is possible to add, remove, or replace some or all
+nodes.  The only limit is that the minimum allowed number of nodes is
+three, below this limit is not possible to achieve a quorum.</p>
+<p>In order to support reconfiguration the replicas have to track
+additional properties. A monotonically increasing number called
+<code>epoch-num</code> tracks every reconfiguration, a property called
+<code>old-config</code> holds the previous configuration (list of nodes IPs,
+names, and IDs). Finally a new status called <code>transitioning</code> is used
+to mark when a reconfiguration is in progress.</p>
+<p>A special client, typically with admin rights, will issue a
+<code>&lt;RECONFIGURATION&gt;</code> request. The request includes the current
+<code>epoch-num</code>, the <code>client-id</code>, the <code>request#</code> and the <code>new-config</code> with
+the list of all ensemble nodes which is expected to replace the
+current configuration.</p>
+<p>The request will be sent to the primary and processed as a normal
+request.  However, as soon as a <code>&lt;RECONFIGURATION&gt;</code> request is
+received by the primary it will stop accepting new client&rsquo;s requests.
+The other replicas will process the request as usual and send a
+<code>&lt;PREPARE-OK&gt;</code> message back to the primary. Once the primary receives
+a quorum of <code>&lt;PREPARE-OK&gt;</code> responses it will increase the <code>epoch-num</code>
+and send a <code>&lt;COMMIT&gt;</code> message to all replicas.  At this point it sends
+a <code>&lt;START-EPOCH&gt;</code> to all new replicas (all the replicas which are part
+of the new configuration but not of the old configuration) and it sets
+the <code>status = transitioning</code>. The <code>&lt;START-EPOCH&gt;</code> contains the new
+<code>epoch-num</code> the primary <code>op-num</code> and both: the old and new
+configuration.</p>
+<p>When the new replicas receive the <code>&lt;START-EPOCH&gt;</code> message they update
+the configuration taking <code>old-config</code> and <code>new-config</code> from the
+message itself, they reset the <code>view-num</code> to zero and set their
+<code>status = transitioning</code>.  If a new replica is missing data in
+their <code>op-log</code> it will issue a <code>&lt;GET-STATE&gt;</code> request to the old
+replicas. Once the new replica is up to date, then it sets its <code>status = normal</code>, send a <code>&lt;EPOCH-STARTED&gt;</code> with the new <code>epoch-num</code> and its
+identity to the old group, and finally, the new primary will start to
+accept client requests.</p>
+<p>This protocol extension allows to control the size of the ensemble
+for both: sizing up and sizing down. Additionally it can be used to
+replace a defective machine or also to migrate the entire cluster
+to a new set of more powerful machines.</p>
+
+<h2 class="relative group">Conclusions
+    <div id="conclusions" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#conclusions" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>As we seen the Viewstamped Replication algorithm is a fairly simple
+consensus algorithm and quite interesting replication protocol.  It is
+quite simple to understand and, together with the many optimisations
+proposed, it can be implemented efficiently for real world
+application.  Since it operates only on the interactions between
+replicas and clients it can be used as a &ldquo;<em>library</em>&rdquo; wrapper atop an
+existing system rendering the system distributed, high available and
+strictly consistent.  For example it possible to take a single node
+file system and turn it into a distributed high available file system,
+which it was the initial motivation of the viewstamped replication
+protocol in first place. Moreover it could be used to wrap
+communications of systems such as Redis and Memcache or any other
+non-distributed system and turn it into a distributed, fault tolerant,
+high available and strictly consistent system.</p>
+<hr>
+<p>Links and resources:</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><a href="https://lamport.azurewebsites.net/pubs/lamport-paxos.pdf"  target="_blank" rel="noreferrer">Paxos algorithm - The Part-Time Parliament, Leslie Lamport (1998)</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://pmg.csail.mit.edu/papers/vr.pdf"  target="_blank" rel="noreferrer">Viewstamped Replication: A New Primary Copy method to Support Highly-Available Distributed Systems, B. Oki, B. Liskov, (1988)</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://pmg.csail.mit.edu/papers/vr-revisited.pdf"  target="_blank" rel="noreferrer">Viewstamped Replication Revisited, B. Liskov, J.Cowling (2012)</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p><a href="https://www.youtube.com/watch?v=1EzNa-zAYS8"  target="_blank" rel="noreferrer">Viewstamped Replication presentation at PapersWeLove London</a>&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5">
+<p><a href="https://www.microsoft.com/en-us/research/publication/byzantine-generals-problem/"  target="_blank" rel="noreferrer">The Byzantine Generals Problem, L. Lamport (1982)</a>&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:6">
+<p><a href="https://www.cs.cornell.edu/fbs/publications/SMSurvey.pdf"  target="_blank" rel="noreferrer">Implementing Fault-Tolerant Services Using the State Machine Approach: A Tutorial, Schneider, Fred (1990)</a>&#160;<a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+          
+          
+          
+        </div>
+        
+        
+
+        
+
+        
+
+      </div>
+    </section>
+
+    
+    <footer class="pt-8 max-w-prose print:hidden">
+      
+  
+    
+    
+    
+    <div class="pt-8">
+      <hr class="border-dotted border-neutral-300 dark:border-neutral-600">
+      <div class="flex justify-between pt-3">
+        <span class="flex flex-col">
+          
+            <a
+              class="flex text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+              href="/2017/10/08/lambda-calculus-boolean-logic./">
+              <span class="leading-6">
+                <span class="inline-block rtl:rotate-180">&larr;</span>&ensp;Lambda Calculus - Boolean logic.
+              </span>
+            </a>
+            
+              <span class="ms-6 mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                <time datetime="2017-10-08T00:00:00&#43;00:00">2017-10-08</time>
+              </span>
+            
+          
+        </span>
+        <span class="flex flex-col items-end">
+          
+            <a
+              class="flex text-right text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+              href="/2020/07/02/switching-between-multiple-java-jdk-versions-in-emacs/">
+              <span class="leading-6">
+                Switching between multiple Java JDK versions in Emacs&ensp;<span class="inline-block rtl:rotate-180">&rarr;</span>
+              </span>
+            </a>
+            
+              <span class="me-6 mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                <time datetime="2020-07-02T00:00:00&#43;00:00">2020-07-02</time>
+              </span>
+            
+          
+        </span>
+      </div>
+    </div>
+  
+
+
+      
+    </footer>
+  </article>
+
+        
+
+
+  
+
+
+
+
+
+
+<div
+  id="scroll-to-top"
+  class="fixed bottom-6 end-6 z-50 transform translate-y-4 opacity-0 duration-200">
+  <a
+    href="#the-top"
+    class="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-neutral/50 text-xl text-neutral-700 hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral dark:hover:text-primary-400"
+    aria-label="Scroll to top"
+    title="Scroll to top">
+    &uarr;
+  </a>
+</div>
+
+      </main><footer id="site-footer" class="py-10 print:hidden">
+  
+  
+    
+  
+  <div class="flex items-center justify-between">
+    
+    
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">
+          (©) Bruno Bonacci, all rights reserved.
+      </p>
+    
+
+    
+    
+      <p class="text-xs text-neutral-500 dark:text-neutral-400">
+        
+        
+        Powered by <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://gohugo.io/" target="_blank" rel="noopener noreferrer">Hugo</a> &amp; <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://blowfish.page/" target="_blank" rel="noopener noreferrer">Blowfish</a>
+      </p>
+    
+  </div>
+  
+    <script>
+      mediumZoom(document.querySelectorAll("img:not(.nozoom)"), {
+        margin: 24,
+        background: "rgba(0,0,0,0.5)",
+        scrollOffset: 0,
+      });
+    </script>
+  
+  
+  
+</footer>
+<div
+  id="search-wrapper"
+  class="invisible fixed inset-0 flex h-screen w-screen cursor-default flex-col bg-neutral-500/50 p-4 backdrop-blur-sm dark:bg-neutral-900/50 sm:p-6 md:p-[10vh] lg:p-[12vh] z-500"
+  data-url="https://blog.brunobonacci.com/">
+  <div
+    id="search-modal"
+    class="flex flex-col w-full max-w-3xl min-h-0 mx-auto border rounded-md shadow-lg top-20 border-neutral-200 bg-neutral dark:border-neutral-700 dark:bg-neutral-800">
+    <header class="relative z-10 flex items-center justify-between flex-none px-2">
+      <form class="flex items-center flex-auto min-w-0">
+        <div class="flex items-center justify-center w-8 h-8 text-neutral-400">
+          <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+        </div>
+        <input
+          type="search"
+          id="search-query"
+          class="flex flex-auto h-12 mx-1 bg-transparent appearance-none focus:outline-dotted focus:outline-2 focus:outline-transparent"
+          placeholder="Search"
+          tabindex="0">
+      </form>
+      <button
+        id="close-search-button"
+        class="flex items-center justify-center w-8 h-8 text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+        title="Close (Esc)">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+</span>
+      </button>
+    </header>
+    <section class="flex-auto px-2 overflow-auto">
+      <ul id="search-results">
+        
+      </ul>
+    </section>
+  </div>
+</div>
+
+    </div>
+  </body>
+  
+</html>

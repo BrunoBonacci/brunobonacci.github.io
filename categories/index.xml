@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on The Daily REPL</title>
+    <link>https://blog.brunobonacci.com/categories/</link>
+    <description>Recent content in Categories on The Daily REPL</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>(©) Bruno Bonacci, all rights reserved.</copyright>
+    <lastBuildDate>Wed, 11 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.brunobonacci.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Programming</title>
+      <link>https://blog.brunobonacci.com/categories/programming/</link>
+      <pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/categories/programming/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Observability</title>
+      <link>https://blog.brunobonacci.com/categories/observability/</link>
+      <pubDate>Sun, 09 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/categories/observability/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Consensus Algorithm</title>
+      <link>https://blog.brunobonacci.com/categories/consensus-algorithm/</link>
+      <pubDate>Thu, 02 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/categories/consensus-algorithm/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Distributed Systems</title>
+      <link>https://blog.brunobonacci.com/categories/distributed-systems/</link>
+      <pubDate>Thu, 02 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/categories/distributed-systems/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Development</title>
+      <link>https://blog.brunobonacci.com/categories/development/</link>
+      <pubDate>Sun, 08 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/categories/development/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Theory</title>
+      <link>https://blog.brunobonacci.com/categories/theory/</link>
+      <pubDate>Sun, 08 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/categories/theory/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Tutorial</title>
+      <link>https://blog.brunobonacci.com/categories/tutorial/</link>
+      <pubDate>Wed, 11 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/categories/tutorial/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Productivity</title>
+      <link>https://blog.brunobonacci.com/categories/productivity/</link>
+      <pubDate>Fri, 18 Mar 2016 20:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/categories/productivity/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>BigData</title>
+      <link>https://blog.brunobonacci.com/categories/bigdata/</link>
+      <pubDate>Sun, 01 Jun 2014 17:45:25 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/categories/bigdata/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Performance</title>
+      <link>https://blog.brunobonacci.com/categories/performance/</link>
+      <pubDate>Fri, 21 Jun 2013 20:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/categories/performance/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Devops</title>
+      <link>https://blog.brunobonacci.com/categories/devops/</link>
+      <pubDate>Fri, 22 Feb 2013 21:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/categories/devops/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Methodologies</title>
+      <link>https://blog.brunobonacci.com/categories/methodologies/</link>
+      <pubDate>Sat, 24 Mar 2012 21:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/categories/methodologies/</guid>
+      <description></description>
+      
+    </item>
+    
+  </channel>
+</rss>

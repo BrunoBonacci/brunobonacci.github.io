@@ -1,0 +1,23 @@
+---
+layout:     post
+title:      Clojure complete guite to type hinting
+date:       2021-07-02 00:00:00
+categories: [programming]
+tags:       [Clojure, Java]
+published:  false
+
+author:
+  name:  Bruno Bonacci
+  image: bb.png
+---
+
+
+hint func argument
+hint func return
+hint def type
+hint in let binding
+hint in macro
+hint for proxy
+
+
+https://vimeo.com/884772901

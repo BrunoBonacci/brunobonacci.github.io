@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Groovy on The Daily REPL</title>
+    <link>https://blog.brunobonacci.com/tags/groovy/</link>
+    <description>Recent content in Groovy on The Daily REPL</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>(©) Bruno Bonacci, all rights reserved.</copyright>
+    <lastBuildDate>Sat, 30 Jun 2012 21:00:00 +0000</lastBuildDate><atom:link href="https://blog.brunobonacci.com/tags/groovy/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Vert.x Goodness - Simple Telnet Server</title>
+      <link>https://blog.brunobonacci.com/2012/06/30/vert.x-goodness-simple-telnet-server/</link>
+      <pubDate>Sat, 30 Jun 2012 21:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2012/06/30/vert.x-goodness-simple-telnet-server/</guid>
+      <description></description>
+      
+    </item>
+    
+  </channel>
+</rss>

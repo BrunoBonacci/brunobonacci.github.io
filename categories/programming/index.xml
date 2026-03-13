@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Programming on The Daily REPL</title>
+    <link>https://blog.brunobonacci.com/categories/programming/</link>
+    <description>Recent content in Programming on The Daily REPL</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>(©) Bruno Bonacci, all rights reserved.</copyright>
+    <lastBuildDate>Wed, 11 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.brunobonacci.com/categories/programming/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>How to start a Polylith project from scratch</title>
+      <link>https://blog.brunobonacci.com/2026/03/11/how-to-start-a-polylith-project-from-scratch/</link>
+      <pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2026/03/11/how-to-start-a-polylith-project-from-scratch/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Lazy, Chunked, and Buffered: Understanding Clojure&#39;s Lazy Sequences</title>
+      <link>https://blog.brunobonacci.com/2023/09/08/lazy-chunked-and-buffered-understanding-clojures-lazy-sequences/</link>
+      <pubDate>Fri, 08 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2023/09/08/lazy-chunked-and-buffered-understanding-clojures-lazy-sequences/</guid>
+      <description></description>
+      
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Clojure on The Daily REPL</title>
+    <link>https://blog.brunobonacci.com/tags/clojure/</link>
+    <description>Recent content in Clojure on The Daily REPL</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>(©) Bruno Bonacci, all rights reserved.</copyright>
+    <lastBuildDate>Wed, 11 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.brunobonacci.com/tags/clojure/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>How to start a Polylith project from scratch</title>
+      <link>https://blog.brunobonacci.com/2026/03/11/how-to-start-a-polylith-project-from-scratch/</link>
+      <pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2026/03/11/how-to-start-a-polylith-project-from-scratch/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Lazy, Chunked, and Buffered: Understanding Clojure&#39;s Lazy Sequences</title>
+      <link>https://blog.brunobonacci.com/2023/09/08/lazy-chunked-and-buffered-understanding-clojures-lazy-sequences/</link>
+      <pubDate>Fri, 08 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2023/09/08/lazy-chunked-and-buffered-understanding-clojures-lazy-sequences/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>µ/log hidden superpower</title>
+      <link>https://blog.brunobonacci.com/2023/07/09/%C2%B5/log-hidden-superpower/</link>
+      <pubDate>Sun, 09 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2023/07/09/%C2%B5/log-hidden-superpower/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Switching between multiple Java JDK versions in Emacs</title>
+      <link>https://blog.brunobonacci.com/2020/07/02/switching-between-multiple-java-jdk-versions-in-emacs/</link>
+      <pubDate>Thu, 02 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2020/07/02/switching-between-multiple-java-jdk-versions-in-emacs/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Lambda Calculus - Boolean logic.</title>
+      <link>https://blog.brunobonacci.com/2017/10/08/lambda-calculus-boolean-logic./</link>
+      <pubDate>Sun, 08 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2017/10/08/lambda-calculus-boolean-logic./</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>lumo vs planck vs clojure vs pixie.</title>
+      <link>https://blog.brunobonacci.com/2017/08/10/lumo-vs-planck-vs-clojure-vs-pixie./</link>
+      <pubDate>Thu, 10 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2017/08/10/lumo-vs-planck-vs-clojure-vs-pixie./</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Designing Samsara</title>
+      <link>https://blog.brunobonacci.com/2016/06/20/designing-samsara/</link>
+      <pubDate>Mon, 20 Jun 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2016/06/20/designing-samsara/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Learn Clojure - Clojure Basics</title>
+      <link>https://blog.brunobonacci.com/2016/05/11/learn-clojure-clojure-basics/</link>
+      <pubDate>Wed, 11 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2016/05/11/learn-clojure-clojure-basics/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Emacs Incanter Hack</title>
+      <link>https://blog.brunobonacci.com/2016/03/18/emacs-incanter-hack/</link>
+      <pubDate>Fri, 18 Mar 2016 20:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2016/03/18/emacs-incanter-hack/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>A &#34;dead simple&#34; introduction to Clojure macros.</title>
+      <link>https://blog.brunobonacci.com/2015/04/19/a-dead-simple-introduction-to-clojure-macros./</link>
+      <pubDate>Sun, 19 Apr 2015 19:49:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2015/04/19/a-dead-simple-introduction-to-clojure-macros./</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>The complete guide to Clojure destructuring.</title>
+      <link>https://blog.brunobonacci.com/2014/11/16/the-complete-guide-to-clojure-destructuring./</link>
+      <pubDate>Sun, 16 Nov 2014 10:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2014/11/16/the-complete-guide-to-clojure-destructuring./</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Cascalog by examples (part 1)</title>
+      <link>https://blog.brunobonacci.com/2014/06/01/cascalog-by-examples-part-1/</link>
+      <pubDate>Sun, 01 Jun 2014 17:45:25 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2014/06/01/cascalog-by-examples-part-1/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Clojure Pills: Arithmetics and type autopromotion</title>
+      <link>https://blog.brunobonacci.com/2013/06/21/clojure-pills-arithmetics-and-type-autopromotion/</link>
+      <pubDate>Fri, 21 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2013/06/21/clojure-pills-arithmetics-and-type-autopromotion/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Clojure Pills: Strings and Characters</title>
+      <link>https://blog.brunobonacci.com/2013/03/23/clojure-pills-strings-and-characters/</link>
+      <pubDate>Sat, 23 Mar 2013 21:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2013/03/23/clojure-pills-strings-and-characters/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Clojure Pills: keywords</title>
+      <link>https://blog.brunobonacci.com/2013/03/17/clojure-pills-keywords/</link>
+      <pubDate>Sun, 17 Mar 2013 22:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2013/03/17/clojure-pills-keywords/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Clojure Pills: rational numbers</title>
+      <link>https://blog.brunobonacci.com/2013/03/17/clojure-pills-rational-numbers/</link>
+      <pubDate>Sun, 17 Mar 2013 21:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2013/03/17/clojure-pills-rational-numbers/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Clojure Pills: Decimals and floating point numbers</title>
+      <link>https://blog.brunobonacci.com/2013/03/17/clojure-pills-decimals-and-floating-point-numbers/</link>
+      <pubDate>Sun, 17 Mar 2013 20:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2013/03/17/clojure-pills-decimals-and-floating-point-numbers/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Clojure Pills: Integers number</title>
+      <link>https://blog.brunobonacci.com/2013/03/16/clojure-pills-integers-number/</link>
+      <pubDate>Sat, 16 Mar 2013 22:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2013/03/16/clojure-pills-integers-number/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Clojure Pills: The syntax</title>
+      <link>https://blog.brunobonacci.com/2013/03/16/clojure-pills-the-syntax/</link>
+      <pubDate>Sat, 16 Mar 2013 19:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2013/03/16/clojure-pills-the-syntax/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Clojure pills: Getting started</title>
+      <link>https://blog.brunobonacci.com/2013/03/15/clojure-pills-getting-started/</link>
+      <pubDate>Fri, 15 Mar 2013 22:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2013/03/15/clojure-pills-getting-started/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Clojure pills: The journey begins</title>
+      <link>https://blog.brunobonacci.com/2013/03/15/clojure-pills-the-journey-begins/</link>
+      <pubDate>Fri, 15 Mar 2013 20:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2013/03/15/clojure-pills-the-journey-begins/</guid>
+      <description></description>
+      
+    </item>
+    
+  </channel>
+</rss>

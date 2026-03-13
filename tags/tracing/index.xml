@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tracing on The Daily REPL</title>
+    <link>https://blog.brunobonacci.com/tags/tracing/</link>
+    <description>Recent content in Tracing on The Daily REPL</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>(©) Bruno Bonacci, all rights reserved.</copyright>
+    <lastBuildDate>Sun, 09 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.brunobonacci.com/tags/tracing/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>µ/log hidden superpower</title>
+      <link>https://blog.brunobonacci.com/2023/07/09/%C2%B5/log-hidden-superpower/</link>
+      <pubDate>Sun, 09 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2023/07/09/%C2%B5/log-hidden-superpower/</guid>
+      <description></description>
+      
+    </item>
+    
+  </channel>
+</rss>

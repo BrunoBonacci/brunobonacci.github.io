@@ -1,0 +1,49 @@
+---
+layout:     post
+title:      My "Awesome Clojure libraries" list.
+date:       2021-07-02 00:00:00
+categories: [programming]
+tags:       [Clojure, Emacs, hacks, Java, JDK]
+published:  false
+
+author:
+  name:  Bruno Bonacci
+  image: bb.png
+---
+
+
+* μ/log
+* safely
+* where
+* 1config
+
+* aleph + Manifold
+* http-kit
+* ring
+* compojure
+
+* prismatic/schema
+
+* leiningen
+* lein-binplus
+* lein-auto
+
+* midje
+* test.check
+
+* clojure-jmh
+* criterium
+* clj-async-profiler
+
+* instaparse
+
+* cheshire
+* clj-http
+
+* data.avl
+
+# less used
+* core.match
+
+## missing
+* time??

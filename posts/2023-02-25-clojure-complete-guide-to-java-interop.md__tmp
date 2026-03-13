@@ -1,0 +1,29 @@
+---
+layout:     post
+title:      Clojure complete guite to Java Interoperability
+date:       2021-07-02 00:00:00
+categories: [programming]
+tags:       [Clojure, Java]
+published:  false
+
+author:
+  name:  Bruno Bonacci
+  image: bb.png
+---
+
+
+call a static function
+call a member function
+set a field
+get a field
+
+Generics call, define
+
+(Paths/get "file" (into-array Paths []))
+
+
+(FileChannel/open (.toPath f1)
+  (into-array StandardOpenOption
+    [StandardOpenOption/CREATE
+    StandardOpenOption/READ
+    StandardOpenOption/WRITE]))

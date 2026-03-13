@@ -1,0 +1,2480 @@
+<!doctype html>
+<html
+  lang="en"
+  dir="ltr"
+  class="scroll-smooth"
+  data-default-appearance="dark"
+  data-auto-appearance="false"><head>
+  <meta charset="utf-8">
+  
+    <meta http-equiv="content-language" content="en">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color">
+
+  
+  
+    <title>Designing Samsara &middot; The Daily REPL</title>
+    <meta name="title" content="Designing Samsara &middot; The Daily REPL">
+  
+
+  
+  
+    <meta name="description" content="A tech blog about Clojure, Software Architecture, and Distributed Systems">
+  
+  
+    <meta name="keywords" content="Clojure,Architecture,Samsara,">
+  
+  
+  
+  <link rel="canonical" href="https://blog.brunobonacci.com/2016/06/20/designing-samsara/">
+  
+
+  
+  
+    <meta name="author" content="Bruno Bonacci">
+  
+  
+    
+      
+        
+          <link href="https://www.linkedin.com/in/brunobonacci/" rel="me">
+        
+      
+    
+      
+        
+          <link href="https://github.com/BrunoBonacci" rel="me">
+        
+      
+    
+      
+        
+          <link href="https://x.com/BrunoBonacci" rel="me">
+        
+      
+    
+  
+
+  
+  <meta property="og:url" content="https://blog.brunobonacci.com/2016/06/20/designing-samsara/">
+  <meta property="og:site_name" content="The Daily REPL">
+  <meta property="og:title" content="Designing Samsara">
+  <meta property="og:description" content="A tech blog about Clojure, Software Architecture, and Distributed Systems">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2016-06-20T00:00:00+00:00">
+    <meta property="article:modified_time" content="2016-06-20T00:00:00+00:00">
+    <meta property="article:tag" content="Clojure">
+    <meta property="article:tag" content="Architecture">
+    <meta property="article:tag" content="Samsara">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Designing Samsara">
+  <meta name="twitter:description" content="A tech blog about Clojure, Software Architecture, and Distributed Systems">
+
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+  
+    
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+    
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/css/main.bundle.min.4469cacae30d496926850c1d6b6fe0a4ac575f26b85d63b379e7679901a12e508883d10988f6e16de782cea142a25c0f73cff326b784bc85e793a22423edbd49.css"
+    integrity="sha512-RGnKyuMNSWkmhQwda2/gpKxXXya4XWOzeednmQGhLlCIg9EJiPbhbeeCzqFColwPc8/zJreEvIXnk6IkI&#43;29SQ==">
+
+  
+  
+  <script
+    type="text/javascript"
+    src="/js/appearance.min.6f41174b3a05b680820fe08cadbfa5fb7a7ca347b76a0955cdc68b9d8aca1ce24f0547e138cea33bcc7904d551a90afcb1cc7f2d9fe8557075d501419046c08c.js"
+    integrity="sha512-b0EXSzoFtoCCD&#43;CMrb&#43;l&#43;3p8o0e3aglVzcaLnYrKHOJPBUfhOM6jO8x5BNVRqQr8scx/LZ/oVXB11QFBkEbAjA=="></script>
+  
+  
+    
+    <script src="/js/a11y.min.7eeed9f7a6fe7c8aa3b999966484369eb1b5380455116fc15c2b407140f3c2e3b174fc00201797dba34e4d4013213736ae375c9bcf2d7ad1fadb224355d8d54d.js" integrity="sha512-fu7Z96b&#43;fIqjuZmWZIQ2nrG1OARVEW/BXCtAcUDzwuOxdPwAIBeX26NOTUATITc2rjdcm88tetH62yJDVdjVTQ=="></script>
+  
+  
+  
+  
+    
+    <script
+      type="text/javascript"
+      src="/js/zen-mode.min.9814dee9614d32aeb56239d118edfe20acd6231424f9b19c2dd48835038414130a5e946c0d1c9087d60e60e31840c9babfd217e3d4b95643dc8d651a71ccdf4a.js"
+      integrity="sha512-mBTe6WFNMq61YjnRGO3&#43;IKzWIxQk&#43;bGcLdSINQOEFBMKXpRsDRyQh9YOYOMYQMm6v9IX49S5VkPcjWUacczfSg=="></script>
+  
+  
+    
+    <script src="/lib/zoom/zoom.min.umd.a527109b68c082a70f3697716dd72a9d5aa8b545cf800cecbbc7399f2ca6f6e0ce3e431f2062b48bbfa47c9ea42822714060bef309be073f49b9c0e30d318d7b.js" integrity="sha512-pScQm2jAgqcPNpdxbdcqnVqotUXPgAzsu8c5nyym9uDOPkMfIGK0i7&#43;kfJ6kKCJxQGC&#43;8wm&#43;Bz9JucDjDTGNew=="></script>
+  
+
+  
+  
+  
+    
+  
+  
+    
+  
+  
+    
+  
+  
+  
+  
+  
+  
+    
+    <script
+      defer
+      type="text/javascript"
+      id="script-bundle"
+      src="/js/main.bundle.min.6b483bdc9246a18b35259ce2a40e363ade34a01edf2f3a31094f0a396844e75f863d18735a89b85ee8301f2dfdb9e471bdf47c44483d4b8f0d6eb93701873824.js"
+      integrity="sha512-a0g73JJGoYs1JZzipA42Ot40oB7fLzoxCU8KOWhE51&#43;GPRhzWom4XugwHy39ueRxvfR8REg9S48Nbrk3AYc4JA=="
+      data-copy="Copy"
+      data-copied="Copied"></script>
+  
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+  
+
+  
+  <script type="application/ld+json">
+  [{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "articleSection": "Posts",
+    "name": "Designing Samsara",
+    "headline": "Designing Samsara",
+    
+    "inLanguage": "en",
+    "url" : "https://blog.brunobonacci.com/2016/06/20/designing-samsara/",
+    "author" : {
+      "@type": "Person",
+      "name": "Bruno Bonacci"
+    },
+    "copyrightYear": "2016",
+    "dateCreated": "2016-06-20T00:00:00\u002b00:00",
+    "datePublished": "2016-06-20T00:00:00\u002b00:00",
+    
+    "dateModified": "2016-06-20T00:00:00\u002b00:00",
+    
+    "keywords": ["Clojure","Architecture","Samsara"],
+    
+    "mainEntityOfPage": "true",
+    "wordCount": "7058"
+  }]
+  </script>
+
+
+
+  
+  
+    
+
+
+
+
+  
+
+  
+  
+
+  
+  
+
+  
+  
+</head>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <body class="flex flex-col h-screen m-auto leading-7 max-w-7xl px-6 sm:px-14 md:px-24 lg:px-32 text-lg bg-neutral text-neutral-900 dark:bg-neutral-800 dark:text-neutral bf-scrollbar">
+    <div id="the-top" class="absolute flex self-center">
+      <a
+        class="px-3 py-1 text-sm -translate-y-8 rounded-b-lg bg-primary-200 focus:translate-y-0 dark:bg-neutral-600"
+        href="#main-content">
+        <span class="font-bold text-primary-600 pe-2 dark:text-primary-400">&darr;</span>
+        Skip to main content
+      </a>
+    </div>
+    
+    
+      <div class="main-menu flex items-center w-full gap-2 p-1 pl-0">
+  
+  
+    <a href="/" class="text-base font-medium truncate min-w-0 shrink">
+      The Daily REPL
+    </a>
+  
+  <div class="flex items-center ms-auto">
+    <div class="hidden md:flex">
+      <nav class="flex items-center gap-x-5 h-12">
+  
+    
+      
+  
+    <a
+      href="/about/"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="About me"
+      title="About me">
+      
+      
+        <span class="text-base font-medium break-normal">
+          About me
+        </span>
+      
+    </a>
+  
+
+    
+      
+  
+    <a
+      href="/projects/"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="Projects"
+      title="Projects">
+      
+      
+        <span class="text-base font-medium break-normal">
+          Projects
+        </span>
+      
+    </a>
+  
+
+    
+      
+  
+    <a
+      href="/posts/"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="Blog"
+      title="Posts">
+      
+      
+        <span class="text-base font-medium break-normal">
+          Blog
+        </span>
+      
+    </a>
+  
+
+    
+      
+  
+    <a
+      href="/categories/"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="Categories"
+      title="Categories">
+      
+      
+        <span class="text-base font-medium break-normal">
+          Categories
+        </span>
+      
+    </a>
+  
+
+    
+      
+  
+    <a
+      href="/tags/"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="Tags"
+      title="Tags">
+      
+      
+        <span class="text-base font-medium break-normal">
+          Tags
+        </span>
+      
+    </a>
+  
+
+    
+  
+
+  
+
+  
+    <div class="flex items-center">
+  <button
+    id="desktop-a11y-toggle"
+    aria-label="Open accessibility panel"
+    aria-expanded="false"
+    type="button"
+    class="bf-icon-color-hover"
+    role="button"
+    aria-pressed="false">
+    <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm161.5-86.1c-12.2-5.2-26.3 .4-31.5 12.6s.4 26.3 12.6 31.5l11.9 5.1c17.3 7.4 35.2 12.9 53.6 16.3l0 50.1c0 4.3-.7 8.6-2.1 12.6l-28.7 86.1c-4.2 12.6 2.6 26.2 15.2 30.4s26.2-2.6 30.4-15.2l24.4-73.2c1.3-3.8 4.8-6.4 8.8-6.4s7.6 2.6 8.8 6.4l24.4 73.2c4.2 12.6 17.8 19.4 30.4 15.2s19.4-17.8 15.2-30.4l-28.7-86.1c-1.4-4.1-2.1-8.3-2.1-12.6l0-50.1c18.4-3.5 36.3-8.9 53.6-16.3l11.9-5.1c12.2-5.2 17.8-19.3 12.6-31.5s-19.3-17.8-31.5-12.6L338.7 175c-26.1 11.2-54.2 17-82.7 17s-56.5-5.8-82.7-17l-11.9-5.1zM256 160a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"/></svg>
+</span>
+  </button>
+
+  <div id="desktop-a11y-overlay" class="fixed inset-0 hidden" style="z-index:9999;"></div>
+
+  <div
+    id="desktop-a11y-panel"
+    role="dialog"
+    aria-labelledby="desktop-a11y-panel-title"
+    class="a11y-panel-enter fixed hidden p-6 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 rounded-lg shadow-xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700"
+    style="min-width: 20rem; z-index:9999;">
+    <div class="flex items-center justify-between mb-6">
+      <h3
+        id="desktop-a11y-panel-title"
+        class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+        Accessibility settings
+      </h3>
+      <button
+        id="desktop-a11y-close"
+        class="text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200"
+        aria-label="Close a11y panel">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="space-y-5">
+      
+      
+      
+      
+        
+      
+      
+        <div class="flex items-center justify-between">
+          <label for="desktop-disable-blur" class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            Disable blur
+          </label>
+          <div class="ios-toggle">
+            <input type="checkbox" id="desktop-disable-blur">
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <label for="desktop-underline-links" class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            Show link underline
+          </label>
+          <div class="ios-toggle">
+            <input type="checkbox" id="desktop-underline-links">
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <label for="desktop-zen-mode" class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            Enable zen mode
+          </label>
+          <div class="ios-toggle">
+            <input type="checkbox" id="desktop-zen-mode">
+          </div>
+        </div>
+
+
+      <div class="flex items-center justify-between">
+        <label
+          for="desktop-font-size-select"
+          class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+          Font size
+        </label>
+        <select
+          id="desktop-font-size-select"
+          class="border rounded-lg px-3 py-1.5 pr-8 text-neutral-900 text-sm dark:bg-neutral-700 dark:text-neutral-200 focus:ring-primary-500 focus:border-primary-500">
+          
+          
+            <option value="default">default</option>
+          
+            <option value="12px">12px</option>
+          
+            <option value="14px">14px</option>
+          
+            <option value="16px">16px</option>
+          
+            <option value="18px">18px</option>
+          
+            <option value="20px">20px</option>
+          
+            <option value="22px">22px</option>
+          
+            <option value="24px">24px</option>
+          
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+  
+    <button
+      id="search-button"
+      aria-label="Search"
+      class="text-base bf-icon-color-hover"
+      title="Search (/)">
+      <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+    </button>
+  
+
+  
+    <div class="flex items-center">
+      <button
+        id="appearance-switcher"
+        aria-label="Dark mode switcher"
+        type="button"
+        class="text-base bf-icon-color-hover">
+        <div class="flex items-center justify-center dark:hidden">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+</span>
+        </div>
+        <div class="items-center justify-center hidden dark:flex">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+</span>
+        </div>
+      </button>
+    </div>
+  
+</nav>
+
+
+
+    </div>
+    <div class="flex md:hidden">
+      <div class="flex items-center h-14 gap-4">
+  
+    <button
+      id="search-button-mobile"
+      aria-label="Search"
+      class="flex items-center justify-center bf-icon-color-hover"
+      title="Search (/)">
+      <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+    </button>
+  
+
+  
+    <button
+      id="appearance-switcher-mobile"
+      type="button"
+      aria-label="Dark mode switcher"
+      class="flex items-center justify-center text-neutral-900 hover:text-primary-600 dark:text-neutral-200 dark:hover:text-primary-400">
+      <div class="dark:hidden">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+</span>
+      </div>
+      <div class="hidden dark:block">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+</span>
+      </div>
+    </button>
+  
+
+  
+    <input type="checkbox" id="mobile-menu-toggle" autocomplete="off" class="hidden peer">
+    <label for="mobile-menu-toggle" class="flex items-center justify-center cursor-pointer bf-icon-color-hover">
+      <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M0 96C0 78.33 14.33 64 32 64H416C433.7 64 448 78.33 448 96C448 113.7 433.7 128 416 128H32C14.33 128 0 113.7 0 96zM0 256C0 238.3 14.33 224 32 224H416C433.7 224 448 238.3 448 256C448 273.7 433.7 288 416 288H32C14.33 288 0 273.7 0 256zM416 448H32C14.33 448 0 433.7 0 416C0 398.3 14.33 384 32 384H416C433.7 384 448 398.3 448 416C448 433.7 433.7 448 416 448z"/></svg>
+</span>
+    </label>
+
+    <div
+      role="dialog"
+      aria-modal="true"
+      style="scrollbar-gutter: stable;"
+      class="fixed inset-0 z-50 invisible overflow-y-auto px-6 py-20 opacity-0 transition-[opacity,visibility] duration-300 peer-checked:visible peer-checked:opacity-100 bg-neutral-50/97 dark:bg-neutral-900/99
+      bf-scrollbar">
+      <label
+        for="mobile-menu-toggle"
+        class="fixed end-8 top-5 flex items-center justify-center z-50 h-12 w-12 cursor-pointer select-none rounded-full bf-icon-color-hover border bf-border-color bf-border-color-hover bg-neutral-50 dark:bg-neutral-900">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+</span>
+      </label>
+      <nav class="mx-auto max-w-md space-y-6">
+        
+  
+    
+    <div class="px-2">
+      <a
+        href="/about/"
+        aria-label="About me"
+        
+        class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+        
+        <span title="About me" class="text-2xl font-bold tracking-tight">
+          About me
+        </span>
+        
+      </a>
+
+      
+    </div>
+  
+    
+    <div class="px-2">
+      <a
+        href="/projects/"
+        aria-label="Projects"
+        
+        class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+        
+        <span title="Projects" class="text-2xl font-bold tracking-tight">
+          Projects
+        </span>
+        
+      </a>
+
+      
+    </div>
+  
+    
+    <div class="px-2">
+      <a
+        href="/posts/"
+        aria-label="Blog"
+        
+        class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+        
+        <span title="Posts" class="text-2xl font-bold tracking-tight">
+          Blog
+        </span>
+        
+      </a>
+
+      
+    </div>
+  
+    
+    <div class="px-2">
+      <a
+        href="/categories/"
+        aria-label="Categories"
+        
+        class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+        
+        <span title="Categories" class="text-2xl font-bold tracking-tight">
+          Categories
+        </span>
+        
+      </a>
+
+      
+    </div>
+  
+    
+    <div class="px-2">
+      <a
+        href="/tags/"
+        aria-label="Tags"
+        
+        class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+        
+        <span title="Tags" class="text-2xl font-bold tracking-tight">
+          Tags
+        </span>
+        
+      </a>
+
+      
+    </div>
+  
+
+        
+  
+
+        
+  
+    <div
+      class="flex flex-wrap items-center [&_span]:text-2xl [&_.translation_button_.icon]:text-4xl! [&_.translation_button_span]:text-base! [&_.translation_.menuhide_span]:text-sm! gap-x-6 ps-2 mt-8 pt-8 border-t bf-border-color">
+      
+
+
+      
+        <div class="flex items-center">
+  <button
+    id="mobile-menu-a11y-toggle"
+    aria-label="Open accessibility panel"
+    aria-expanded="false"
+    type="button"
+    class="bf-icon-color-hover"
+    role="button"
+    aria-pressed="false">
+    <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm161.5-86.1c-12.2-5.2-26.3 .4-31.5 12.6s.4 26.3 12.6 31.5l11.9 5.1c17.3 7.4 35.2 12.9 53.6 16.3l0 50.1c0 4.3-.7 8.6-2.1 12.6l-28.7 86.1c-4.2 12.6 2.6 26.2 15.2 30.4s26.2-2.6 30.4-15.2l24.4-73.2c1.3-3.8 4.8-6.4 8.8-6.4s7.6 2.6 8.8 6.4l24.4 73.2c4.2 12.6 17.8 19.4 30.4 15.2s19.4-17.8 15.2-30.4l-28.7-86.1c-1.4-4.1-2.1-8.3-2.1-12.6l0-50.1c18.4-3.5 36.3-8.9 53.6-16.3l11.9-5.1c12.2-5.2 17.8-19.3 12.6-31.5s-19.3-17.8-31.5-12.6L338.7 175c-26.1 11.2-54.2 17-82.7 17s-56.5-5.8-82.7-17l-11.9-5.1zM256 160a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"/></svg>
+</span>
+  </button>
+
+  <div id="mobile-menu-a11y-overlay" class="fixed inset-0 hidden" style="z-index:9999;"></div>
+
+  <div
+    id="mobile-menu-a11y-panel"
+    role="dialog"
+    aria-labelledby="mobile-menu-a11y-panel-title"
+    class="a11y-panel-enter fixed hidden p-6 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 rounded-lg shadow-xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700"
+    style="min-width: 20rem; z-index:9999;">
+    <div class="flex items-center justify-between mb-6">
+      <h3
+        id="mobile-menu-a11y-panel-title"
+        class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+        Accessibility settings
+      </h3>
+      <button
+        id="mobile-menu-a11y-close"
+        class="text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200"
+        aria-label="Close a11y panel">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="space-y-5">
+      
+      
+      
+      
+        
+      
+      
+        <div class="flex items-center justify-between">
+          <label for="mobile-menu-disable-blur" class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            Disable blur
+          </label>
+          <div class="ios-toggle">
+            <input type="checkbox" id="mobile-menu-disable-blur">
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <label for="mobile-menu-underline-links" class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            Show link underline
+          </label>
+          <div class="ios-toggle">
+            <input type="checkbox" id="mobile-menu-underline-links">
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <label for="mobile-menu-zen-mode" class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            Enable zen mode
+          </label>
+          <div class="ios-toggle">
+            <input type="checkbox" id="mobile-menu-zen-mode">
+          </div>
+        </div>
+
+
+      <div class="flex items-center justify-between">
+        <label
+          for="mobile-menu-font-size-select"
+          class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+          Font size
+        </label>
+        <select
+          id="mobile-menu-font-size-select"
+          class="border rounded-lg px-3 py-1.5 pr-8 text-neutral-900 text-sm dark:bg-neutral-700 dark:text-neutral-200 focus:ring-primary-500 focus:border-primary-500">
+          
+          
+            <option value="default">default</option>
+          
+            <option value="12px">12px</option>
+          
+            <option value="14px">14px</option>
+          
+            <option value="16px">16px</option>
+          
+            <option value="18px">18px</option>
+          
+            <option value="20px">20px</option>
+          
+            <option value="22px">22px</option>
+          
+            <option value="24px">24px</option>
+          
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+  
+
+      </nav>
+    </div>
+  
+</div>
+
+
+
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+    
+    <div class="relative flex flex-col grow">
+      <main id="main-content" class="grow">
+        
+  
+  <article>
+    
+    
+
+    
+    <header id="single_header" class="mt-5 max-w-prose">
+      
+      <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+        Designing Samsara
+      </h1>
+      <div class="mt-1 mb-6 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
+        
+
+
+
+
+
+  
+  
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2016-06-20T00:00:00&#43;00:00">2016-06-20</time><span class="px-2 text-primary-500">&middot;</span><span>7058 words</span><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">34 mins</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+      
+        
+          
+            
+              <a class="relative mt-[0.5rem] me-2" href="/categories/development/">
+                <span class="flex cursor-pointer">
+  <span
+    class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+    Development
+  </span>
+</span>
+
+              </a>
+            
+          
+        
+      
+        
+      
+        
+          
+            
+              <a class="relative mt-[0.5rem] me-2" href="/tags/clojure/">
+                <span class="flex cursor-pointer">
+  <span
+    class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+    Clojure
+  </span>
+</span>
+
+              </a>
+            
+              <a class="relative mt-[0.5rem] me-2" href="/tags/architecture/">
+                <span class="flex cursor-pointer">
+  <span
+    class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+    Architecture
+  </span>
+</span>
+
+              </a>
+            
+              <a class="relative mt-[0.5rem] me-2" href="/tags/samsara/">
+                <span class="flex cursor-pointer">
+  <span
+    class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+    Samsara
+  </span>
+</span>
+
+              </a>
+            
+          
+        
+      
+    </div>
+  
+
+  
+  
+
+
+
+      </div>
+      
+        
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+    
+    
+<div class="flex author">
+  
+    
+    
+      
+    
+    
+      
+      
+      
+        
+        
+        
+      
+      <img
+        class="!mt-0 !mb-0 h-24 w-24 rounded-full me-4"
+        width="96"
+        height="96"
+        alt="Bruno Bonacci"
+        src="/images/bruno-bonacci_hu_62749e6fecade90c.jpg"
+        data-zoom-src="/images/bruno-bonacci_hu_ce04e3c59e6e0c7a.jpg">
+    
+  
+  <div class="place-self-center">
+    
+      <div class="text-[0.6rem] uppercase leading-3 text-neutral-500 dark:text-neutral-400">
+        Author
+      </div>
+      <div class="font-semibold leading-6 text-neutral-800 dark:text-neutral-300">
+        Bruno Bonacci
+      </div>
+    
+    
+      <div class="text-sm text-neutral-700 dark:text-neutral-400">Tech. Architect, Ex Apple, Distributed System Expert, High-Volume Systems, Low latency.</div>
+    
+    <div class="text-2xl sm:text-lg">
+  <div class="flex flex-wrap text-neutral-400 dark:text-neutral-500 space-x-2">
+    
+      
+        
+        <a
+          class=" hover:text-primary-700 dark:hover:text-primary-400"
+          href="https://www.linkedin.com/in/brunobonacci/"
+          
+          target="_blank"
+          aria-label="Linkedin"
+          title="Linkedin"
+          rel="me noopener noreferrer"
+          ><span class="inline-block align-text-bottom"><span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+</span></span></a
+        >
+      
+    
+      
+        
+        <a
+          class=" hover:text-primary-700 dark:hover:text-primary-400"
+          href="https://github.com/BrunoBonacci"
+          
+          target="_blank"
+          aria-label="Github"
+          title="Github"
+          rel="me noopener noreferrer"
+          ><span class="inline-block align-text-bottom"><span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+</span></span></a
+        >
+      
+    
+      
+        
+        <a
+          class=" hover:text-primary-700 dark:hover:text-primary-400"
+          href="https://x.com/BrunoBonacci"
+          
+          target="_blank"
+          aria-label="X-Twitter"
+          title="X-Twitter"
+          rel="me noopener noreferrer"
+          ><span class="inline-block align-text-bottom"><span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg></span></span></a
+        >
+      
+    
+  </div>
+
+</div>
+  </div>
+</div>
+
+  
+
+  
+
+  
+    <div class="mb-5"></div>
+  
+
+      
+    </header>
+
+    
+    <section class="flex flex-col max-w-full mt-0 prose dark:prose-invert lg:flex-row">
+      
+      
+      
+      
+      
+
+
+      <div class="min-w-0 min-h-0 max-w-fit">
+        
+
+        <div class="article-content max-w-prose mb-20">
+          <p>In this post I describe the ideas behind
+<a href="https://samsara-analytics.io/"  target="_blank" rel="noreferrer">Samsara</a> a real-time analytics
+system. It as a walk through its design principles, and the decision
+behind the architecture.</p>
+<p>Table of contents:</p>
+<ul>
+<li><a href="/2016/06/20/designing-samsara/#simple" >Simple.</a></li>
+<li><a href="/2016/06/20/designing-samsara/#realtime" >Real-time.</a></li>
+<li><a href="/2016/06/20/designing-samsara/#aggregation" >Aggregation &ldquo;on ingestion&rdquo; vs &ldquo;on query&rdquo;.</a>
+<ul>
+<li><a href="/2016/06/20/designing-samsara/#agg_ingestion" >Aggregation &ldquo;on ingestion&rdquo;.</a></li>
+<li><a href="/2016/06/20/designing-samsara/#agg_query" >Aggregation &ldquo;on query&rdquo;.</a></li>
+<li><a href="/2016/06/20/designing-samsara/#agg_best" >Which approach is best?</a></li>
+</ul>
+</li>
+<li><a href="/2016/06/20/designing-samsara/#overview" >Samsara&rsquo;s design overview.</a>
+<ul>
+<li><a href="/2016/06/20/designing-samsara/#cloud" >Cloud native vs Cloud independent</a></li>
+<li><a href="/2016/06/20/designing-samsara/#slack" >Cutting some slack.</a></li>
+</ul>
+</li>
+<li><a href="/2016/06/20/designing-samsara/#kafka" >Kafka.</a></li>
+<li><a href="/2016/06/20/designing-samsara/#core" >Samsara CORE.</a>
+<ul>
+<li><a href="/2016/06/20/designing-samsara/#core_filtering" >Filtering</a></li>
+<li><a href="/2016/06/20/designing-samsara/#core_enrichment" >Enrichment</a></li>
+<li><a href="/2016/06/20/designing-samsara/#core_correlation" >Correlation</a></li>
+<li><a href="/2016/06/20/designing-samsara/#core_pipeline" >Composition: Pipeline</a></li>
+<li><a href="/2016/06/20/designing-samsara/#core_state" >State management</a></li>
+</ul>
+</li>
+<li><a href="/2016/06/20/designing-samsara/#why" >Why should you choose Samsara.</a></li>
+</ul>
+<hr>
+
+<h2 class="relative group"><a name="simple"/> Simple.
+    <div id="simple" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#simple" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<blockquote><p><em>&ldquo;The price of reliability is the pursuit of the utmost simplicity.&rdquo; (Tony Hoare)</em></p>
+</blockquote><p>When I designed this system I had very hard timeline constraints. In
+six weeks we went from a POC in my laptop to a scalable,
+fault-tolerant production environment with just two people doing
+everything: design, development, testing, operations, monitoring and
+production support. With such timeline, I had to keep things
+very very simple.</p>
+<p>The decision was to only use systems which were easy to setup, easy to
+understand, easy to debug, easy to maintain and which didn&rsquo;t require a
+lot of time and effort in low-level fine tuning.</p>
+<p>The choice of the language was easy, most of the tooling picked was on
+the JVM, and <a href="https://clojure.org"  target="_blank" rel="noreferrer">Clojure</a> is a very good choice when
+the system is primarily data oriented. Its properties of immutable,
+functional, LISP dialect made it an excellent choice for this project.
+Most of all, the ability to do
+<a href="https://blog.jayfields.com/2014/01/repl-driven-development.html"  target="_blank" rel="noreferrer">REPL Driven Development</a>
+allowed us to cut the development time enormously maintaining fairly
+good quality.</p>
+<p>Another important aspect was to be able to debug the system easily.
+Again the REPL came useful a few times providing the possibility to
+connect to a running system and inspect its state. Additionally, the
+ability to easily inspect the data at every stage was a paramount
+capability. Rushing the implementation so quickly would cause
+possible defects which could be anywhere in the system, so designing
+for <em>human-fault tolerance</em> was another property we tried to
+bake in the original design. Storing the raw data in verbatim
+in deep storage, ability to safely re-process the data, possibility
+to tear down one part of the system without losing events have
+been factored in the design from the beginning.</p>
+<p>The real-time processing part was the big question. Loads of
+frameworks were available at the time. Things like:
+<a href="https://storm.apache.org/"  target="_blank" rel="noreferrer">Storm</a>,
+<a href="https://spark.apache.org/streaming/"  target="_blank" rel="noreferrer">Spark Streaming</a>,
+<a href="https://samza.apache.org/"  target="_blank" rel="noreferrer">Samza</a>, <a href="https://flink.apache.org/"  target="_blank" rel="noreferrer">Flink</a>
+were widely used, <a href="https://www.onyxplatform.org/"  target="_blank" rel="noreferrer">Onyx</a> was a new
+player in this field.  Yet, some had complicated processing semantics
+to learn, required complicated clusters setup, spend time on tuning
+topologies and some of them were mandating specific application
+packaging requirements.</p>
+<p>We decided to start simple. <strong>The fundamental idea was to encapsulate
+the stream processing into a (Clojure) function which was taking in
+input a stream and producing a new (richer) stream as output.</strong></p>
+<p>With such approach we could have picked any of the more established
+stream processing systems later on and use it as scalable execution
+environment as the semantic of stream processing were encapsulated
+in our core; but to begin with we wrote our own Kafka consumers.</p>
+<p>This choice became fundamentally important later on as it forged the
+basis for deciding how to scale the system, providing strong guarantees
+(ordering) for event processing and high data locality.</p>
+<hr>
+
+<h2 class="relative group"><a name="realtime"/> Real-time.
+    <div id="real-time" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#real-time" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>Users of Samsara want to be able to see changes in metrics as they
+happen.  Providing speed at scale was an important goal. <em>Samsara
+provides &ldquo;Real Time&rdquo; Analytics</em>, but how much &ldquo;real time&rdquo; is depends
+on various factors.</p>
+<p>Samsara is not aiming to provide milliseconds or microseconds
+latency. It is more what normally is called <em>near real-time</em> and it
+ranges from <strong>sub-seconds to a few seconds</strong> of end-to-end latency.
+The good thing is that the latency is <em>tuneable</em>.</p>
+<p>What does it mean to have <em>tuneable latency</em>?</p>
+<p>In such systems you can typically trade <em>latency</em> for <em>throughput</em>.
+Which means that if you accept to have slightly longer latencies, you
+can gain in system throughput. This is simply achieved by packing more
+events in batches.  However if you need shorter latencies you can
+configure Samsara to sacrifice some of the throughput.</p>
+<p>In most of real life projects the throughput is not a variable that you
+can control, you have a number of users which will send a number of events
+and the system has to cope with it. So if we <em>lock</em> the throughput dimension,
+there is another dimension which can be influenced, and it is the amount
+of hardware necessary to deliver a given throughput/latency value.</p>
+<p>Ultimately in a cloud environment the amount of hardware used reflects
+the infrastructure cost, in such environment you trade latency for
+service cost.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Tuneable latency"
+    width="634"
+    height="356"
+    src="/images/design-principles/tuneable-latency.gif"
+    srcset="/images/design-principles/tuneable-latency.gif 800w, /images/design-principles/tuneable-latency.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/tuneable-latency.gif"></figure>
+<br/>
+<em><strong>[~] You can trade latency for throughput or less hardware..</strong></em></p>
+<hr>
+
+<h2 class="relative group"><a name="aggregation"/> Aggregation &ldquo;on ingestion&rdquo; vs &ldquo;on query&rdquo;.
+    <div id="aggregation-on-ingestion-vs-on-query" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#aggregation-on-ingestion-vs-on-query" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>The design of analytics system broadly divides in two large
+categories: <em>the ones who aggregate data during the ingestion</em> and
+<em>the ones who aggregate data at query time</em>. Both approaches have
+advantages and drawbacks. We will try to see how these systems do work
+and what are the key differences to better understand why a
+particular solution was picked in Samsara.</p>
+
+<h3 class="relative group"><a name="agg_ingestion"/> Aggregation on ingestion.
+    <div id="aggregation-on-ingestion" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#aggregation-on-ingestion" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>The following image depicts what commonly happens in systems which perform
+aggregation on ingestion.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Aggregation on ingestion"
+    width="634"
+    height="356"
+    src="/images/design-principles/agg-on-ingestion.gif"
+    srcset="/images/design-principles/agg-on-ingestion.gif 800w, /images/design-principles/agg-on-ingestion.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/agg-on-ingestion.gif"></figure>
+<br/>
+<em><strong>[~] Upon ingestion of e new event, counters are updated in memory.</strong></em></p>
+<p>On the left side we have the <em>time</em> flowing from top to bottom with a
+number of different events sent to the system. The strategy here is to
+split the <em>time continuum</em> in discrete buckets. The size of the
+buckets depends on your system requirements. These buckets are often
+called <em>windows</em> as well.</p>
+<p>Let&rsquo;s assume we want to know the average number of events over the
+last 3 seconds.</p>
+<p>For this we need to create windows of <em>1 second</em> each in our ingestion
+layer.  Every bucket has a timestamp associated so that when we
+receive a event we can look at the event&rsquo;s timestamp and increment the
+counter for corresponding bucket.</p>
+<p>As the time flows, we will receive a number of events and increment
+the buckets. Buckets typically are stored in memory for performances
+reasons.  After a certain period of time we will have to flush these
+in-memory buckets back to a storage layer to ensure durability and
+free up some memory for new buckets.</p>
+<p>With this pretty simple approach there is already a number of
+difficult challenges to address. For instance how often will we flush
+the buckets to the durable storage? If we do it too often we will
+overwhelm the storage with loads of very little operations.  On the
+other side, if we decide to keep in memory for too long we incur the
+risk for running out of memory or losing a number of events due to a
+process crash.</p>
+<p>Additionally, how do we manage events which arrive late? If they
+arrive while we still have the corresponding bucket in memory, we can
+simply increment the corresponding counter. However, if we have
+already flushed the bucket to the durable storage and we have freed up
+the memory we will be left with no corresponding bucket in memory.</p>
+<p>There are several strategies to deal with late arrivals and there are
+several papers which explain benefits of the different strategies.
+Whatever decision we take these are hard problems to solve in a reliable
+and efficient manner.</p>
+<p>Once data is flushed to the permanent storage is becomes ready to be queried.
+Some systems allow to query also the in-memory buckets at the ingestion
+layer to shorten the latencies.
+The query engine will have to select a number of buckets based on
+the query parameters and sum all counters. At this point it is ready
+to return the result back to the user.</p>
+<p>If you think that this was complicated just to get the average number
+of events, just sit tight, there is more to come.</p>
+<p>Now when I&rsquo;ve got the overall number of events, as a user, I realize
+that I need to understand how this value breaks down in relation to
+the type (shape) of events I&rsquo;ve received.</p>
+<p>To do so, one bucket per second is not enough. <em>We need a bucket
+per second per type of event</em>. With such buckets structure
+I can now compute not only the total number of events per second,
+but also the number of <em>stars</em> per seconds, for example.</p>
+<p>There is more. What if, what I really wanted was the number of <em>red
+stars</em> per second. Well, we have to start from scratch again, this
+information is not available in the current information model because
+we took the raw events, we aggregated them and discarded the original
+events in favour an aggregated view only.</p>
+<p>In order to compute the number of <em>red stars</em> per second we need to go
+back to our information model and duplicate all buckets for every type
+of colour we handle.</p>
+
+<h4 class="relative group">Number of buckets explosion.
+    <div id="number-of-buckets-explosion" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#number-of-buckets-explosion" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<p>The image below shows the difference between the three queries on the
+same events and the buckets required to compute them.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Num Buckets explosion"
+    width="634"
+    height="356"
+    src="/images/design-principles/agg-explosion.gif"
+    srcset="/images/design-principles/agg-explosion.gif 800w, /images/design-principles/agg-explosion.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/agg-explosion.gif"></figure>
+<br/>
+<em><strong>[~] The number of buckets explodes for every new dimension to explore</strong></em></p>
+<p>You can easily see how, even in this very simple example, the number
+of buckets and the complexity start to explode exponentially for
+every dimension that we need to track.</p>
+<p>For example just for this simple example, if we want to be able to run
+query across this data and retain 1 year worth of data we will need to
+create a bucket for every second in a year (31M circa), however
+querying across several weeks or months can become prohibitive due to
+the large number of small buckets to lookup. A common strategy is to
+roll small buckets up into larger one creating aggregated buckets at
+for minutes, hours, days and so on. By doing so, if I&rsquo;m requesting the
+number of events across the last 3 days I can just aggregate last 3
+daily buckets, or mix daily buckets with hours, minutes and seconds to
+get finer granularity. So if I need to query across last 3 months I
+have a significant smaller number of buckets to look up.</p>
+<p>However this has a cost. In this picture there is the breakdown of
+how many buckets will be required to be able to flexibly and efficiently
+query the above simple example across 1 year.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Num Buckets"
+    width="634"
+    height="356"
+    src="/images/design-principles/num-buckets.gif"
+    srcset="/images/design-principles/num-buckets.gif 800w, /images/design-principles/num-buckets.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/num-buckets.gif"></figure>
+<br/>
+<em><strong>[~] The number of buckets required even for simple cases is huge</strong></em></p>
+<p>As you can see we need to keep track of <em>32 million</em> buckets just for
+1 year worth of data, and this <em>just for the time buckets</em>, now we
+have to multiply this figure for every dimension in your dataset and
+every cardinality in each and every dimension.  For this basic example
+which only contains 2 dimensions: the event type (4 categories) and the
+colour (2 categories) we will require <strong>over 256 million</strong> buckets,
+and above all <strong>we still haven&rsquo;t stored the event itself</strong>.</p>
+<p>Luckily there is another way.</p>
+
+<h3 class="relative group"><a name="agg_query"/> Aggregation on query.
+    <div id="aggregation-on-query" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#aggregation-on-query" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>If we consider the same situation with a typical aggregation on query
+architecture we see a different story.</p>
+<p>Again on the left side we have time flowing from top to bottom, and a
+number of events reaching the system. This time we consider the <em>time
+continuum</em> as fluid as the reality, no need to create discrete
+buckets.  As we receive an event, in ingestion we can process it
+straightaway.  While in the previous scenario we had to be mindful of
+the number of dimensions, here we are encouraged to enrich each event
+with many more dimensions and attributes and make it easier to query.</p>
+<p>Each event is processed by a custom pipeline in which enrichment,
+correlation and occasionally filtering, take place. At the end of the
+processing pipeline we have a richer event with more dimensions
+possibly denormalised as we might have used some internal dataset to
+join to this stream. The output goes into the storage and indexing
+system where the organisation is radially different.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Aggregation on query"
+    width="634"
+    height="356"
+    src="/images/design-principles/agg-on-query.gif"
+    srcset="/images/design-principles/agg-on-query.gif 800w, /images/design-principles/agg-on-query.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/agg-on-query.gif"></figure>
+<br/>
+<em><strong>[~] Upon ingestion of e new event, we enrich the event and store into information retrieval inverted index.</strong></em></p>
+<p>First major difference is that the indexing system stores the event
+itself.  Then it analyses all its dimensions and creates a bucket for
+each property.  In this bucket it adds a pointer back to the original
+event.</p>
+<p>As the picture shows the bucket for the color &ldquo;red&rdquo; is pointing to all
+red events in our stream, and as more red events arrive they are added to
+this bucket. Same thing happens for the &ldquo;yellow&rdquo; events and for the
+different shapes. Virtually, also the time can be considered in a
+similar way, although the time is most system is considered a
+&ldquo;special&rdquo; dimension and it is used for physical partitioning.
+But for the purpose of this description we can consider pretty much
+in the same way.</p>
+<p>These newly created buckets are just
+<a href="https://en.wikipedia.org/wiki/Set_%28mathematics%29"  target="_blank" rel="noreferrer">sets</a> and every set
+just contains the ids of the events which have that property.  Now if
+we are looking for all events in a specific timeframe, all we need to
+do is to take all these sets (buckets) with a timestamp within the
+range and perform a
+<a href="https://en.wikipedia.org/wiki/Set_%28mathematics%29#Unions"  target="_blank" rel="noreferrer">set union</a>.</p>
+<p>Now if we want to know all &ldquo;red&rdquo; events for the same timeframe, we
+do a union of the sets within the time range and an
+<a href="https://en.wikipedia.org/wiki/Set_%28mathematics%29#Intersections"  target="_blank" rel="noreferrer">intersection</a>
+of the resulting set with the &ldquo;reds&rdquo; set.  There are plenty of
+optimisations to this high level view but the idea stays the same.
+This type of index structure is called
+<a href="https://en.wikipedia.org/wiki/Inverted_index"  target="_blank" rel="noreferrer">Inverted index</a>.</p>
+<p>Because the aggregation happens at query time, the handling of events
+which arrives late is no different than the normal events.  They get
+processed in the same way, enriched and stored like any other event.
+As they are added to the corresponding set for each dimension they are
+directly available for query and accounted in the correct aggregations.</p>
+
+<h3 class="relative group"><a name="agg_best"/> Which approach is best?
+    <div id="which-approach-is-best" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#which-approach-is-best" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>Both approaches have advantages and drawbacks. Which one you should
+choose really depends on the use you are going to make of the data.</p>
+<p>The aggregation on ingestion offers good performances even for very
+large datasets as you don&rsquo;t store the raw data-points but only
+aggregated values. However a problematic point is that you have to
+know all the queries you will run ahead of time. So if you have a
+<em>small fix number of queries</em> which you have to serve continuously
+then that&rsquo;s a optimal approach.</p>
+<p>In the projects I&rsquo;ve been working on, I was looking for a system which
+would be flexible and support interactive and fast data exploration.
+In other words you couldn&rsquo;t predict ahead of time all or most of the
+queries which would be performed over the data. In such cases
+aggregation on ingestion is the wrong approach. The combinatorial
+explosion of dimensions and values would make the ingestion too slow
+and complicated. To perform arbitrary queries on any of the available
+dimensions you need to store the original value and prepare your
+storage for such case.</p>
+<p>If query flexibility is what you are looking for, like the ability to
+slice and dice your dataset using any of the available dimensions then
+the aggregation on query is the only solution.</p>
+<p>Nowadays, most of the real-world systems have a mixed approach,
+but the difference is still evident when looking on how the storage
+layer is organized.</p>
+<hr>
+
+<h2 class="relative group"><a name="overview"/> Samsara&rsquo;s design overview.
+    <div id="samsaras-design-overview" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#samsaras-design-overview" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>In Samsara we focus on agility and flexibility. Even with datasets of
+several billion events we can achieve very good performances and
+maintain the interactive query experience (most of the queries last
+less than 10 seconds).</p>
+<p>Let&rsquo;s see how did we manage to implement the &ldquo;aggregation on query&rdquo;
+approach with large scale datasets.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="High level design"
+    width="634"
+    height="356"
+    src="/images/design-principles/high-level-design.jpeg"
+    srcset="/images/design-principles/high-level-design.jpeg 800w, /images/design-principles/high-level-design.jpeg 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/high-level-design.jpeg"></figure>
+<br/>
+<em><strong>[~] Samsara&rsquo;s high-level design.</strong></em></p>
+<p>On the left side of the diagram we have the clients which might be
+a mobile client, your services or websites, or internet websites
+pushing the data to a RESTful endpoint.</p>
+<p>The Ingestion-API will acquire the data and immediately store it into
+Kafka topics. The <strong>Kafka</strong> cluster will replicate the events into
+other machines in the cluster for fault-tolerance and durability.</p>
+<p>Additionally a process will be continuously listening to the Kafka
+topic and as the events arrive it will push the data into a deep
+storage.  This can be something cloud based such as <strong>Amazon S3</strong> or
+<strong>Azure Storage</strong>, a NAS/SAN in your datacenter or a <strong>HDFS</strong> cluster.
+The idea is to store the raw stream so that no matter what happens to
+the cluster and the processing infrastructure you will always be able
+to retrieve the original data and reprocess it.</p>
+<p>The next step is where the enrichment and correlation of the data
+happens.  Samsara CORE is a streaming library which allows you to
+define your data enrichment pipelines in terms of very simple
+functions and streams composition. Stream processing shouldn&rsquo;t be a
+specialist skill, but any developer which is mindful of performance
+should be able to develop highly scalable processing pipelines.  We
+aim to build the full processing pipeline out of plain Clojure
+functions, so that it is not necessary to learn a new programming
+paradigm but just use the language knowledge you already have.</p>
+<p>For those who don&rsquo;t know the Clojure programming language, we are
+considering to write language specific bindings with the same
+semantics.</p>
+<p>Implementing stateless stream processing is easy. But most of the real
+world applications need some sort of <em>stateful stream processing</em>.
+Unfortunately many stream processing frameworks have little or nothing
+to support the correctness and efficiency of state management for
+streams processing. Samsara&rsquo;s leverages the amazing
+<a href="https://hypirion.com/musings/understanding-persistent-vector-pt-1"  target="_blank" rel="noreferrer">Clojure&rsquo;s persistent data structures</a>
+to provide a very efficient stateful processing. The <em>in-memory</em> state
+is then backed by a Kafka topic or <em>spilled</em> into a external key/value
+store such as <strong>DynamoDB</strong>, <strong>Cassandra</strong> etc.</p>
+<p>The processing pipeline takes one or more streams as an input and produces
+a richer stream as an output. The output stream is stored in Kafka as
+well.  Another component (<code>Qanal</code>) consumes the output streams and
+indexes the data into ElasticSearch. In the same way we store the raw
+data we can decide to store the processed data as well in the deep
+storage.</p>
+<p>Once the data is inside <strong>ElasticSearch</strong> it is now ready to be queried.
+The powerful query engine of <strong>ElasticSearch</strong> is based on <a href="https://lucene.apache.org/"  target="_blank" rel="noreferrer">Lucene</a>
+which manages the inverted indexes. <strong>ElasticSearch</strong> implemented a
+large number of queries and aggregations and it makes simple even very
+sophisticated aggregations.</p>
+<p>The following picture shows the list of aggregations queries which
+<strong>ElasticSearch</strong> already implemented (v1.7.x) and more will come.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="ElasticSearch available aggregations"
+    width="634"
+    height="356"
+    src="/images/design-principles/els-aggregations.gif"
+    srcset="/images/design-principles/els-aggregations.gif 800w, /images/design-principles/els-aggregations.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/els-aggregations.gif"></figure>
+<br/>
+<em><strong>[~] ElasticSearch available aggregations (v1.7.x).</strong></em></p>
+<p>Once the data is inside <strong>ElasticSearch</strong> you get all the benefits of a
+robust and mature product and the speed of the underlying Lucene
+indexing system via a REST API. Additionally, out of the box, you can
+visualize your data using <strong>Kibana</strong>, creating <em>ad-hoc</em>
+visualizations, dashboards which work for both: real-time data and
+historical data as both are in the same repository.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Kibana visualizations"
+    width="634"
+    height="356"
+    src="/images/design-principles/kibana-visualizations.jpeg"
+    srcset="/images/design-principles/kibana-visualizations.jpeg 800w, /images/design-principles/kibana-visualizations.jpeg 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/kibana-visualizations.jpeg"></figure>
+<br/>
+<em><strong>[~] Kibana visualizations (from the web).</strong></em></p>
+<p>Kibana might not be the best visualization tool out there but is a quite
+good solution for providing compelling dashboards with very little
+effort.</p>
+
+<h3 class="relative group"><a name="cloud"/> Cloud native vs Cloud independent.
+    <div id="cloud-native-vs-cloud-independent" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#cloud-native-vs-cloud-independent" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>The discussion around cloud native architectures with their benefits
+versus the drawbacks is always a hot topic while designing a new
+system.  Advocates from both sides have good reasons and valid
+arguments.  Cloud native is usually easier to operate and scale, but
+with the risk of vendor lock-in. Cloud independent has to rely only on
+basic infrastructure (IaaS) when running on a cloud and not use any of
+the proprietary PaaS services.  With Samsara we went a step
+further. We composed the system with tools which have a cloud PaaS
+counterpart.</p>
+<p><strong>Kafka</strong>, <strong>Amazon Kinesis</strong> and <strong>Azure EventHubs</strong> try to solve the
+same problem.  Similarly <strong>Cassandra</strong>, <strong>Riak</strong>, <strong>DynamoDB</strong>,
+<strong>Azure Table Storage</strong> are again very similar from a high level
+view. So while designing Samsara we&rsquo;ve took care of not using
+functionalities which were not available in other platforms or which
+couldn&rsquo;t be implemented in some other way.</p>
+<p>The result is that the system can preserve some guarantees across the
+different clouds and even provide the same functionality when running
+in your own data-center.</p>
+<p>The next picture shows some of the interchangeable parts in Samsara&rsquo;s
+design.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Cloud alternatives"
+    width="634"
+    height="356"
+    src="/images/design-principles/cloud-support.jpeg"
+    srcset="/images/design-principles/cloud-support.jpeg 800w, /images/design-principles/cloud-support.jpeg 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/cloud-support.jpeg"></figure>
+<br/>
+<em><strong>[~] Green parts are available as of 0.5, the other ones soon to come.</strong></em></p>
+
+<h3 class="relative group"><a name="slack"/> Cutting some slack.
+    <div id="cutting-some-slack" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#cutting-some-slack" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>One design principle I was very keen to observe was to build around
+every layer some <strong>fail-safe</strong>. In this case I&rsquo;m not talking about the
+fault-tolerance against machine failures, but specifically fail-safe
+against <strong>human failures</strong>.  If you have ever worked in any larger
+project you know that failures introduced by humans mistakes are by
+large the most frequent type of failures.  The idea of adding some sort
+of resilience against human mistakes is not new.  The old and good
+database backup is probably one of the earliest attempt to deal with
+this issue. For many years, while designing new systems, I tried to
+include some sort of fail-safe here and there, but I wasn&rsquo;t aware of a
+appropriate name for it. so when people were asking why, my short
+answer was something like: <em>&quot;&hellip; because, you know; you never know
+what can go wrong&quot;</em>. It wasn&rsquo;t until 2013 when I watched
+<a href="https://www.youtube.com/watch?v=Ipjrhue5bXs"  target="_blank" rel="noreferrer">Nathan Marz talk on &ldquo;Human Fault-Tolerance&rdquo;</a>
+which it came clear to me what was the pattern to follow.  In the same
+way we try to take into account machine failures, network
+failures, power failures etc in our design we should also account for
+human failures.</p>
+<p>In the talk, Nathan illustrates principles which, if applied, could be
+treated as general pattern for human fault-tolerance.  The general
+idea is: <strong>if you are building a data system, and you <em>build upon
+immutable facts</em>, then storing the raw data, you can always go back
+and rebuild the entire system based on the raw, immutable facts plus
+the corrected algorithms</strong>. This really resonated with what I was
+trying to do.</p>
+<p>Samsara encourages to publish small essential facts. By definition
+they are always &ldquo;true&rdquo;.  Samsara stores them in durable storage so
+that <em>no matter what happens later, you always have the possibility to
+go back and reprocess all the data</em>.</p>
+<p>Samsara cares also to make it easy to rebuild a consistent
+view of the world, so it gives you support for publishing
+external dataset as streams of event as well. Finally we avoid
+duplicates in the indexes which could be caused by re-processing the
+data by assigning repeatable IDs to every event, at the cost of some
+indexing performance loss. This is a deliberate choice, and it has is
+foundation in the concept of <em>human fault-tolerance</em>.</p>
+<p>There are many other little changes which have been made to support
+this idea I hope you will agree with me that the system is overall
+better with them.</p>
+<hr>
+
+<h2 class="relative group"><a name="kafka"/> Kafka.
+    <div id="kafka" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#kafka" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>Samsara&rsquo;s design relies a lot on Kafka primitives. For this reason I&rsquo;m
+going to quickly introduce Kafka design detailing why and how we use
+these primitives to build a robust system for our processing
+infrastructure.</p>
+<p><a href="https://kafka.apache.org/"  target="_blank" rel="noreferrer">Apache Kafka</a> is a fast, fault-tolerant,
+append-only distributed log service. At its core there is the log
+structure. The log contains messages, every message has an offset, a
+payload and optionally a partition-key. The offset is a monotonically
+increasing number and can be utilized to identify a particular message
+in a specific log.  The payload, from Kafka point of view, is just a
+byte array, which can have a variable size. The partition key is
+specified by the producer (sender) together with the message&rsquo;s payload
+and it is used for data locality (more on this later).</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Kafka log"
+    width="634"
+    height="356"
+    src="/images/design-principles/kafka-log.jpeg"
+    srcset="/images/design-principles/kafka-log.jpeg 800w, /images/design-principles/kafka-log.jpeg 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/kafka-log.jpeg"></figure>
+<br/>
+<em><strong>[~] The log structure of Kafka.</strong></em></p>
+<p>The log is not a single continuous file, but is divided into segments
+and every segment is a file on disk.  The consumer (reader) chooses
+which messages to read, and because once written log never
+changes (just appends new records), the consumer doesn&rsquo;t need to send
+acknowledgments, for the messages which it consumed back, to the server
+but it needs only to store what was the offset of the last consumed
+message.</p>
+<p>Kafka has the concept of <em>topics</em>. Topics are used to divide messages
+for different domains. For example a topic called <em>&ldquo;users&rdquo;</em> could
+contains users updates, while a topic called <em>&ldquo;metrics&rdquo;</em> could
+contains devices sensors reading or services events.  Topics are
+divided into <em>partitions</em>, and every partition is just a log. Topics
+can have multiple partitions and they are replicated on multiple
+machines for fault-tolerance.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Kafka partitions"
+    width="634"
+    height="356"
+    src="/images/design-principles/kafka-partitions.jpeg"
+    srcset="/images/design-principles/kafka-partitions.jpeg 800w, /images/design-principles/kafka-partitions.jpeg 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/kafka-partitions.jpeg"></figure>
+<br/>
+<em><strong>[~] A topic is composed of partitions (logs) and replicated across the cluster.</strong></em></p>
+<p>When a producer sends a message to a topic it specifies the <em>topic name</em>,
+the message <em>payload</em> and optionally a <em>partition-key</em>.  The broker,
+to decide which partition must store the given message, hashes the
+message-key and based on the hash fixes a partition.  This is a very
+important aspect as <em>all messages which contain the same partition
+key are guaranteed to be in the same partition</em>. Such data locality is
+very important to implement aggressive caching and perform stream
+processing without requiring coordination. In Samsara we use the
+<code>sourceId</code> as partition key. The <code>sourceId</code> is typically and
+identifier of the agent or device which is producing a event.  So it
+means that all messages sent by a particular source will always end up
+in the same partition, therefore it guarantees a total ordering of the
+messages. If the partition key is not given (or null) then a random
+partition is picked.</p>
+<p>All partitions and replicas are spread across the cluster to guarantee
+high-availability and durability. Every partition has one and only one
+partition leader across the cluster at any point in time, and all
+messages are sent to the partition leader.</p>
+<p>Kafka offers policy based evictions of three kinds: based on time,
+on size and a special eviction called <em>compaction</em></p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Kafka compaction"
+    width="634"
+    height="356"
+    src="/images/design-principles/kafka-compaction.gif"
+    srcset="/images/design-principles/kafka-compaction.gif 800w, /images/design-principles/kafka-compaction.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/kafka-compaction.gif"></figure>
+<br/>
+<em><strong>[~] Kafka eviction policy: compaction.</strong></em></p>
+<p>The <strong>time based eviction</strong> deletes messages beyond a configurable
+amount of time. For example you can configure Kafka to retain all
+messages for a given topic for one week.  Once the week is past
+messages are automatically deleted.</p>
+<p>The <strong>size based eviction</strong> deletes the oldest messages when the total
+size of a topic exceed a given size. For example you can configure
+Kafka to keep <em>at most</em> 2TB of data for a given topic.</p>
+<p>The <strong>compaction based policy</strong> is quite interesting. The compaction
+agent only works on non-active segments. For every message in older
+segments, it looks at the partition key and it takes last message for
+every partition key. Like in the picture, partition keys in messages
+are represented by the different colors, only last message for every
+partition-key is copied into a new segment and the old one is then
+removed. For example if you have three updates from &ldquo;John&rdquo; and two
+from &ldquo;Susanne&rdquo; then the compacted log will contain only two messages:
+last message from &ldquo;John&rdquo; and last message from &ldquo;Susanne&rdquo;.</p>
+<p>This type of compaction is very useful when messages represent state
+changes for a given key. Similarly to a transaction log of a database,
+where last change is last state. If you have such situation then you
+can use this type of compaction to efficiently store the state changes
+by key, and have Kafka cleaning up the old copies for you
+automatically.  To rebuild the state all you need to do in to apply
+the state of last message for every key.</p>
+
+<h2 class="relative group"><a name="core"/> Samsara processing CORE.
+    <div id="samsara-processing-core" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#samsara-processing-core" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>Now that we have seen how the fundamentals parts of Kafka do work we
+can see how Samsara CORE leverages them to produce a high throughput
+scalable processing system.</p>
+<p>Firstly the CORE idea is that your stream processing is just a function
+which takes in input a topic and produces the output into another
+topic.  In this context we will refer to topics as <strong>streams</strong>, and
+since streams are potentially infinite, then the processing function
+has to be able to process an unbounded stream, streams get chunked as
+the data arrives and every chunk will contain one or more events.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Samsara CORE processing"
+    width="634"
+    height="356"
+    src="/images/design-principles/core-processing.gif"
+    srcset="/images/design-principles/core-processing.gif 800w, /images/design-principles/core-processing.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/core-processing.gif"></figure>
+<br/>
+<em><strong>[~] Samsara CORE processing.</strong></em></p>
+<p>The processing function can essentially do one of these three operations:</p>
+<ul>
+<li><strong>filtering</strong>: where given one event it decides whether this
+particular event isn&rsquo;t of interest for the system and it drops it.</li>
+<li><strong>enrichment</strong>: where a single event is transformed and new
+dimensions/properties are added.</li>
+<li><strong>correlation</strong>: where the relation between events can produce
+one or more completely new events.</li>
+</ul>
+
+<h3 class="relative group"><a name="core_filtering"/> Filtering.
+    <div id="filtering" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#filtering" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>This is the simplest processor you can have, given an event you can
+decide whether to keep the event (return it) or drop it (return
+<code>nil</code>).</p>
+<pre><code>ƒ(e) -&gt; e | nil
+</code></pre>
+<p>When working with systems which do aggregation on query, you typically
+want to store all events you receive, so isn&rsquo;t very common to have
+loads of filters. However in your processing you might correlate two
+or more simpler events to generate new richer high level events which
+are both: more complete and contain all information which you have on
+the simpler ones.  In such cases you often might want to drop the
+simpler ones as they are less informative and harder to query than the
+high level ones.  You can build a filtering function from a
+conventional predicate functions.</p>
+
+<h3 class="relative group"><a name="core_enrichment"/> Enrichment.
+    <div id="enrichment" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#enrichment" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>The enrichment functions are the most common. It is here where you can
+add all the additional information that you know about a particular event.
+The enrichment function is a function which takes one event and it returns
+a richer event or <code>nil</code>.</p>
+<pre><code>ƒ(e) -&gt; e' | nil
+</code></pre>
+<p>If an enrichment function returns <code>nil</code> it means that it doesn&rsquo;t have
+any enrichment to do with this particular event. This semantic sugar
+allows very idiomatic code in Clojure, and avoid accidental dropping
+of events. In fact the only way you can eliminate an event is via a
+filtering function.</p>
+<p>Common uses of the enrichment functions are to add calculated
+attributes, or to add additional properties from internal
+data-sources.  For example you might receive an event from a device
+and look up in your company data-sources for the owner. Or if you
+receive an event from a user with its <code>userId</code> you could lookup in
+your user&rsquo;s data-source for more information about the particular
+user. Adding this information directly into the event allows you to
+easily make queries based on user&rsquo;s properties.</p>
+
+<h3 class="relative group"><a name="core_correlation"/> Correlation.
+    <div id="correlation" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#correlation" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>The correlation type of functions allow you to produce completely new
+events.  You typically going to use other events which you might have
+already seen in your processing stream to generate new events. One
+common example could be that your system receives events which denote
+the <em>starting</em> and the <em>stopping</em> of an activity and you could use a
+correlation function to generate one new event which represent the
+activity itself and its duration (Samsara has a module which provides
+this functionality).</p>
+<p>The correlation function is a function which given an event can
+return zero, one or more events.</p>
+<pre><code>ƒ(e) -&gt; [] | [e1] | [e1 e2 ... en]
+</code></pre>
+<p>Also here if the correlation function returns <code>nil</code> it is considered as a
+no-operation (no new events are generated).  One interesting aspect of
+correlation functions is that the newly generated events are inserted
+in-place in the stream and processed with the entire processing
+pipeline like if they were received from a client.  This approach
+simplifies a lot the processing pipeline as you have the guarantee
+that <strong>every event will go through the entire pipeline</strong> even if the
+correlation function produced them mid-way in your processing.</p>
+<p>The following image shows how the events are processed and what happens
+when a correlation function generates new events.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Samsara CORE - correlation"
+    width="634"
+    height="356"
+    src="/images/design-principles/core-correlation.gif"
+    srcset="/images/design-principles/core-correlation.gif 800w, /images/design-principles/core-correlation.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/core-correlation.gif"></figure>
+<br/>
+<em><strong>[~] The correlation adds new events <code>in-place</code> in the stream, like if they were sent by the client.</strong></em></p>
+
+<h3 class="relative group"><a name="core_pipeline"/> Composition: Pipeline.
+    <div id="composition-pipeline" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#composition-pipeline" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>We&rsquo;ve seen how you can organize your processing semantics into simple
+building blocks like the functions which perform the <em>filtering,
+enrichment and correlation</em>. However any non trivial processing will
+require to define many of these different functions.  Samsara allows
+to compose these simple functions in more complex and structured
+pipelines. Like the Clojure function
+<a href="https://clojuredocs.org/clojure.core/comp"  target="_blank" rel="noreferrer"><code>comp</code></a> which is used to
+compose many functions into one, Samsara offers a function called
+<code>pipeline</code> which will compose filtering, enrichment and
+correlation functions into a single processing pipeline.</p>
+<p>Like the picture below shows, <code>pipeline</code> can take many different
+functions (with different input/output shapes) and compose them into a
+single function which will be the equivalent of all single functions
+executed one after the other one <em>in the given order</em>.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Samsara CORE - composition: pipeline "
+    width="634"
+    height="356"
+    src="/images/design-principles/core-pipeline.gif"
+    srcset="/images/design-principles/core-pipeline.gif 800w, /images/design-principles/core-pipeline.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/core-pipeline.gif"></figure>
+<br/>
+<em><strong>[~] Samsara allows you to compose your stream processing from very simple building blocks.</strong></em></p>
+<p>Samsara also offers tools to visualize a pipeline and produce a flow
+diagram with the different functions.</p>
+<p>Enrichment, filtering, correlation and the ability to compose them
+into pipelines are provided as a library called <code>moebius</code> which is
+part of Samsara. I&rsquo;ve designed this as a separate library so that your
+processing pipelines can be designed, built, and <strong>tested</strong>, in
+complete isolation using just pure functions without requiring a
+running cluster or complex testing infrastructure. Once your
+processing pipelines are build you can test them by providing events
+directly and verifying the expected output. No mocking required, just
+pure functions.</p>
+
+<h3 class="relative group"><a name="core_state"/> State management.
+    <div id="state-management" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#state-management" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>So far we have seen how to do <strong>stateless stream processing</strong> which is
+the easiest form.  However most of real-world projects require more
+complex processing semantics which often are powered by <em>transitory
+computational state</em>.</p>
+<p>Some stream processing frameworks have little or nothing to help
+developers to get <strong>stateful stream processing</strong> right.  Without
+support, developers have little or no choice to use their own custom
+approach to <strong>state management</strong>.</p>
+<p>In this section we are going to see various approaches used by different
+frameworks and then we are going to explore Samsara&rsquo;s approach.</p>
+<p>The first approach is to store your processing state using an external
+DB cluster, typically a k/v-store such as: <em>Cassandra, Dynamo, Riak</em>
+to name a few.</p>
+<p>This is the easiest approach but also the weakest one as well. Even if
+your database is well tuned, as the processing rate grows, it is
+likely to become a bottleneck in your processing. After a certain
+stage it will become harder and harder to scale your stream processing
+system due to the database. Database are much harder to scale, even
+system like Cassandra which scale very well, sooner or later will become
+the dominant part in your execution time. To push the database beyond
+certain points requires more nodes. While your stream processing will
+be quite fast with a modest number of machines, your DB, likely will
+require huge clusters.</p>
+<p>The following picture shows processing nodes connecting to an external
+k/v-store to persist their transitory state.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="External state management"
+    width="634"
+    height="356"
+    src="/images/design-principles/state-external.gif"
+    srcset="/images/design-principles/state-external.gif 800w, /images/design-principles/state-external.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/state-external.gif"></figure>
+<br/>
+<em><strong>[~] The simplest approach (not good) is to use external k/v-store.</strong></em></p>
+<p>One additional challenge in case of processing failures is that the
+state can get easily out-of-sync. For example the processing
+node might have stored successfully the data into the k/v-store, but it failed to
+checkpoint it&rsquo;s own progress.</p>
+<p>The second approach is to use the data-locality offered by Kafka, and
+the guarantee that all events coming from a given source will always
+be landing in the same partition. Keeping this important fact in mind,
+it is possible to use local (to the node) caches such as: <em>Redis,
+Memcache and RocksDB</em> to name a few.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Local state management"
+    width="634"
+    height="356"
+    src="/images/design-principles/state-local.gif"
+    srcset="/images/design-principles/state-local.gif 800w, /images/design-principles/state-local.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/state-local.gif"></figure>
+<br/>
+<em><strong>[~] A local cache offers better latency and better scalability profile.</strong></em></p>
+<p>Because every node is independent from the others it is much easier to
+scale. While in the external database the read/write latencies are in the
+order of <em>1-10ms</em>, with the local cache the latency is typically
+around <em>100𝛍s-2ms</em>. However you still have to incur the serialization
+and de-serialization costs on every read/write.</p>
+<p>In Samsara we designed a <em>in-memory k/v-store</em> using the fabulous
+<a href="https://hypirion.com/musings/understanding-persistent-vector-pt-1"  target="_blank" rel="noreferrer">Clojure&rsquo;s persistent data structures</a>
+to store the state. To guarantee durability we back changes in into a
+Kafka topic which is used to store the state only. Samsara&rsquo;s k/v-store
+produces a <em>transaction log</em> of all the changes made to the in-memory
+data and when Samsara writes the output of the processing into the
+output topic, it writes the changes to the state into the kv-store
+topic.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Samsara&rsquo;s state management"
+    width="634"
+    height="356"
+    src="/images/design-principles/state-samsara.gif"
+    srcset="/images/design-principles/state-samsara.gif 800w, /images/design-principles/state-samsara.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/state-samsara.gif"></figure>
+<br/>
+<em><strong>[~] Samsara&rsquo;s kv-store is in-memory and in-process.</strong></em></p>
+<p>The use of Clojure persistent data structures makes the k/v-store
+friendlier to the JVM Garbage Collection, and being in process there
+is no serialization costs of every read/write. The typical latencies
+for Samsara&rsquo;s k/v-store are <em><strong>100ns read, 1𝛍s write</strong></em>, additionally
+every thread has his own thread-local k/v-store which eliminates
+contentions and the need of coordination (locks), overall it has just
+better data locality for your process.  If your processing state is
+way bigger than the available memory on your nodes you have two
+options: the first one is to add more nodes and distribute the
+processing across more partitions. If this isn&rsquo;t viable for solution
+cost-wise you can have the k/vs-store to <em>spill</em> into an external db
+cluster. Such solution is still better than making db lookups for
+every event as the k/v-store will only go to the external db in case
+of a cache-miss and will only store when the entire batch has been
+processed (not for every single event). Considering that events from a
+given source tend to arrive in batches due to the client buffering it
+is easy to understand the advantages of this approach compared to the
+first approach we discussed. If you are really sensitive to the
+latencies the only solution is to add more nodes.</p>
+<p>Finally, let&rsquo;s see how Samsara is fault tolerant in respect to the
+state management. We said earlier that the k/v-store we use is in
+memory, so what happens if a node dies?</p>
+<p>The following picture illustrate what are the steps in such case.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Samsara&rsquo;s state management fault tolerance"
+    width="634"
+    height="356"
+    src="/images/design-principles/state-samsara-ft.gif"
+    srcset="/images/design-principles/state-samsara-ft.gif 800w, /images/design-principles/state-samsara-ft.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/state-samsara-ft.gif"></figure>
+<br/>
+<em><strong>[~] Samsara&rsquo;s state management fault tolerance.</strong></em></p>
+<ol>
+<li>The system is running and all nodes are consuming their own share
+of partitions.</li>
+<li>As events are processed the output is written into the <em>output
+topic</em> and the state changes are persisted into the k/v-store
+topic.</li>
+<li>The &ldquo;node 2&rdquo; dies due to a machine failure. The processing of
+that partition stops. In memory state is lost.</li>
+<li>After some time the machine comes back alive.</li>
+<li>Samsara initializes the k/v-store using the transaction-log
+in its own topic.</li>
+<li>After the full state is restored, the node starts to process
+events from the partition as before, with the exact state that
+was left before the failure.</li>
+</ol>
+<p>To avoid that the k/v-store topic becomes huge impacting the
+restart time we use the <em>Kafka&rsquo;s compaction feature</em> for this topic.
+So over time only latest copy of the keys will be kept.</p>
+<p>This pattern is used by other processing systems notably Apache Samza and
+the very new Kafka-Streams.</p>
+<p>This is the way Samsara maintains state and offers a support for the
+stateful stream development directly in its core. All functions which
+process events that we seen earlier such as <em>filtering, enrichment and
+correlation</em> they all have a stateful variant as well.  In the
+stateless processing they only accept an event, if you need stateful
+processing, then they will accept the current state and the event.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Samsara&rsquo;s stateful processing functions"
+    width="634"
+    height="356"
+    src="/images/design-principles/stateful-fn.jpeg"
+    srcset="/images/design-principles/stateful-fn.jpeg 800w, /images/design-principles/stateful-fn.jpeg 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/stateful-fn.jpeg"></figure>
+<br/>
+<em><strong>[~] Samsara&rsquo;s stateful processing functions.</strong></em></p>
+<p>Stateful functions and the stateless ones can be mixed in the same
+pipeline.  The <code>pipeline</code> function takes care of passing the state to
+these functions which requires one and only the event to the stateless
+ones.</p>
+<p>Earlier we said that the stream processing is a function of the input
+stream to produce an output stream, now for you stateful stream
+processing we can say that is a function of the input stream and the
+state topic, to produce output stream and an update state topic.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Samsara&rsquo;s stateful processing"
+    width="634"
+    height="356"
+    src="/images/design-principles/stateful-proc.jpeg"
+    srcset="/images/design-principles/stateful-proc.jpeg 800w, /images/design-principles/stateful-proc.jpeg 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/stateful-proc.jpeg"></figure>
+<br/>
+<em><strong>[~] Samsara&rsquo;s stateful processing representation.</strong></em></p>
+<p>Finally if you have internal data sources which you want to use to
+enrich your data you can provide them as a stream and Samsara will
+convert them into k/v store.  This is often useful when you have
+internal data-source such as your <code>users</code> database or your <code>products</code>
+catalog etc which you might want to join with incoming events enriching
+them with additional dimensions.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Samsara&rsquo;s support for data-sources"
+    width="634"
+    height="356"
+    src="/images/design-principles/stateful-dimensions.jpeg"
+    srcset="/images/design-principles/stateful-dimensions.jpeg 800w, /images/design-principles/stateful-dimensions.jpeg 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/stateful-dimensions.jpeg"></figure>
+<br/>
+<em><strong>[~] Samsara support external datasource as streams.</strong></em></p>
+<p>These <em>dimesions</em> are available in your processing functions as globally accessible
+in-memory k/v-stores, and because they are just streams of changes, they can be
+updated while the application is running without downtime.</p>
+<hr>
+
+<h2 class="relative group"><a name="why"/> Why should you choose Samsara.
+    <div id="why-should-you-choose-samsara" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#why-should-you-choose-samsara" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>I designed Samsara because I think that although many systems allow
+you to do stream processing, the stream processing part is just a
+small part, albeit important, of delivering a system which provides
+real-time analytics. Samsara is a full stack. We provide clients for
+your devices or your services, we provide a way to ingest the data, we
+provide an easy and scalable solution for events processing, a very
+fast storage, visualization, dashboards, and a number of built-in
+modules to facilitate common scenarios.</p>
+<p>All other alternative solutions are either not providing the full
+stack, or they are proprietary services and very expensive solutions.
+With Samsara you have a open source solution that lets you keep your
+own data, and provides all the capabilities to build very
+sophisticated models.</p>
+<p>I&rsquo;ve used this system to build a real-time recommendation engine.
+Because the processing system is made of just plain Clojure functions
+and its execution model is very clear, you can easily develop extend
+the system to build new products or services with the same platform.</p>
+<p>Having a real-time analytics system as part of your services is
+invaluable. You can understand how users interact with your services
+as it is happening. You can use it for general analytics, you can use
+it as a Multi Variant Testing (MVT) system, you can use it for
+monitoring KPIs and in many other different way.</p>
+<p>Many BI solutions rely on batch systems which have incredibly high
+latencies, Samsara is performing incredibly well in this space.
+Much of the merit has to go to ElasticSearch for this.</p>
+<p>In the following picture there is a performance comparison which I
+made for one of my clients. It was performed using the same data on
+the same cluster size with similar machines.  The first query shows
+the time it took Hadoop + Hive to perform a simple filtering query
+with aggregation across <strong>1.8 billion records</strong>. The same query was then
+performed with Spark + Hive and ElasticSearch.</p>
+<p><figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="auto"
+    alt="Query performance comparison"
+    width="634"
+    height="356"
+    src="/images/design-principles/performance-comp.gif"
+    srcset="/images/design-principles/performance-comp.gif 800w, /images/design-principles/performance-comp.gif 1280w"
+    sizes="(min-width: 768px) 50vw, 65vw"
+    data-zoom-src="/images/design-principles/performance-comp.gif"></figure>
+<br/>
+<em><strong>[~] Query performance comparison.</strong></em></p>
+<p>You can see the incredible difference, <em>6 seconds</em> against the 2 hours
+for Hadoop. Samsara with ElasticSearch enables an interactive data
+exploration experience that other products are just not able to
+provide.</p>
+<p>I hope the reader will find this description interesting and that it
+helped to shed some light on Samsara&rsquo;s internals. Try the
+<a href="https://github.com/samsara/samsara"  target="_blank" rel="noreferrer">open source project </a> and visit
+the <a href="https://samsara-analytics.io/"  target="_blank" rel="noreferrer">website</a>.</p>
+
+          
+          
+          
+        </div>
+        
+        
+
+        
+
+        
+
+      </div>
+    </section>
+
+    
+    <footer class="pt-8 max-w-prose print:hidden">
+      
+  
+    
+    
+    
+    <div class="pt-8">
+      <hr class="border-dotted border-neutral-300 dark:border-neutral-600">
+      <div class="flex justify-between pt-3">
+        <span class="flex flex-col">
+          
+            <a
+              class="flex text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+              href="/2016/05/11/learn-clojure-clojure-basics/">
+              <span class="leading-6">
+                <span class="inline-block rtl:rotate-180">&larr;</span>&ensp;Learn Clojure - Clojure Basics
+              </span>
+            </a>
+            
+              <span class="ms-6 mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                <time datetime="2016-05-11T00:00:00&#43;00:00">2016-05-11</time>
+              </span>
+            
+          
+        </span>
+        <span class="flex flex-col items-end">
+          
+            <a
+              class="flex text-right text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+              href="/2016/10/10/microservices-with-api-gateway-aws-lambda-and-jvm-languages/">
+              <span class="leading-6">
+                Microservices with API Gateway, AWS Lambda and JVM languages&ensp;<span class="inline-block rtl:rotate-180">&rarr;</span>
+              </span>
+            </a>
+            
+              <span class="me-6 mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                <time datetime="2016-10-10T00:00:00&#43;00:00">2016-10-10</time>
+              </span>
+            
+          
+        </span>
+      </div>
+    </div>
+  
+
+
+      
+    </footer>
+  </article>
+
+        
+
+
+  
+
+
+
+
+
+
+<div
+  id="scroll-to-top"
+  class="fixed bottom-6 end-6 z-50 transform translate-y-4 opacity-0 duration-200">
+  <a
+    href="#the-top"
+    class="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-neutral/50 text-xl text-neutral-700 hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral dark:hover:text-primary-400"
+    aria-label="Scroll to top"
+    title="Scroll to top">
+    &uarr;
+  </a>
+</div>
+
+      </main><footer id="site-footer" class="py-10 print:hidden">
+  
+  
+    
+  
+  <div class="flex items-center justify-between">
+    
+    
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">
+          (©) Bruno Bonacci, all rights reserved.
+      </p>
+    
+
+    
+    
+      <p class="text-xs text-neutral-500 dark:text-neutral-400">
+        
+        
+        Powered by <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://gohugo.io/" target="_blank" rel="noopener noreferrer">Hugo</a> &amp; <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://blowfish.page/" target="_blank" rel="noopener noreferrer">Blowfish</a>
+      </p>
+    
+  </div>
+  
+    <script>
+      mediumZoom(document.querySelectorAll("img:not(.nozoom)"), {
+        margin: 24,
+        background: "rgba(0,0,0,0.5)",
+        scrollOffset: 0,
+      });
+    </script>
+  
+  
+  
+</footer>
+<div
+  id="search-wrapper"
+  class="invisible fixed inset-0 flex h-screen w-screen cursor-default flex-col bg-neutral-500/50 p-4 backdrop-blur-sm dark:bg-neutral-900/50 sm:p-6 md:p-[10vh] lg:p-[12vh] z-500"
+  data-url="https://blog.brunobonacci.com/">
+  <div
+    id="search-modal"
+    class="flex flex-col w-full max-w-3xl min-h-0 mx-auto border rounded-md shadow-lg top-20 border-neutral-200 bg-neutral dark:border-neutral-700 dark:bg-neutral-800">
+    <header class="relative z-10 flex items-center justify-between flex-none px-2">
+      <form class="flex items-center flex-auto min-w-0">
+        <div class="flex items-center justify-center w-8 h-8 text-neutral-400">
+          <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+        </div>
+        <input
+          type="search"
+          id="search-query"
+          class="flex flex-auto h-12 mx-1 bg-transparent appearance-none focus:outline-dotted focus:outline-2 focus:outline-transparent"
+          placeholder="Search"
+          tabindex="0">
+      </form>
+      <button
+        id="close-search-button"
+        class="flex items-center justify-center w-8 h-8 text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+        title="Close (Esc)">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+</span>
+      </button>
+    </header>
+    <section class="flex-auto px-2 overflow-auto">
+      <ul id="search-results">
+        
+      </ul>
+    </section>
+  </div>
+</div>
+
+    </div>
+  </body>
+  
+</html>

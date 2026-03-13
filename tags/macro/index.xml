@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Macro on The Daily REPL</title>
+    <link>https://blog.brunobonacci.com/tags/macro/</link>
+    <description>Recent content in Macro on The Daily REPL</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>(©) Bruno Bonacci, all rights reserved.</copyright>
+    <lastBuildDate>Sun, 19 Apr 2015 19:49:00 +0000</lastBuildDate><atom:link href="https://blog.brunobonacci.com/tags/macro/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>A &#34;dead simple&#34; introduction to Clojure macros.</title>
+      <link>https://blog.brunobonacci.com/2015/04/19/a-dead-simple-introduction-to-clojure-macros./</link>
+      <pubDate>Sun, 19 Apr 2015 19:49:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2015/04/19/a-dead-simple-introduction-to-clojure-macros./</guid>
+      <description></description>
+      
+    </item>
+    
+  </channel>
+</rss>

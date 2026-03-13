@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>API-Gateway on The Daily REPL</title>
+    <link>https://blog.brunobonacci.com/tags/api-gateway/</link>
+    <description>Recent content in API-Gateway on The Daily REPL</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>(©) Bruno Bonacci, all rights reserved.</copyright>
+    <lastBuildDate>Mon, 10 Oct 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.brunobonacci.com/tags/api-gateway/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Microservices with API Gateway, AWS Lambda and JVM languages</title>
+      <link>https://blog.brunobonacci.com/2016/10/10/microservices-with-api-gateway-aws-lambda-and-jvm-languages/</link>
+      <pubDate>Mon, 10 Oct 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2016/10/10/microservices-with-api-gateway-aws-lambda-and-jvm-languages/</guid>
+      <description></description>
+      
+    </item>
+    
+  </channel>
+</rss>
