@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Logging on The Daily REPL</title>
-    <link>https://blog.brunobonacci.com/tags/logging/</link>
-    <description>Recent content in Logging on The Daily REPL</description>
+    <title>Mulog on The Daily REPL</title>
+    <link>https://blog.brunobonacci.com/tags/mulog/</link>
+    <description>Recent content in Mulog on The Daily REPL</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>(©) Bruno Bonacci, all rights reserved.</copyright>
-    <lastBuildDate>Sun, 09 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.brunobonacci.com/tags/logging/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 09 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.brunobonacci.com/tags/mulog/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>µ/log hidden superpower</title>
