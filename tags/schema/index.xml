@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Schema on The Daily REPL</title>
+    <link>https://blog.brunobonacci.com/tags/schema/</link>
+    <description>Recent content in Schema on The Daily REPL</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>(©) Bruno Bonacci, all rights reserved.</copyright>
+    <lastBuildDate>Sun, 15 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.brunobonacci.com/tags/schema/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Datomic Schema Modeling: A Step-by-Step Guide</title>
+      <link>https://blog.brunobonacci.com/2026/03/15/datomic-schema-modeling/</link>
+      <pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/2026/03/15/datomic-schema-modeling/</guid>
+      <description></description>
+      
+    </item>
+    
+  </channel>
+</rss>
