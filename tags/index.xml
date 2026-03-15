@@ -7,12 +7,12 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>(©) Bruno Bonacci, all rights reserved.</copyright>
-    <lastBuildDate>Wed, 11 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.brunobonacci.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 15 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.brunobonacci.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Clojure</title>
       <link>https://blog.brunobonacci.com/tags/clojure/</link>
-      <pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate>
       
       <guid>https://blog.brunobonacci.com/tags/clojure/</guid>
       <description></description>
@@ -20,7 +20,37 @@
     </item>
     
     <item>
-      <title>Aws</title>
+      <title>Database</title>
+      <link>https://blog.brunobonacci.com/tags/database/</link>
+      <pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/tags/database/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Datomic</title>
+      <link>https://blog.brunobonacci.com/tags/datomic/</link>
+      <pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/tags/datomic/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Schema</title>
+      <link>https://blog.brunobonacci.com/tags/schema/</link>
+      <pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.brunobonacci.com/tags/schema/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>AWS</title>
       <link>https://blog.brunobonacci.com/tags/aws/</link>
       <pubDate>Sun, 09 Jul 2023 00:00:00 +0000</pubDate>
       

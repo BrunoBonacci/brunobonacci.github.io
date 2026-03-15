@@ -237,10 +237,10 @@
       "name": "Bruno Bonacci"
     },
     "copyrightYear": "2026",
-    "dateCreated": "2026-03-11T00:00:00\u002b00:00",
-    "datePublished": "2026-03-11T00:00:00\u002b00:00",
+    "dateCreated": "2026-03-15T00:00:00\u002b00:00",
+    "datePublished": "2026-03-15T00:00:00\u002b00:00",
     
-    "dateModified": "2026-03-11T00:00:00\u002b00:00",
+    "dateModified": "2026-03-15T00:00:00\u002b00:00",
     
     
     
@@ -833,6 +833,23 @@
 
 
 
+  <script>
+    (function () {
+      var mainmenu = document.querySelector(".main-menu");
+      if (!mainmenu) return;
+
+      var path = window.location.pathname;
+      var links = mainmenu.querySelectorAll('a[href="' + path + '"]');
+
+      links.forEach(function (link) {
+        var targets = link.querySelectorAll("span");
+        targets.forEach(function (el) {
+          el.classList.add("active");
+        });
+      });
+    })();
+  </script>
+
 
     
     <div class="relative flex flex-col grow">
@@ -1043,7 +1060,7 @@
     
       <span class="px-2 text-base text-primary-500">&middot;</span>
       <span class="text-base text-neutral-400">
-        2
+        3
       </span>
     
   </h2>
