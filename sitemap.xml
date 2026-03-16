@@ -4,18 +4,24 @@
 
   <url>
     <loc>https://blog.brunobonacci.com/</loc>
-    <lastmod>2026-03-15T00:00:00+00:00</lastmod>
+    <lastmod>2026-03-16T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://blog.brunobonacci.com/2026/03/15/datomic-schema-modeling/</loc>
-    <lastmod>2026-03-15T00:00:00+00:00</lastmod>
+    <loc>https://blog.brunobonacci.com/2026/03/16/datomic-query-guide/</loc>
+    <lastmod>2026-03-16T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://blog.brunobonacci.com/posts/</loc>
+    <lastmod>2026-03-16T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://blog.brunobonacci.com/2026/03/15/datomic-schema-modeling/</loc>
     <lastmod>2026-03-15T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
