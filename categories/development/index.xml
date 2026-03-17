@@ -11,20 +11,20 @@
     
     <item>
       <title>Switching between multiple Java JDK versions in Emacs</title>
-      <link>https://blog.brunobonacci.com/2020/07/02/switching-between-multiple-java-jdk-versions-in-emacs/</link>
+      <link>https://blog.brunobonacci.com/2020/07/02/switching-between-multiple-jdk-in-emacs/</link>
       <pubDate>Thu, 02 Jul 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://blog.brunobonacci.com/2020/07/02/switching-between-multiple-java-jdk-versions-in-emacs/</guid>
+      <guid>https://blog.brunobonacci.com/2020/07/02/switching-between-multiple-jdk-in-emacs/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Lambda Calculus - Boolean logic</title>
-      <link>https://blog.brunobonacci.com/2017/10/08/lambda-calculus-boolean-logic/</link>
+      <link>https://blog.brunobonacci.com/2017/10/08/lambda-calculus-and-boolean-logic/</link>
       <pubDate>Sun, 08 Oct 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://blog.brunobonacci.com/2017/10/08/lambda-calculus-boolean-logic/</guid>
+      <guid>https://blog.brunobonacci.com/2017/10/08/lambda-calculus-and-boolean-logic/</guid>
       <description></description>
       
     </item>
@@ -41,10 +41,10 @@
     
     <item>
       <title>Microservices with API Gateway, AWS Lambda and JVM languages</title>
-      <link>https://blog.brunobonacci.com/2016/10/10/microservices-with-api-gateway-aws-lambda-and-jvm-languages/</link>
+      <link>https://blog.brunobonacci.com/2016/10/10/aws-api-gateway-and-lambda-with-jvm/</link>
       <pubDate>Mon, 10 Oct 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://blog.brunobonacci.com/2016/10/10/microservices-with-api-gateway-aws-lambda-and-jvm-languages/</guid>
+      <guid>https://blog.brunobonacci.com/2016/10/10/aws-api-gateway-and-lambda-with-jvm/</guid>
       <description></description>
       
     </item>
@@ -61,10 +61,10 @@
     
     <item>
       <title>Learn Clojure - Clojure Basics</title>
-      <link>https://blog.brunobonacci.com/2016/05/11/learn-clojure-clojure-basics/</link>
+      <link>https://blog.brunobonacci.com/2016/05/11/clojure-basics/</link>
       <pubDate>Wed, 11 May 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://blog.brunobonacci.com/2016/05/11/learn-clojure-clojure-basics/</guid>
+      <guid>https://blog.brunobonacci.com/2016/05/11/clojure-basics/</guid>
       <description></description>
       
     </item>
@@ -81,10 +81,10 @@
     
     <item>
       <title>A &#34;dead simple&#34; introduction to Clojure macros</title>
-      <link>https://blog.brunobonacci.com/2015/04/19/a-dead-simple-introduction-to-clojure-macros/</link>
+      <link>https://blog.brunobonacci.com/2015/04/19/dead-simple-introduction-to-clojure-macros/</link>
       <pubDate>Sun, 19 Apr 2015 19:49:00 +0000</pubDate>
       
-      <guid>https://blog.brunobonacci.com/2015/04/19/a-dead-simple-introduction-to-clojure-macros/</guid>
+      <guid>https://blog.brunobonacci.com/2015/04/19/dead-simple-introduction-to-clojure-macros/</guid>
       <description></description>
       
     </item>
@@ -101,10 +101,10 @@
     
     <item>
       <title>Cascalog by examples (part 1)</title>
-      <link>https://blog.brunobonacci.com/2014/06/01/cascalog-by-examples-part-1/</link>
+      <link>https://blog.brunobonacci.com/2014/06/01/cascalog-by-examples-part1/</link>
       <pubDate>Sun, 01 Jun 2014 17:45:25 +0000</pubDate>
       
-      <guid>https://blog.brunobonacci.com/2014/06/01/cascalog-by-examples-part-1/</guid>
+      <guid>https://blog.brunobonacci.com/2014/06/01/cascalog-by-examples-part1/</guid>
       <description></description>
       
     </item>
@@ -211,10 +211,10 @@
     
     <item>
       <title>Vert.x Goodness - Simple Telnet Server</title>
-      <link>https://blog.brunobonacci.com/2012/06/30/vert.x-goodness-simple-telnet-server/</link>
+      <link>https://blog.brunobonacci.com/2012/06/30/vertx-simple-telnet-server/</link>
       <pubDate>Sat, 30 Jun 2012 21:00:00 +0000</pubDate>
       
-      <guid>https://blog.brunobonacci.com/2012/06/30/vert.x-goodness-simple-telnet-server/</guid>
+      <guid>https://blog.brunobonacci.com/2012/06/30/vertx-simple-telnet-server/</guid>
       <description></description>
       
     </item>

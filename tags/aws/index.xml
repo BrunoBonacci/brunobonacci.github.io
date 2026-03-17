@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>AWS on The Daily REPL</title>
+    <title>Aws on The Daily REPL</title>
     <link>https://blog.brunobonacci.com/tags/aws/</link>
-    <description>Recent content in AWS on The Daily REPL</description>
+    <description>Recent content in Aws on The Daily REPL</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>(©) Bruno Bonacci, all rights reserved.</copyright>
@@ -11,20 +11,20 @@
     
     <item>
       <title>µ/log hidden superpower</title>
-      <link>https://blog.brunobonacci.com/2023/07/09/mulog-hidden-superpower/</link>
+      <link>https://blog.brunobonacci.com/2023/07/09/mulog-hidden-superrpower/</link>
       <pubDate>Sun, 09 Jul 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://blog.brunobonacci.com/2023/07/09/mulog-hidden-superpower/</guid>
+      <guid>https://blog.brunobonacci.com/2023/07/09/mulog-hidden-superrpower/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Microservices with API Gateway, AWS Lambda and JVM languages</title>
-      <link>https://blog.brunobonacci.com/2016/10/10/microservices-with-api-gateway-aws-lambda-and-jvm-languages/</link>
+      <link>https://blog.brunobonacci.com/2016/10/10/aws-api-gateway-and-lambda-with-jvm/</link>
       <pubDate>Mon, 10 Oct 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://blog.brunobonacci.com/2016/10/10/microservices-with-api-gateway-aws-lambda-and-jvm-languages/</guid>
+      <guid>https://blog.brunobonacci.com/2016/10/10/aws-api-gateway-and-lambda-with-jvm/</guid>
       <description></description>
       
     </item>

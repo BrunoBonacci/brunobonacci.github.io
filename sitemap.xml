@@ -27,25 +27,25 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://blog.brunobonacci.com/2026/03/11/how-to-start-a-polylith-project-from-scratch/</loc>
+    <loc>https://blog.brunobonacci.com/2026/03/11/polylith-from-scratch/</loc>
     <lastmod>2026-03-11T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://blog.brunobonacci.com/2023/09/08/lazy-chunked-and-buffered-understanding-clojures-lazy-sequences/</loc>
+    <loc>https://blog.brunobonacci.com/2023/09/08/buffered-sequences/</loc>
     <lastmod>2023-09-08T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://blog.brunobonacci.com/2023/07/09/mulog-hidden-superpower/</loc>
+    <loc>https://blog.brunobonacci.com/2023/07/09/mulog-hidden-superrpower/</loc>
     <lastmod>2023-07-09T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://blog.brunobonacci.com/2020/07/02/switching-between-multiple-java-jdk-versions-in-emacs/</loc>
+    <loc>https://blog.brunobonacci.com/2020/07/02/switching-between-multiple-jdk-in-emacs/</loc>
     <lastmod>2020-07-02T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
@@ -57,7 +57,7 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://blog.brunobonacci.com/2017/10/08/lambda-calculus-boolean-logic/</loc>
+    <loc>https://blog.brunobonacci.com/2017/10/08/lambda-calculus-and-boolean-logic/</loc>
     <lastmod>2017-10-08T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
@@ -69,7 +69,7 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://blog.brunobonacci.com/2016/10/10/microservices-with-api-gateway-aws-lambda-and-jvm-languages/</loc>
+    <loc>https://blog.brunobonacci.com/2016/10/10/aws-api-gateway-and-lambda-with-jvm/</loc>
     <lastmod>2016-10-10T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
@@ -81,7 +81,7 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://blog.brunobonacci.com/2016/05/11/learn-clojure-clojure-basics/</loc>
+    <loc>https://blog.brunobonacci.com/2016/05/11/clojure-basics/</loc>
     <lastmod>2016-05-11T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
@@ -93,7 +93,7 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://blog.brunobonacci.com/2015/04/19/a-dead-simple-introduction-to-clojure-macros/</loc>
+    <loc>https://blog.brunobonacci.com/2015/04/19/dead-simple-introduction-to-clojure-macros/</loc>
     <lastmod>2015-04-19T19:49:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
@@ -105,7 +105,7 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://blog.brunobonacci.com/2014/06/01/cascalog-by-examples-part-1/</loc>
+    <loc>https://blog.brunobonacci.com/2014/06/01/cascalog-by-examples-part1/</loc>
     <lastmod>2014-06-01T17:45:25+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
@@ -177,7 +177,7 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://blog.brunobonacci.com/2012/06/30/vert.x-goodness-simple-telnet-server/</loc>
+    <loc>https://blog.brunobonacci.com/2012/06/30/vertx-simple-telnet-server/</loc>
     <lastmod>2012-06-30T21:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
